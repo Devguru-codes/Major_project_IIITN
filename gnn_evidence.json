@@ -1,0 +1,192 @@
+{
+  "_meta": {
+    "purpose": "Verbatim GNN / graph future-work evidence extracted from RETRIEVED FULL TEXT only.",
+    "extraction_date": "2026-08-17",
+    "rule": "A paper is assigned Category A ONLY where a verbatim quotation was extracted from full text actually retrieved. No quotation is paraphrased into Category A. Papers whose full text could not be retrieved are recorded with availability='not_retrievable' and carry NO category-A claim.",
+    "categories": {
+      "A": "Authors explicitly name GNN / graph neural / graph convolutional networks as future work",
+      "B": "Authors explicitly recommend graph / network / topology modelling but do not use the term GNN",
+      "C": "No graph mention by authors, but a stated limitation strongly motivates graph modelling",
+      "D": "Paper already uses GNNs (useful for SOTA and graph construction; NOT counted toward the future-work gap argument)"
+    },
+    "full_text_retrieval": {"examined": 87, "retrieved": 39, "not_retrievable": 48}
+  },
+
+  "category_A": [
+    {
+      "ref": "R8",
+      "doi": "10.1038/s41598-025-02018-7",
+      "title": "Translational approach for dementia subtype classification using convolutional neural network based on EEG connectome dynamics",
+      "year": 2025,
+      "venue": "Scientific Reports",
+      "source": "Europe PMC full text, PMC12089592",
+      "availability": "fulltext-xml",
+      "section": "Discussion",
+      "page": "n/a (HTML full text; no fixed pagination)",
+      "quotation": "These findings highlight the necessity for further investigation to examine the connectivity dynamics as a network. Future studies should consider employing novel techniques, such as graph convolutional networks, topological models such as N-body orbital graphs or graphical features to explore the complex interactions between brain regions.",
+      "why_it_supports_our_direction": "An unambiguous, authors' own recommendation that dementia-subtype classification from EEG connectivity should next be performed with graph convolutional networks. This matches our proposed model class and our proposed task exactly, on the same disease pair (AD/FTD)."
+    },
+    {
+      "ref": "F7",
+      "doi": "10.1038/s41746-023-00983-9",
+      "title": "An interpretable model based on graph learning for diagnosis of Parkinson's disease with voice-related EEG",
+      "year": 2024,
+      "venue": "npj Digital Medicine",
+      "source": "Europe PMC full text, PMC10770376",
+      "availability": "fulltext-xml",
+      "section": "Discussion (limitations)",
+      "page": "n/a (HTML full text)",
+      "quotation": "Also, the exclusive use of GCN models in the present study may not be suitable for all types of graph data. Future studies should consider alternative methodologies (e.g. graph attention networks, graph neural ordinary differential equations) for graph learning.",
+      "secondary_quotation": "our models performed the connectivity analysis of large-scale EEG networks at the electrode level, which cannot provide precise anatomical sources that generate the EEG signals. Incorporating source localization analysis for constructing EEG connectivity network is therefore needed in future studies.",
+      "why_it_supports_our_direction": "The authors of a successful GCN study explicitly call for systematic comparison across graph architectures, which supports our GAT sensitivity analysis, and flag electrode-level versus source-level graph construction as unresolved - our Factor B.",
+      "note": "This paper is simultaneously Category D (it already uses a GCN). It qualifies independently for Category A and is listed in both, as permitted by the brief."
+    }
+  ],
+
+  "category_B": [
+    {
+      "ref": "R2",
+      "doi": "10.3390/diagnostics16050746",
+      "title": "Deep Learning-Based Alzheimer's Disease Detection from Multi-Channel EEG Using Fused Time-Frequency Representations",
+      "year": 2026,
+      "venue": "Diagnostics",
+      "source": "Europe PMC full text",
+      "availability": "fulltext-xml",
+      "section": "4.4 Limitations",
+      "page": "n/a (HTML full text)",
+      "quotation": "the proposed 4 x 5 fixed grid fusion strategy, while effective for integrating all 19 EEG channels into a unified image representation, does not explicitly model the true spatial topology or anatomical neighborhood relationships among electrodes on the scalp. As a result, spatial dependencies are implicitly learned by the convolutional networks rather than being explicitly encoded, and alternative graph-based or topology-aware fusion schemes may further enhance spatial interpretability and performance.",
+      "secondary_quotation": "Future research will address these limitations by extending the framework to multi-center and cross-dataset evaluations, incorporating data recorded under diverse experimental conditions, and exploring topology-aware fusion mechanisms and subject-level modeling strategies.",
+      "third_quotation": "The results indicate that classification performance is influenced by the choice of representation, with STFT, CWT, and CQT providing more discriminative features than WVD and HHT under the evaluated setting.",
+      "why_it_supports_our_direction": "This is the closest existing work to our proposal and it both validates the design and leaves our contribution open. The authors performed a controlled representation comparison on our exact dataset using a CNN, concluded that representation choice matters, and identified explicit graph/topology modelling as the missing ingredient. Our study substitutes a fixed GNN for their CNN and adds the connectivity representations they could not encode.",
+      "category_note": "Placed in B, not A: the authors say 'graph-based' and 'topology-aware' but never write 'graph neural network'."
+    },
+    {
+      "ref": "F9",
+      "doi": "10.1186/1471-2202-10-101",
+      "title": "Functional neural network analysis in frontotemporal dementia and Alzheimer's disease using EEG and graph theory",
+      "year": 2009,
+      "venue": "BMC Neuroscience",
+      "source": "Europe PMC full text, PMC2736175",
+      "availability": "fulltext-xml",
+      "section": "Future directions (a dedicated section in the paper)",
+      "page": "n/a (HTML full text)",
+      "quotation": "Graph theory offers a growing amount of techniques to describe topological network features like modularity, node centrality (e.g. 'betweenness'), or synchronizability.",
+      "secondary_quotation": "An alternative approach is to convert the original SL-based connectivity matrix directly into a 'weighted' graph, in which the connections between nodes in a graph have variable strengths.",
+      "third_quotation": "AD and FTLD patients show dissimilar resting-state functional brain network disturbance.",
+      "why_it_supports_our_direction": "The seminal demonstration that AD and FTD produce dissimilar network disturbances, which is the neurophysiological premise for a 3-class graph model, combined with an explicit recommendation for weighted-graph methods - the edge-weighting choice we adopt in Section 11."
+    },
+    {
+      "ref": "R13",
+      "doi": "10.1186/s12938-025-01361-0",
+      "title": "Identification of Alzheimer's disease brain networks based on EEG phase synchronization",
+      "year": 2025,
+      "venue": "BioMedical Engineering OnLine",
+      "source": "Europe PMC full text, PMC11892187",
+      "availability": "fulltext-xml",
+      "section": "Introduction",
+      "quotation": "EEG phase synchronization is used through the combination of brain network and deep learning in order to achieve the purpose of assisted diagnosis.",
+      "why_it_supports_our_direction": "Confirms phase-synchronisation-derived brain networks combined with deep learning as an active 2025 direction for AD, supporting Pipeline P2."
+    }
+  ],
+
+  "gap_evidence_from_category_D_and_surveys": [
+    {
+      "ref": "R1",
+      "doi": "10.1007/s11571-026-10464-w",
+      "title": "The AHEPA EEG benchmark: setting the standard for machine learning in dementia diagnosis, a scoping review",
+      "year": 2026,
+      "venue": "Cognitive Neurodynamics",
+      "source": "Europe PMC full text, PMC13184051",
+      "availability": "fulltext-xml",
+      "section": "Discussion",
+      "quotation": "much of the apparent superiority of deep learning arises not from inherent representational advantage, but from data leakage and overfitting to non-independent samples.",
+      "secondary_quotation": "Graph neural networks exploit the topological structure of EEG connectivity, modeling long-range dependencies that CNNs cannot easily capture.",
+      "third_quotation": "While a subset of studies incorporates additional EEG biomarkers - such as nonlinear complexity measures or functional connectivity - these extensions do not demonstrate a systematic performance improvement, with all approaches converging to similar accuracy levels (approx. 80-85% for AD vs. ...)",
+      "fourth_quotation": "Consequently, the field's next step is not necessarily to pursue deeper networks, but to integrate sounder methodological practices and transparent reporting to ensure that claimed gains reflect true generalization.",
+      "why_it_supports_our_direction": "The single strongest justification for the project. An independent 2026 scoping review of our exact dataset states that reported gains are confounded by leakage, that added representations have not been systematically evaluated, and that graph models are a genuine conceptual advance. Our controlled, subject-level, fixed-model design addresses all three points directly."
+    },
+    {
+      "ref": "R9",
+      "doi": "10.3389/fnins.2025.1555657",
+      "title": "A multi-graph convolutional network method for Alzheimer's disease diagnosis based on multi-frequency EEG data",
+      "year": 2025,
+      "venue": "Frontiers in Neuroscience",
+      "source": "Europe PMC full text, PMC12263931",
+      "availability": "fulltext-xml",
+      "section": "1 Introduction",
+      "quotation": "However, most studies overlook spatial connectivity between channels, which can reveal synchronized activity patterns between different brain regions, thus providing valuable structural information.",
+      "secondary_quotation": "Most existing research relies solely on functional connectivity methods to infer inter-regional brain connectivity, failing to fully capture the complex interactions within EEG signals.",
+      "why_it_supports_our_direction": "A 2025 GNN paper on our dataset states that the choice between spatial and functional edge definitions is unresolved, which is precisely our experimental Factor B."
+    },
+    {
+      "ref": "F6",
+      "doi": "10.1002/hbm.25994",
+      "title": "Spatial-temporal graph convolutional network for Alzheimer classification based on brain functional connectivity",
+      "year": 2022,
+      "venue": "Human Brain Mapping",
+      "source": "Europe PMC full text, PMC9812255",
+      "availability": "fulltext-xml",
+      "section": "Introduction",
+      "quotation": "The above CNN applications on AD classification focus more on learning the locally and continuously changed multiscaled features on the Euclidean space from the EEG signals, neglecting the functional connectivity features.",
+      "secondary_quotation": "Instead, geometric graph-based deep learning methods would provide a more suitable way to learn the cross-channel topologically associated features of EEG.",
+      "why_it_supports_our_direction": "States the core motivation of the project - that grid-based CNN representations discard inter-channel structure that graph methods retain."
+    },
+    {
+      "ref": "R10",
+      "doi": "10.3390/diagnostics15111441",
+      "title": "Connectogram-COH: A Coherence-Based Time-Graph Representation for EEG-Based Alzheimer's Disease Detection",
+      "year": 2025,
+      "venue": "Diagnostics",
+      "source": "Europe PMC full text, PMC12154050",
+      "availability": "fulltext-xml",
+      "section": "1. Introduction / 3. Results and Discussion",
+      "quotation": "(2021) introduced graph neural networks (GNNs), which respect the spatial relationships between electrodes and incorporate structural information into learning, allowing models to exploit topological features of the brain network - a significant advancement over CNNs, which assume regular grid-like inputs.",
+      "practical_finding_adopted": "limiting the segment length values to 10 or 20 s would give better accuracy regardless of the other parameters tested",
+      "why_it_supports_our_direction": "Supplies both the conceptual argument for GNNs over CNNs on EEG and an empirically grounded window-length choice, which we adopt (10 s windows) in Section 9."
+    },
+    {
+      "ref": "not-selected (background)",
+      "doi": "10.1109/tnsre.2021.3110665",
+      "title": "Multi-View Spatial-Temporal Graph Convolutional Networks With Domain Generalization for Sleep Stage Classification",
+      "year": 2021,
+      "venue": "IEEE TNSRE",
+      "source": "Europe PMC full text, PMC8556658",
+      "availability": "fulltext-xml",
+      "section": "Introduction",
+      "quotation": "In particular, the topology among brain regions has not been effectively employed to capture richer spatial features.",
+      "secondary_quotation": "However, in the brain network based on functional connectivity, there may not necessarily be connections among physically adjacent brain regions. However, GraphSleepNet only utilizes the functional connectivity of the brain to construct the sleep stage networks, which ignores the importance of the physical proximity of the brain in space.",
+      "why_it_supports_our_direction": "Rejected from the final 30 because the task is sleep staging rather than disease, but it states the spatial-versus-functional edge tension with unusual clarity and independently motivates our hybrid graph."
+    }
+  ],
+
+  "explicitly_not_category_A": [
+    {
+      "doi": "10.1038/s41598-026-42452-9",
+      "reason": "Full text retrieved and it does contain a section literally titled 'Future work', but that section concerns sex differences in functional connectivity, not graph learning. Verbatim: 'In the future, we will study the FC patterns between men and women for AD and FTD.' Assigned Category C. Recording this explicitly to demonstrate that the presence of a future-work section was not treated as evidence of a GNN recommendation."
+    },
+    {
+      "doi": "10.1038/s41598-026-57069-1",
+      "reason": "Full text retrieved (OA PDF); no explicit graph or GNN future-work statement located. Assigned Category C."
+    },
+    {
+      "doi": "10.3390/brainsci16080856",
+      "reason": "Full text NOT retrievable. Abstract indicates source-connectivity features are central, but no future-work quotation can be supplied. No category-A claim made."
+    },
+    {
+      "doi": "10.3390/brainsci16070716",
+      "reason": "Full text NOT retrievable. No quotation claimed."
+    },
+    {
+      "doi": "10.1142/s0129065725500480",
+      "reason": "Paywalled; full text NOT retrievable. Metadata verified via Crossref only. No quotation claimed."
+    },
+    {
+      "doi": "10.1007/s11571-025-10232-2",
+      "reason": "Full text NOT retrievable. Used as a SOTA reference point only. No quotation claimed."
+    },
+    {
+      "doi": "10.1109/tnsre.2022.3204913",
+      "reason": "Paywalled (IEEE); full text NOT retrievable. Its relevance rests on its verified title and abstract, which establish that it empirically compares functional connectivity methods as GNN inputs. No internal quotation claimed."
+    }
+  ]
+}
