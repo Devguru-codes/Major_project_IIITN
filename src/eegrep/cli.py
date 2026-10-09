@@ -62,6 +62,17 @@ def cmd_merge(a, cfg):
     merge_caches(a.inputs, a.out)
 
 
+def cmd_qc(a, cfg):
+    from .qc import gate_failures, qc_report
+
+    rep = qc_report(a.cache, a.logs or [], cfg["dataset"]["class_names"])
+    rep["gate_failures"] = gate_failures(rep)
+    Path(a.out).write_text(json.dumps(rep, indent=1))
+    print(json.dumps(rep, indent=1))
+    if rep["gate_failures"] and not a.no_fail:
+        raise SystemExit(f"QC gate failed: {rep['gate_failures']}")
+
+
 def cmd_demographics(a, cfg):
     from .baselines import demographics_baseline, summarize
     from .data.participants import load_participants
@@ -159,6 +170,9 @@ def main(argv=None):
     s.add_argument("--out", required=True); s.set_defaults(fn=cmd_cache)
     s = sub.add_parser("merge-caches"); s.add_argument("--inputs", nargs="+", required=True)
     s.add_argument("--out", required=True); s.set_defaults(fn=cmd_merge)
+    s = sub.add_parser("qc"); s.add_argument("--cache", required=True); s.add_argument("--logs", nargs="*")
+    s.add_argument("--out", default="qc_report.json"); s.add_argument("--no-fail", action="store_true")
+    s.set_defaults(fn=cmd_qc)
     s = sub.add_parser("folds"); s.add_argument("--participants", required=True)
     s.add_argument("--out", default="splits/folds_ds004504.json"); s.set_defaults(fn=cmd_folds)
     s = sub.add_parser("demographics"); s.add_argument("--participants", required=True)
