@@ -1,0 +1,81 @@
+# Single source of truth for every frozen choice. Values are set a priori
+# (LITERATURE_REVIEW_REPORT.md §9–§13, IMPLEMENTATION_PLAN.md §4) and are
+# identical in every cell of the factorial. Ablations override keys explicitly.
+
+dataset:
+  name: ds004504
+  cite_doi: 10.18112/openneuro.ds004504.v1.0.8   # S3 serves 1.0.9; CHANGES: README-only edit, data identical
+  s3_bucket: openneuro.org
+  group_to_label: {A: 0, F: 1, C: 2}              # participants.tsv Group codes
+  class_names: [AD, FTD, CN]
+  channels: [Fp1, Fp2, F3, F4, C3, C4, P3, P4, O1, O2, F7, F8, T3, T4, T5, T6, Fz, Cz, Pz]
+  # old 10-20 names -> standard_1020 names (coordinates only)
+  channel_rename: {T3: T7, T4: T8, T5: P7, T6: P8}
+
+preprocess:
+  l_freq: 0.5
+  h_freq: 45.0
+  notch: 50.0
+  reference: average
+  ica_hp: 1.0                 # ICA fit on a 1 Hz high-passed copy
+  ica_method: picard
+  iclabel_drop: [eye blink, muscle artifact]
+  iclabel_threshold: 0.8
+  sfreq: 128
+  window_s: 10.0
+
+bands:                        # Hz, [lo, hi)
+  delta: [0.5, 4.0]
+  theta: [4.0, 8.0]
+  alpha: [8.0, 13.0]
+  beta: [13.0, 30.0]
+  gamma: [30.0, 45.0]
+
+features:
+  welch_nperseg_s: 2.0
+  peak_freq_range: [4.0, 15.0]   # individual alpha/peak frequency (slowing marker)
+  dwt_wavelet: db4
+  dwt_level: 5
+  dwt_keep: [A5, D5, D4, D3, D2]  # D1 (32-64 Hz) lies above the 45 Hz low-pass
+  sampen_order: 2
+  sampen_r: 0.2
+  pswe_local_rate_s: 60.0
+
+pswe:                          # Milikovsky 2019 (10.1126/scitranslmed.aaw8954); params per 10.3390/s23020918
+  win_s: 2.0                   # FFT window
+  step_s: 1.0                  # 1 s overlap
+  mpf_threshold_hz: 6.0
+  min_duration_s: 5.0          # "MPF lower than 6 Hz for five consecutive seconds or more"
+  fmin: 1.0                    # MPF range: not reported in source; matches our pass-band (sensitivity in A11)
+  fmax: 45.0
+
+graph:
+  edge: hybrid                 # spatial | functional | hybrid | pswe | identity | random
+  functional_band: alpha
+  knn_k: 4
+  binarize: false
+
+model:
+  arch: gcn                    # gcn | gat
+  hidden: [64, 32]
+  dropout: 0.5
+  batchnorm: true
+
+train:
+  optimizer: adamw
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  batch_size: 64
+  max_epochs: 200
+  patience: 20
+  subject_equal_weighting: true
+  class_weighting: inverse_frequency
+
+cv:
+  n_repeats: 5
+  n_folds: 5
+  val_frac: 0.2
+  seeds: [0, 1, 2, 3, 4]
+
+budget:
+  max_hours: 11.0              # Kaggle session limit is 12 h; leave headroom

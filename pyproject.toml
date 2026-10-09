@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eegrep"
+version = "0.1.0"
+description = "Controlled comparison of EEG representations x graph constructions (+ BBB-associated PSWE marker) under a fixed GCN on OpenNeuro ds004504"
+requires-python = ">=3.10"
+authors = [{ name = "Devguru", email = "bt23csd060@iiitn.ac.in" }]
+# torch is preinstalled on Kaggle images and intentionally not listed here.
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pandas>=2.0",
+    "scikit-learn>=1.3",
+    "pyyaml>=6.0",
+    "PyWavelets>=1.4",
+    "antropy>=0.1.6",
+    "mne>=1.6",
+]
+
+[project.optional-dependencies]
+preprocess = ["mne-icalabel>=0.6", "onnxruntime>=1.16"]
+stats = ["pingouin>=0.5.4", "statsmodels>=0.14", "matplotlib>=3.7", "seaborn>=0.13"]
+dev = ["pytest>=7.4"]
+
+[project.scripts]
+eegrep = "eegrep.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

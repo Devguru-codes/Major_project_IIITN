@@ -1,0 +1,14 @@
+{
+  "id": "devgurucodes/eegrep-nb00-setup-tests",
+  "title": "eegrep NB00 setup tests",
+  "code_file": "nb00_setup_tests.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}

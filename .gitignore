@@ -1,0 +1,21 @@
+# data and caches never enter git (all compute happens on Kaggle)
+data/
+cache/
+results/
+*.npz
+*.npy
+*.set
+*.fdt
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+build/
+dist/
+
+# kaggle
+kaggle/**/output/
+.ipynb_checkpoints/
