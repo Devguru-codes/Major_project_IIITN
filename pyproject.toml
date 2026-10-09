@@ -17,7 +17,7 @@ dependencies = [
     "pyyaml>=6.0",
     "PyWavelets>=1.4",
     "antropy>=0.1.6",
-    "mne>=1.6",
+    "mne>=1.6,<1.14",   # standard_1020 montage removed in 1.14; keep electrode coordinates fixed
 ]
 
 [project.optional-dependencies]

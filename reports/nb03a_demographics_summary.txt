@@ -1,0 +1,5 @@
+                    mean    sd   n  ci95_lo  ci95_hi
+model                                               
+chance_stratified  0.302  0.11  25    0.259    0.346
+demographics_lr    0.411  0.12  25    0.364    0.458
+
