@@ -1,0 +1,7 @@
+[runner] bench|P5|hybrid|0|0|e1ca495784  macroF1=0.431  epochs=24  30.3s
+[runner] bench|P5|hybrid|0|1|e1ca495784  macroF1=0.396  epochs=29  29.1s
+[runner] bench|P5|hybrid|0|2|e1ca495784  macroF1=0.439  epochs=23  23.2s
+[runner] bench|P5|hybrid|0|3|e1ca495784  macroF1=0.324  epochs=21  20.9s
+[runner] bench|P5|hybrid|0|4|e1ca495784  macroF1=0.494  epochs=22  22.2s
+[bench] 26.2 s/run on cpu -> 150 runs ≈ 1.09 h (budget 11.0 h)
+
