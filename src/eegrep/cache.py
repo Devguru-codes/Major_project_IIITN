@@ -67,7 +67,7 @@ def build_cache(recordings, labels: dict, cfg: dict, coords: np.ndarray, out_dir
         np.savez(out / "features" / f"{name}.npz", X=np.concatenate(chunks))
     np.savez(out / "wpli.npz", W=np.concatenate(wpli_all), bands=np.array(list(cfg["bands"])))
     np.savez(out / "pswe_jaccard.npz", subjects=np.array(jac_subj), J=np.stack(jac))
-    pd.concat(ev_all).to_csv(out / "pswe_events.csv", index=False)
+    pd.concat([e for e in ev_all if not e.empty] or ev_all[:1]).to_csv(out / "pswe_events.csv", index=False)
     pd.concat(summ_all).to_csv(out / "pswe_subject.csv", index=False)
     return out
 

@@ -42,7 +42,8 @@ def make_recordings(n_per_class: int = 7, duration_s: float = 60.0, sfreq: float
             x += alpha_amp * np.sin(2 * np.pi * 10 * t + lags)
             x += theta_amp * np.sin(2 * np.pi * 6 * t + rng.uniform(0, 2 * np.pi, (n_channels, 1)))
             if bursts:
-                for onset in rng.choice(np.arange(5, duration_s - 15, 10), size=2, replace=False):
+                slots = np.arange(5, max(6.0, duration_s - 9), 10)   # 8 s bursts must fit
+                for onset in rng.choice(slots, size=min(2, len(slots)), replace=False):
                     m = (t >= onset) & (t < onset + 8)
                     x[: n_channels // 2, m] += 6.0 * np.sin(2 * np.pi * 3 * t[m])
             recordings.append((subject, x.astype(np.float32), sfreq))
