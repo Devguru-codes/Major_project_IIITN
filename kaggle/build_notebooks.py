@@ -98,6 +98,25 @@ def main():
              "--out {WORK}/cache_s{SHARD}', log=f'{WORK}/cache.log')"],
             extras="preprocess"))
 
+    write_kernel("nb02-merge-qc", "nb02 merge qc", notebook(
+        "NB02 — merge shard caches + data-quality gates (CPU)",
+        "Inputs: the outputs of the three NB01 shard kernels. Writes the single feature cache used by every "
+        "training notebook and `qc_report.json` (window counts, durations, ICA removals, θ/α slowing check, "
+        "PSWE burden per group).",
+        ["import glob\n"
+         "shards = sorted(glob.glob('/kaggle/input/**/cache_s*', recursive=True))\n"
+         "logs = sorted(glob.glob('/kaggle/input/**/preproc/preprocess_log.jsonl', recursive=True))\n"
+         "part = sorted(glob.glob('/kaggle/input/**/participants.tsv', recursive=True))[0]\n"
+         f"print(shards, logs, part, sep='\\n')\n"
+         f"assert len(shards) == {N_SHARDS} and len(logs) == {N_SHARDS}, 'missing NB01 shard outputs'\n"
+         "shutil.copy(part, f'{WORK}/participants.tsv')",
+         "sh(f'{PY} merge-caches --inputs {\" \".join(shards)} --out {WORK}/cache', log=f'{WORK}/merge.log')",
+         "sh(f'{PY} qc --cache {WORK}/cache --logs {\" \".join(logs)} --out {WORK}/qc_report.json --no-fail')\n"
+         "print(json.load(open(f'{WORK}/qc_report.json'))['gate_failures'])"],
+        extras="dev"),
+        internet=True,
+        kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)])
+
     write_kernel("nb03a-folds-demographics", "nb03a folds demographics", notebook(
         "NB03a — frozen folds + demographics confound check (CPU)",
         "Writes the frozen subject-level fold assignment (5 repeats x 5 folds) and runs the "

@@ -1,0 +1,18 @@
+{
+  "id": "dev123123456/eegrep-nb02-merge-qc",
+  "title": "eegrep nb02 merge qc",
+  "code_file": "nb02_merge_qc.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": [
+    "dev123123456/eegrep-nb01-preprocess-s0",
+    "dev123123456/eegrep-nb01-preprocess-s1",
+    "dev123123456/eegrep-nb01-preprocess-s2"
+  ]
+}
