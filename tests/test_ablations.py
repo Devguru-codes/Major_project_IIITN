@@ -32,6 +32,19 @@ def test_permutation_runs_unique_keys(setup, small_cache):
     assert len(store.done) == 6
 
 
+def test_select_cells_ranks_main_runs_only(tmp_path):
+    import json
+
+    from eegrep.ablations import select_cells
+
+    rows = [("main", "P1", "hybrid", 0.6), ("main", "P1", "hybrid", 0.7), ("main", "P6", "spatial", 0.8),
+            ("main", "P2", "functional", 0.5), ("bench", "P5", "hybrid", 0.99)]
+    f = tmp_path / "runs.jsonl"
+    f.write_text("\n".join(json.dumps({"tag": t, "pipeline": p, "edge": e, "subject": {"macro_f1": v}})
+                           for t, p, e, v in rows))
+    assert select_cells([f], top=2) == ["P6xspatial", "P1xhybrid"]
+
+
 def test_residualize_removes_linear_covariate_effect(rng):
     cov = rng.normal(size=(200, 1))
     X = (3.0 * cov[:, :, None] + rng.normal(scale=0.1, size=(200, 2, 2))).astype(np.float32)

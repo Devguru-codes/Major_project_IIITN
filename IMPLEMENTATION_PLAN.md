@@ -336,3 +336,23 @@ Demšar 2006 (JMLR) has no DOI, so it will be cited by URL.
     1. report this as the pre-registered "is PSWE just slowing?" result;
     2. expect RQ7 to be near-null;
     3. treat a background-relative PSWE definition as an *exploratory* follow-up, labelled post hoc. This one awaits the user's decision.
+
+### Exploratory: background-relative PSWE (2026-10-09, Kaggle NB03d; tests 73/73 at `fd9a57a`)
+This analysis is **post hoc**. It was added after the RQ6 result, but its definition and sensitivity grid were fixed in `configs/default.yaml` (`pswe_relative`) before any real-data run.
+
+**Definition:**
+- An event is MPF dropping below the channel's own recording-median MPF, by ≥ 2 Hz (primary), 1.5 or 3 Hz, or by 2 or 3 robust SDs (1.4826·MAD), sustained for ≥ 5 s.
+- Outputs are in `reports/rq6_relative/`.
+
+**Primary result (drop of 2 Hz):** relative to CN, after adjusting for age and sex, the rate ratio is **AD 0.55 [0.35–0.89], p = 0.014** and FTD 0.70 (ns). After also adjusting for background MPF, AD is 0.77 (ns).
+
+**Across variants:**
+- Every variant gives AD < CN; FTD goes the same way.
+- The MAD variants remain significant after adjusting for background MPF: AD 0.35–0.43, FTD 0.31–0.35.
+- The relative rate is only weakly related to δ+θ slowing (ρ = −0.15 for the primary variant, vs +0.88 for the fixed rule).
+- It is not associated with MMSE (ρ = 0.04).
+
+**Interpretation for the paper:**
+- The raised fixed-threshold PSWE burden in AD and FTD reflects *sustained* background slowing, not excess *paroxysmal* events. Defined relative to each person's background, transient slowing events are fewer in dementia.
+- **Caveat:** there is a floor effect. Subjects whose background MPF is low have less room for an absolute drop in Hz, which is why the Hz-drop variants lose significance after adjusting for background MPF.
+- Framing: an EEG proxy of BBB dysfunction on scalp resting EEG needs a background-relative definition, and in this cohort it does not support excess paroxysmal slowing.
