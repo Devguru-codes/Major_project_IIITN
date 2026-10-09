@@ -1,7 +1,7 @@
 {
-  "id": "dev123123456/eegrep-nb00-setup-tests",
-  "title": "eegrep nb00 setup tests",
-  "code_file": "nb00_setup_tests.ipynb",
+  "id": "dev123123456/eegrep-nb01-preprocess-s0",
+  "title": "eegrep nb01 preprocess s0",
+  "code_file": "nb01_preprocess_s0.ipynb",
   "language": "python",
   "kernel_type": "notebook",
   "is_private": true,

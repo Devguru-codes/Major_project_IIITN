@@ -72,6 +72,31 @@ def build_cache(recordings, labels: dict, cfg: dict, coords: np.ndarray, out_dir
     return out
 
 
+def merge_caches(parts: list[str | Path], out_dir: str | Path) -> Path:
+    """Concatenate shard caches (built on disjoint subject sets) into one cache."""
+    parts = [Path(p) for p in parts]
+    out = Path(out_dir)
+    (out / "features").mkdir(parents=True, exist_ok=True)
+    idx = [np.load(p / "index.npz") for p in parts]
+    subj = np.concatenate([z["subject"] for z in idx])
+    seen = [set(z["subject"].tolist()) for z in idx]
+    assert sum(map(len, seen)) == len(set().union(*seen)), "shards overlap in subjects"
+    np.savez(out / "index.npz", subject=subj, start_s=np.concatenate([z["start_s"] for z in idx]),
+             label=np.concatenate([z["label"] for z in idx]), channels=idx[0]["channels"],
+             coords=idx[0]["coords"], sfreq=idx[0]["sfreq"])
+    for name in PIPELINES:
+        np.savez(out / "features" / f"{name}.npz",
+                 X=np.concatenate([np.load(p / "features" / f"{name}.npz")["X"] for p in parts]))
+    w = [np.load(p / "wpli.npz") for p in parts]
+    np.savez(out / "wpli.npz", W=np.concatenate([z["W"] for z in w]), bands=w[0]["bands"])
+    j = [np.load(p / "pswe_jaccard.npz") for p in parts]
+    np.savez(out / "pswe_jaccard.npz", subjects=np.concatenate([z["subjects"] for z in j]),
+             J=np.concatenate([z["J"] for z in j]))
+    for csv in ("pswe_events.csv", "pswe_subject.csv"):
+        pd.concat([pd.read_csv(p / csv) for p in parts]).to_csv(out / csv, index=False)
+    return out
+
+
 class FeatureCache:
     def __init__(self, cache_dir: str | Path):
         self.dir = Path(cache_dir)
