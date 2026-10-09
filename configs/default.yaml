@@ -18,7 +18,7 @@ preprocess:
   notch: 50.0
   reference: average
   ica_hp: 1.0                 # ICA fit on a 1 Hz high-passed copy
-  ica_method: picard
+  ica_method: infomax-extended  # the variant ICLabel was trained on
   iclabel_drop: [eye blink, muscle artifact]
   iclabel_threshold: 0.8
   sfreq: 128

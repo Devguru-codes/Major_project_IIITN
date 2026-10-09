@@ -1,0 +1,14 @@
+{
+  "id": "dev123123456/eegrep-nb03a-folds-demographics",
+  "title": "eegrep nb03a folds demographics",
+  "code_file": "nb03a_folds_demographics.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}

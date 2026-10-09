@@ -19,10 +19,59 @@ def _overrides(pairs: list[str]) -> dict:
     return out
 
 
+def _shard_subjects(participants: str, cfg: dict, shard: int | None, n_shards: int | None) -> list[str]:
+    from .data.participants import load_participants
+
+    subjects = list(load_participants(participants, cfg["dataset"]["group_to_label"])["subject"])
+    return subjects if shard is None else subjects[shard::n_shards]
+
+
 def cmd_download(a, cfg):
     from .data.download import download_dataset
 
-    download_dataset(cfg["dataset"]["name"], a.dest, cfg["dataset"]["s3_bucket"])
+    subjects = None
+    if a.shard is not None:
+        download_dataset(cfg["dataset"]["name"], a.dest, cfg["dataset"]["s3_bucket"], subjects=[])
+        subjects = _shard_subjects(Path(a.dest) / "participants.tsv", cfg, a.shard, a.n_shards)
+    download_dataset(cfg["dataset"]["name"], a.dest, cfg["dataset"]["s3_bucket"], subjects=subjects)
+
+
+def cmd_preprocess(a, cfg):
+    from .preprocess import preprocess_dataset
+
+    subjects = _shard_subjects(Path(a.bids) / "participants.tsv", cfg, a.shard, a.n_shards)
+    preprocess_dataset(a.bids, subjects, cfg, a.out, n_jobs=a.n_jobs)
+
+
+def cmd_cache(a, cfg):
+    from . import graphs
+    from .cache import build_cache
+    from .data.participants import load_participants
+    from .preprocess import iter_preprocessed
+
+    df = load_participants(a.participants, cfg["dataset"]["group_to_label"])
+    subjects = sorted(p.stem for p in Path(a.preproc).glob("sub-*.npz"))
+    labels = dict(zip(df["subject"], df["label"]))
+    coords = graphs.electrode_positions(cfg["dataset"]["channels"], cfg["dataset"]["channel_rename"])
+    build_cache(iter_preprocessed(a.preproc, subjects), labels, cfg, coords, a.out)
+
+
+def cmd_merge(a, cfg):
+    from .cache import merge_caches
+
+    merge_caches(a.inputs, a.out)
+
+
+def cmd_demographics(a, cfg):
+    from .baselines import demographics_baseline, summarize
+    from .data.participants import load_participants
+    from .splits import load_folds
+
+    df = load_participants(a.participants, cfg["dataset"]["group_to_label"])
+    res = demographics_baseline(df, load_folds(a.folds, df["subject"]))
+    Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+    res.to_csv(a.out, index=False)
+    print(summarize(res).round(3).to_string())
 
 
 def cmd_folds(a, cfg):
@@ -102,8 +151,19 @@ def main(argv=None):
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     s = sub.add_parser("download"); s.add_argument("--dest", required=True); s.set_defaults(fn=cmd_download)
+    s.add_argument("--shard", type=int); s.add_argument("--n-shards", type=int)
+    s = sub.add_parser("preprocess"); s.add_argument("--bids", required=True); s.add_argument("--out", required=True)
+    s.add_argument("--shard", type=int); s.add_argument("--n-shards", type=int)
+    s.add_argument("--n-jobs", type=int, default=4); s.set_defaults(fn=cmd_preprocess)
+    s = sub.add_parser("cache"); s.add_argument("--preproc", required=True); s.add_argument("--participants", required=True)
+    s.add_argument("--out", required=True); s.set_defaults(fn=cmd_cache)
+    s = sub.add_parser("merge-caches"); s.add_argument("--inputs", nargs="+", required=True)
+    s.add_argument("--out", required=True); s.set_defaults(fn=cmd_merge)
     s = sub.add_parser("folds"); s.add_argument("--participants", required=True)
     s.add_argument("--out", default="splits/folds_ds004504.json"); s.set_defaults(fn=cmd_folds)
+    s = sub.add_parser("demographics"); s.add_argument("--participants", required=True)
+    s.add_argument("--folds", required=True); s.add_argument("--out", default="results/demographics.csv")
+    s.set_defaults(fn=cmd_demographics)
     s = sub.add_parser("smoke"); s.add_argument("--workdir", default="smoke"); s.set_defaults(fn=cmd_smoke)
     for name, fn in (("bench", cmd_bench), ("grid", cmd_grid)):
         s = sub.add_parser(name)

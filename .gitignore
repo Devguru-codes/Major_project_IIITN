@@ -1,7 +1,9 @@
-# data and caches never enter git (all compute happens on Kaggle)
-data/
-cache/
-results/
+# data and caches never enter git (all compute happens on Kaggle).
+# Anchored to the repo root so src/eegrep/data/ (code) is NOT ignored.
+/data/
+/cache/
+/results/
+/smoke/
 *.npz
 *.npy
 *.set
