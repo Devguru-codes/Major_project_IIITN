@@ -140,7 +140,9 @@ def main():
         "Post hoc follow-up to RQ6: the fixed 6 Hz rule tracked background slowing (ρ = 0.88). Here a PSWE is "
         "transient slowing relative to each channel's own recording-median MPF (primary: ≥ 2 Hz drop for ≥ 5 s; "
         "sensitivity: 1.5/3 Hz drops, 2/3·MAD). Same statistics as RQ6, plus adjustment for background MPF.",
-        [find_cache + "\n"
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_pswe.py tests/test_stats.py', "
+         "log=f'{WORK}/pytest_pswe.txt')",
+         find_cache + "\n"
          "PRE = sorted(d for d in glob.glob('/kaggle/input/**/preproc', recursive=True) if glob.glob(f'{d}/sub-*.npz'))\n"
          f"print(PRE); assert len(PRE) == {N_SHARDS}",
          "sh(f'{PY} pswe-relative --preproc {\" \".join(PRE)} --cache {CACHE} --participants {PART} "
