@@ -73,6 +73,30 @@ def cmd_qc(a, cfg):
         raise SystemExit(f"QC gate failed: {rep['gate_failures']}")
 
 
+def cmd_pswe_stats(a, cfg):
+    from .data.participants import load_participants
+    from .stats_pswe import write_rq6
+
+    df = load_participants(a.participants, cfg["dataset"]["group_to_label"])
+    res = write_rq6(a.cache, df, cfg["dataset"]["class_names"], a.out)
+    print(json.dumps(res, indent=1))
+
+
+def cmd_classical(a, cfg):
+    import pandas as pd
+
+    from .baselines import classical_baseline, summarize
+    from .cache import FeatureCache
+    from .splits import load_folds
+
+    cache = FeatureCache(a.cache)
+    folds = load_folds(a.folds, sorted(set(cache.subject)))
+    res = pd.concat([classical_baseline(cache, folds, p, cfg) for p in a.pipelines.split(",")])
+    Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+    res.to_csv(a.out, index=False)
+    print(summarize(res, by=("pipeline", "model")).round(3).to_string())
+
+
 def cmd_demographics(a, cfg):
     from .baselines import demographics_baseline, summarize
     from .data.participants import load_participants
@@ -173,6 +197,12 @@ def main(argv=None):
     s = sub.add_parser("qc"); s.add_argument("--cache", required=True); s.add_argument("--logs", nargs="*")
     s.add_argument("--out", default="qc_report.json"); s.add_argument("--no-fail", action="store_true")
     s.set_defaults(fn=cmd_qc)
+    s = sub.add_parser("pswe-stats"); s.add_argument("--cache", required=True)
+    s.add_argument("--participants", required=True); s.add_argument("--out", required=True)
+    s.set_defaults(fn=cmd_pswe_stats)
+    s = sub.add_parser("classical"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
+    s.add_argument("--pipelines", default="P1,P2,P3,P4,P6,P7"); s.add_argument("--out", required=True)
+    s.set_defaults(fn=cmd_classical)
     s = sub.add_parser("folds"); s.add_argument("--participants", required=True)
     s.add_argument("--out", default="splits/folds_ds004504.json"); s.set_defaults(fn=cmd_folds)
     s = sub.add_parser("demographics"); s.add_argument("--participants", required=True)

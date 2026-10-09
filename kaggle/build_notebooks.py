@@ -11,6 +11,7 @@ from pathlib import Path
 HERE = Path(__file__).parent
 OWNER = "dev123123456"            # account behind ~/.kaggle/access_token
 N_SHARDS = 3
+GRID_SHARDS = ["P1,P5", "P2,P3,P4", "P6,P7"]   # P5 (1280-dim) is the heaviest; balance by cost
 
 SETUP = r"""REPO = 'https://github.com/Devguru-codes/Major_project_IIITN.git'
 BRANCH = 'feat/implementation'
@@ -116,6 +117,44 @@ def main():
         extras="dev"),
         internet=True,
         kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)])
+
+    find_cache = ("import glob\n"
+                  "CACHE = [d for d in glob.glob('/kaggle/input/**/cache', recursive=True) "
+                  "if os.path.exists(f'{d}/index.npz')][0]\n"
+                  "PART = sorted(glob.glob('/kaggle/input/**/participants.tsv', recursive=True))[0]\n"
+                  "FOLDS = f'{SRC}/splits/folds_ds004504.json'\n"
+                  "print(CACHE, PART, FOLDS)")
+    nb02 = [f"{OWNER}/eegrep-nb02-merge-qc"]
+
+    write_kernel("nb03b-pswe-stats", "nb03b pswe stats", notebook(
+        "NB03b — PSWE (BBB-associated marker) statistics, RQ6 (CPU)",
+        "Kruskal–Wallis + Dunn (Holm), NB2 regression of PSWE counts adjusted for age/sex (and for generic "
+        "δ+θ slowing), PSWE-vs-slowing partial correlation, PSWE-vs-MMSE within patients (analysis only), "
+        "per-channel topography.",
+        [find_cache,
+         "sh(f'{PY} pswe-stats --cache {CACHE} --participants {PART} --out {WORK}/rq6', log=f'{WORK}/rq6.log')"],
+        extras="stats"), kernel_sources=nb02)
+
+    write_kernel("nb03c-classical-baselines", "nb03c classical baselines", notebook(
+        "NB03c — classical non-graph baselines per representation (CPU)",
+        "LR / RBF-SVM / RF on flattened window features of P1–P4, P6, P7 (P5 excluded: 24k dims), "
+        "same frozen folds and weighting as the GCN, subject = mean window log-probability.",
+        [find_cache,
+         "sh(f'{PY} classical --cache {CACHE} --folds {FOLDS} --out {WORK}/classical.csv', log=f'{WORK}/classical.log')"],
+        extras="stats"), kernel_sources=nb02)
+
+    for k, pipes in enumerate(GRID_SHARDS):
+        write_kernel(f"nb04-grid-s{k}", f"nb04 grid s{k}", notebook(
+            f"NB04 — main 7×3 grid, shard {k} ({pipes}) (CPU)",
+            f"Pipelines {pipes} × edges spatial, functional, hybrid × 5 repeats × 5 folds under the fixed GCN. "
+            "Resumable; stops cleanly at the 11 h budget.",
+            [find_cache,
+             f"sh(f'{{PY}} bench --cache {{CACHE}} --folds {{FOLDS}} --pipeline {pipes.split(',')[-1]} --edge hybrid "
+             f"--n-runs {len(pipes.split(',')) * 75} --max-hours 11 --out {{WORK}}/bench.jsonl', log=f'{{WORK}}/bench.log')",
+             f"sh(f'{{PY}} grid --cache {{CACHE}} --folds {{FOLDS}} --pipelines {pipes} "
+             f"--edges spatial,functional,hybrid --tag main --out {{WORK}}/runs.jsonl --max-hours 10.5', "
+             f"log=f'{{WORK}}/grid.log')"],
+            extras="dev"), kernel_sources=nb02)
 
     write_kernel("nb03a-folds-demographics", "nb03a folds demographics", notebook(
         "NB03a — frozen folds + demographics confound check (CPU)",

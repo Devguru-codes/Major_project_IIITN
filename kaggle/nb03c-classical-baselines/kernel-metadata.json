@@ -1,0 +1,16 @@
+{
+  "id": "dev123123456/eegrep-nb03c-classical-baselines",
+  "title": "eegrep nb03c classical baselines",
+  "code_file": "nb03c_classical_baselines.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": [
+    "dev123123456/eegrep-nb02-merge-qc"
+  ]
+}

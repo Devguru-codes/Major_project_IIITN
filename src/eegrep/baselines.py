@@ -42,8 +42,45 @@ def demographics_baseline(participants: pd.DataFrame, folds: dict) -> pd.DataFra
     return pd.DataFrame(rows)
 
 
-def summarize(df: pd.DataFrame, metric: str = "macro_f1") -> pd.DataFrame:
-    g = df.groupby("model")[metric]
+def _classical_models(seed: int) -> dict:
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.svm import SVC
+
+    return {
+        "lr": LogisticRegression(class_weight=None, max_iter=3000, C=1.0),
+        "svm_rbf": SVC(kernel="rbf", C=1.0, gamma="scale", probability=True, random_state=seed),
+        "rf": RandomForestClassifier(n_estimators=300, min_samples_leaf=5, n_jobs=-1, random_state=seed),
+    }
+
+
+def classical_baseline(cache, folds: dict, pipeline: str, cfg: dict) -> pd.DataFrame:
+    """Non-graph twin of each representation: flattened (C·F) window features, fixed default
+    hyperparameters, same subject-equal × inverse-class weights as the GCN, subject prediction
+    = mean of window log-probabilities. Scaler fit on training windows only."""
+    from .train import aggregate_by_subject, window_weights
+
+    X = cache.X(pipeline).reshape(len(cache.subject), -1)
+    rows = []
+    for rep in folds["repeats"]:
+        for k, f in enumerate(rep["folds"]):
+            tr = cache.window_indices(f["train"] + f["val"])
+            te = cache.window_indices(f["test"])
+            w = window_weights(cache.subject[tr], cache.label[tr], 3, cfg["train"]["subject_equal_weighting"])
+            scaler = StandardScaler().fit(X[tr])
+            for name, model in _classical_models(rep["seed"] * 100 + k).items():
+                model.fit(scaler.transform(X[tr]), cache.label[tr], sample_weight=w)
+                logp = np.log(model.predict_proba(scaler.transform(X[te])) + 1e-9)
+                _, y, mean_logp = aggregate_by_subject(logp, cache.subject[te], cache.label[te])
+                prob = np.exp(mean_logp - mean_logp.max(1, keepdims=True))
+                met = classification_metrics(y, prob / prob.sum(1, keepdims=True))
+                rows.append({"model": name, "pipeline": pipeline, "seed": rep["seed"], "fold": k, **met})
+                print(f"[classical] {pipeline} {name} seed{rep['seed']} fold{k} macroF1={met['macro_f1']:.3f}",
+                      flush=True)
+    return pd.DataFrame(rows)
+
+
+def summarize(df: pd.DataFrame, metric: str = "macro_f1", by=("model",)) -> pd.DataFrame:
+    g = df.groupby(list(by))[metric]
     return pd.DataFrame({"mean": g.mean(), "sd": g.std(), "n": g.size(),
                          "ci95_lo": g.mean() - 1.96 * g.std() / np.sqrt(g.size()),
                          "ci95_hi": g.mean() + 1.96 * g.std() / np.sqrt(g.size())})
