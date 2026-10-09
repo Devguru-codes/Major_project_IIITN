@@ -135,6 +135,19 @@ def main():
          "sh(f'{PY} pswe-stats --cache {CACHE} --participants {PART} --out {WORK}/rq6', log=f'{WORK}/rq6.log')"],
         extras="stats"), kernel_sources=nb02)
 
+    write_kernel("nb03d-pswe-relative", "nb03d pswe relative", notebook(
+        "NB03d — EXPLORATORY background-relative PSWE (CPU)",
+        "Post hoc follow-up to RQ6: the fixed 6 Hz rule tracked background slowing (ρ = 0.88). Here a PSWE is "
+        "transient slowing relative to each channel's own recording-median MPF (primary: ≥ 2 Hz drop for ≥ 5 s; "
+        "sensitivity: 1.5/3 Hz drops, 2/3·MAD). Same statistics as RQ6, plus adjustment for background MPF.",
+        [find_cache + "\n"
+         "PRE = sorted(d for d in glob.glob('/kaggle/input/**/preproc', recursive=True) if glob.glob(f'{d}/sub-*.npz'))\n"
+         f"print(PRE); assert len(PRE) == {N_SHARDS}",
+         "sh(f'{PY} pswe-relative --preproc {\" \".join(PRE)} --cache {CACHE} --participants {PART} "
+         "--out {WORK}/rq6_relative', log=f'{WORK}/rq6_relative.log')"],
+        extras="stats"),
+        kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)] + nb02)
+
     write_kernel("nb03c-classical-baselines", "nb03c classical baselines", notebook(
         "NB03c — classical non-graph baselines per representation (CPU)",
         "LR / RBF-SVM / RF on flattened window features of P1–P4, P6, P7 (P5 excluded: 24k dims), "
