@@ -309,3 +309,14 @@ Demšar 2006 (JMLR) has no DOI, so it will be cited by URL.
 - Run results are written to `runs.jsonl`, one JSON object per run, instead of `runs.csv`. The nested per-subject predictions don't fit a CSV, and JSONL appends safely.
 - The PSWE synthetic test uses a 10 s burst (must be detected) and a 2 s burst (must not be). With 2 s windows at a 1 s step, a 4 s burst can produce 5 sub-threshold samples, which would make the test ambiguous. The rule itself is unit-tested exactly on constructed MPF sequences.
 - Preprocessed recordings enter the cache in µV.
+
+**P0 gate: passed on 2026-10-09** (Kaggle NB00 v3, git `169fa6f`, Python 3.13.15, torch 2.11 CPU, mne 1.13.2).
+- 49/49 tests pass.
+- The synthetic end-to-end smoke test (12 cells plus the resume check) finished in 31 s on CPU.
+- Reports are in `reports/`: `nb00_pytest.txt`, `nb00_environment.json` and `kaggle_pip_freeze.txt`, the resolved environment lock.
+
+**Early P3 items, run in parallel at the user's request** (Kaggle NB03a):
+- The frozen folds are committed as `splits/folds_ds004504.json`: 88 subjects, 5×5, test folds of 17–18 subjects.
+- **Demographics confound check:** an age + sex logistic regression scores macro-F1 **0.411 [0.364, 0.458]**, against **0.302** for stratified chance. This is moderately above chance, consistent with the sex imbalance (AD 67% F vs CN 38% F). It is not a blocker, but:
+  - every EEG result must be compared with 0.41, not 0.33;
+  - ablation A12 (demographic-residualised features) is mandatory.
