@@ -270,3 +270,42 @@ There is one local commit per phase on `feat/implementation`. Nothing is pushed 
 - Synthetic end-to-end smoke test (folds → features → bench) in under 2 min on CPU, in NB00.
 - Real-data gates from §8.
 - Compute check: the sum of the `runs.csv` timing column per accelerator must be ≤ 3 GPU-h.
+
+---
+
+## Implementation log
+
+### P0 (scaffold, tests, NB00, DOI verification)
+
+**Implemented:** package `src/eegrep` with these modules:
+- `config`, `data.download`, `data.participants`, `splits`
+- `connectivity`, `graphs`, `pswe`, `features`
+- `models`, `metrics`, `train`, `cache`, `runner`
+- `synthetic`, `cli`
+
+Also `configs/default.yaml`, 7 test modules, and the `kaggle/nb00-setup-tests` kernel.
+
+**DOIs verified on Crossref (2026-10-09)** and appended to `doi_tracking.csv` as B1–B7:
+- Milikovsky 2019 (STM)
+- Senatorov 2019 (STM)
+- Milikovsky 2023 (Sensors)
+- Ganon 2025 (EMBC)
+- Nation 2019 (Nat Med)
+- Radwan 2025 (bioRxiv)
+- Nadeau & Bengio 2003
+
+Demšar 2006 (JMLR) has no DOI, so it will be cited by URL.
+
+**Dataset version.** The S3 bucket serves v1.0.9. Its `CHANGES` entry is "Added in 'How to cite' section", so the EEG data is identical to v1.0.8. We keep citing the v1.0.8 DOI, and the downloader records the served version plus a SHA-256 for every file.
+
+**PSWE parameters**, taken from 10.3390/s23020918 (open access):
+- FFT on 2 s windows with a 1 s overlap
+- an event is "MPF lower than 6 Hz for five consecutive seconds or more"
+- the MPF frequency range is not reported, so we use 1–45 Hz (our pass-band), with sensitivity tested in A11
+- the source paper averaged channels into 9 regions on a 60-channel cap; we detect per channel (19 channels), because P7 node features need channel resolution
+
+**Deviations from §3 and the Verification section:**
+- Features live in a single `features.py` instead of 7 files.
+- Run results are written to `runs.jsonl`, one JSON object per run, instead of `runs.csv`. The nested per-subject predictions don't fit a CSV, and JSONL appends safely.
+- The PSWE synthetic test uses a 10 s burst (must be detected) and a 2 s burst (must not be). With 2 s windows at a 1 s step, a 4 s burst can produce 5 sub-threshold samples, which would make the test ambiguous. The rule itself is unit-tested exactly on constructed MPF sequences.
+- Preprocessed recordings enter the cache in µV.
