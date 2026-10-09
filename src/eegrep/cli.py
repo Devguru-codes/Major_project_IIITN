@@ -82,6 +82,17 @@ def cmd_pswe_stats(a, cfg):
     print(json.dumps(res, indent=1))
 
 
+def cmd_pswe_relative(a, cfg):
+    from .data.participants import load_participants
+    from .stats_pswe import write_relative
+
+    df = load_participants(a.participants, cfg["dataset"]["group_to_label"])
+    res = write_relative(a.preproc, a.cache, df, cfg, a.out)
+    prim = res[res["primary"]]
+    print(json.dumps({"primary": res["primary"], **{k: prim[k] for k in prim if k.startswith(("nb_", "pswe_v"))}},
+                     indent=1))
+
+
 def cmd_classical(a, cfg):
     import pandas as pd
 
@@ -224,7 +235,10 @@ def main(argv=None):
     s = sub.add_parser("pswe-stats"); s.add_argument("--cache", required=True)
     s.add_argument("--participants", required=True); s.add_argument("--out", required=True)
     s.set_defaults(fn=cmd_pswe_stats)
-    s = sub.add_parser("classical"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
+    s = sub.add_parser("pswe-relative"); s.add_argument("--preproc", nargs="+", required=True)
+    s.add_argument("--cache", required=True); s.add_argument("--participants", required=True)
+    s.add_argument("--out", required=True); s.set_defaults(fn=cmd_pswe_relative)
+    s = sub.add_parser("classical");s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
     s.add_argument("--pipelines", default="P1,P2,P3,P4,P6,P7"); s.add_argument("--out", required=True)
     s.set_defaults(fn=cmd_classical)
     s = sub.add_parser("ablate"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)

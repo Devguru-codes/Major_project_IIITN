@@ -44,18 +44,40 @@ def detect(x: np.ndarray, sfreq: float, cfg: dict, channels: list[str] | None = 
 
     Returns (events DataFrame, mpf (C, S), in_event mask (C, S), step_s).
     """
-    mpf, starts = median_power_frequency(x, sfreq, cfg["win_s"], cfg["step_s"], cfg["fmin"], cfg["fmax"])
-    min_len = int(np.ceil(cfg["min_duration_s"] / cfg["step_s"]))
+    mpf, _ = median_power_frequency(x, sfreq, cfg["win_s"], cfg["step_s"], cfg["fmin"], cfg["fmax"])
     channels = channels or [f"ch{i}" for i in range(x.shape[0])]
+    thresholds = np.full(mpf.shape[0], cfg["mpf_threshold_hz"])
+    events, mask = events_below(mpf, thresholds, cfg["step_s"], cfg["min_duration_s"], channels)
+    return events, mpf, mask, cfg["step_s"]
+
+
+def events_below(mpf: np.ndarray, thresholds: np.ndarray, step_s: float, min_duration_s: float,
+                 channels: list[str]) -> tuple[pd.DataFrame, np.ndarray]:
+    """Events = runs of ≥ min_duration_s where mpf[c] < thresholds[c] (one threshold per channel)."""
+    min_len = int(np.ceil(min_duration_s / step_s))
     mask = np.zeros(mpf.shape, dtype=bool)
     rows = []
     for c, ch in enumerate(channels):
-        for s, e in runs_below(mpf[c], cfg["mpf_threshold_hz"], min_len):
+        for s, e in runs_below(mpf[c], thresholds[c], min_len):
             mask[c, s:e] = True
-            rows.append({"channel": ch, "onset_s": float(starts[s]), "duration_s": (e - s) * cfg["step_s"],
+            rows.append({"channel": ch, "onset_s": s * step_s, "duration_s": (e - s) * step_s,
                          "mean_mpf": float(mpf[c, s:e].mean()), "min_mpf": float(mpf[c, s:e].min())})
-    events = pd.DataFrame(rows, columns=["channel", "onset_s", "duration_s", "mean_mpf", "min_mpf"])
-    return events, mpf, mask, cfg["step_s"]
+    return pd.DataFrame(rows, columns=["channel", "onset_s", "duration_s", "mean_mpf", "min_mpf"]), mask
+
+
+def relative_thresholds(mpf: np.ndarray, drop_hz: float | None = None, mad_k: float | None = None) -> np.ndarray:
+    """EXPLORATORY (post hoc) background-relative rule: a channel's threshold sits below its own
+    recording-median MPF, by `drop_hz` Hz or by `mad_k` robust SDs (1.4826·MAD).
+
+    Motivation: the fixed 6 Hz rule tracked continuous background slowing (ρ = 0.88 with δ+θ
+    power, reports/rq6). A relative rule detects *transient* slowing against each channel's
+    own background, closer to the paroxysmal concept of Milikovsky et al. 2019.
+    """
+    base = np.median(mpf, axis=1)
+    if drop_hz is not None:
+        return base - drop_hz
+    mad = 1.4826 * np.median(np.abs(mpf - base[:, None]), axis=1)
+    return base - mad_k * np.maximum(mad, 1e-6)
 
 
 def subject_summary(events: pd.DataFrame, mask: np.ndarray, channels: list[str], duration_s: float) -> pd.DataFrame:

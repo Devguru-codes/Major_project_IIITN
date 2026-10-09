@@ -49,6 +49,16 @@ pswe:                          # Milikovsky 2019 (10.1126/scitranslmed.aaw8954);
   fmin: 1.0                    # MPF range: not reported in source; matches our pass-band (sensitivity in A11)
   fmax: 45.0
 
+pswe_relative:                 # EXPLORATORY / POST HOC — defined after the RQ6 result (reports/rq6), fixed
+  primary: drop2               # before any real-data run of this analysis; all variants reported
+  min_duration_s: 5.0
+  variants:
+    drop2: {drop_hz: 2.0}      # MPF ≥ 2 Hz below the channel's own recording median, ≥ 5 s
+    drop1.5: {drop_hz: 1.5}
+    drop3: {drop_hz: 3.0}
+    mad2: {mad_k: 2.0}         # MPF < median − 2·(1.4826·MAD)
+    mad3: {mad_k: 3.0}
+
 graph:
   edge: hybrid                 # spatial | functional | hybrid | pswe | identity | random
   functional_band: alpha

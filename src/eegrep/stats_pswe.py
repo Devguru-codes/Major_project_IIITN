@@ -84,10 +84,16 @@ def rq6(df: pd.DataFrame, class_names: list[str]) -> dict:
     d = df.assign(group=pd.Categorical(df["label"].map(names), categories=class_names),
                   log_dur_min=np.log(df["duration_s"] / 60.0))
     # NB2 regression of event counts (dispersion estimated), exposure = recording minutes,
-    # adjusted for age and sex; the second model also adjusts for generic slowing (δ+θ power).
-    for name, formula in {"nb_glm_adjusted": "n_events ~ C(group, Treatment('CN')) + age + sex_male",
-                          "nb_glm_adjusted_slowing": "n_events ~ C(group, Treatment('CN')) + age + sex_male"
-                                                     " + rel_delta_theta"}.items():
+    # adjusted for age and sex; further models also adjust for generic slowing (δ+θ power) and,
+    # when available, the subject's background MPF.
+    base = "n_events ~ C(group, Treatment('CN')) + age + sex_male"
+    models = {"nb_glm_adjusted": base, "nb_glm_adjusted_slowing": base + " + rel_delta_theta"}
+    if "background_mpf" in d:
+        models["nb_glm_adjusted_background_mpf"] = base + " + background_mpf"
+    for name, formula in models.items():
+        if d["n_events"].sum() == 0:
+            out[name] = {"error": "no events"}
+            continue
         fit = smf.negativebinomial(formula, data=d, exposure=np.exp(d["log_dur_min"])).fit(disp=0, maxiter=500)
         out[name] = {"rate_ratio": {k: float(np.exp(v)) for k, v in fit.params.items()},
                      "p": {k: float(v) for k, v in fit.pvalues.items()},
@@ -115,6 +121,50 @@ def channel_topography(cache_dir: str | Path, participants: pd.DataFrame, class_
         participants[["subject", "label"]], on="subject")
     ps["group"] = ps["label"].map(dict(enumerate(class_names)))
     return ps.pivot_table(index="channel", columns="group", values="rate_per_min", aggfunc="median")
+
+
+def relative_tables(pre_dirs: list[str | Path], subjects: list[str], cfg: dict) -> dict[str, pd.DataFrame]:
+    """EXPLORATORY: per-subject PSWE burden under each background-relative variant (config pswe_relative)."""
+    from .preprocess import iter_preprocessed
+    from .pswe import events_below, median_power_frequency, relative_thresholds
+
+    pc, rc = cfg["pswe"], cfg["pswe_relative"]
+    channels = cfg["dataset"]["channels"]
+    where = {}
+    for d in map(Path, pre_dirs):
+        for f in d.glob("sub-*.npz"):
+            where[f.stem] = d
+    rows = {v: [] for v in rc["variants"]}
+    for s in subjects:
+        _, data, sfreq = next(iter_preprocessed(where[s], [s]))
+        mpf, _ = median_power_frequency(data, sfreq, pc["win_s"], pc["step_s"], pc["fmin"], pc["fmax"])
+        duration = data.shape[-1] / sfreq
+        for v, spec in rc["variants"].items():
+            ev, mask = events_below(mpf, relative_thresholds(mpf, **spec), pc["step_s"], rc["min_duration_s"],
+                                    channels)
+            rows[v].append({"subject": s, "n_events": len(ev),
+                            "rate_per_min": len(ev) / len(channels) / (duration / 60.0),
+                            "time_fraction": float(mask.mean()), "duration_s": duration,
+                            "background_mpf": float(np.median(np.median(mpf, axis=1)))})
+    return {v: pd.DataFrame(r).set_index("subject") for v, r in rows.items()}
+
+
+def write_relative(pre_dirs, cache_dir, participants, cfg, out_dir) -> dict:
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    names = cfg["dataset"]["class_names"]
+    base = subject_table(cache_dir, participants)          # rel δ+θ, demographics, MMSE
+    results = {"_note": "EXPLORATORY / POST HOC background-relative PSWE (config pswe_relative)",
+               "primary": cfg["pswe_relative"]["primary"]}
+    for v, t in relative_tables(pre_dirs, list(base.index), cfg).items():
+        df = t.join(base[["rel_delta_theta", "group", "label", "age", "sex_male", "mmse"]])
+        df.to_csv(out / f"pswe_relative_{v}_subjects.csv")
+        res = rq6(df, names)
+        rho = stats.spearmanr(df["rate_per_min"], df["background_mpf"])
+        res["pswe_vs_background_mpf_spearman"] = {"rho": float(rho.statistic), "p": float(rho.pvalue)}
+        results[v] = res
+    (out / "rq6_relative_pswe_stats.json").write_text(json.dumps(results, indent=1))
+    return results
 
 
 def write_rq6(cache_dir, participants, class_names, out_dir) -> dict:
