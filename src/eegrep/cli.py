@@ -122,14 +122,20 @@ def cmd_ablate(a, cfg):
     deadline = time.time() + 3600 * a.max_hours
     for cell in a.cells.split(","):
         pipeline, edge = cell.split("x")
-        names = list(ABLATIONS) if a.which == "all" else [w for w in a.which.split(",") if w != "perm"]
+        names = {"all": list(ABLATIONS), "none": []}.get(a.which, a.which.split(","))
         for name in names:
             run_ablation(name, cache, folds, cfg, store, pipeline=pipeline, edge=edge, participants=part,
                          deadline=deadline, device=a.device)
         if a.n_perm:
             run_permutations(cache, folds, cfg, store, pipeline=pipeline, edge=edge, n_perm=a.n_perm,
-                             deadline=deadline, device=a.device)
+                             perm_start=a.perm_start, deadline=deadline, device=a.device)
     print(json.dumps({"runs_done": len(store.done)}))
+
+
+def cmd_select_cells(a, cfg):
+    from .ablations import select_cells
+
+    print(",".join(select_cells(a.runs, a.top)))
 
 
 def cmd_demographics(a, cfg):
@@ -244,9 +250,12 @@ def main(argv=None):
     s = sub.add_parser("ablate"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
     s.add_argument("--participants", required=True)
     s.add_argument("--cells", required=True, help="comma list of PIPELINExEDGE, e.g. P6xhybrid")
-    s.add_argument("--which", default="all"); s.add_argument("--n-perm", type=int, default=0)
+    s.add_argument("--which", default="all", help="all | none | comma list of ablation names")
+    s.add_argument("--n-perm", type=int, default=0); s.add_argument("--perm-start", type=int, default=0)
     s.add_argument("--out", default="results/ablations.jsonl"); s.add_argument("--max-hours", type=float, default=10.5)
     s.add_argument("--device", default="cpu"); s.set_defaults(fn=cmd_ablate)
+    s = sub.add_parser("select-cells"); s.add_argument("--runs", nargs="+", required=True)
+    s.add_argument("--top", type=int, default=2); s.set_defaults(fn=cmd_select_cells)
     s = sub.add_parser("folds"); s.add_argument("--participants", required=True)
     s.add_argument("--out", default="splits/folds_ds004504.json"); s.set_defaults(fn=cmd_folds)
     s = sub.add_parser("demographics"); s.add_argument("--participants", required=True)

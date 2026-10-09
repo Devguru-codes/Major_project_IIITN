@@ -52,15 +52,28 @@ def run_ablation(name: str, cache: FeatureCache, folds: dict, cfg: dict, store: 
     return run_cell(cache, folds, cfg, store, pipeline=pipeline, edge=spec.get("edge", edge), **kw)
 
 
+def select_cells(run_files, top: int = 2) -> list[str]:
+    """Top-`top` main-grid cells by mean subject-level macro-F1 over all completed runs."""
+    import json
+
+    rows = [json.loads(l) for f in run_files for l in open(f, encoding="utf-8") if l.strip()]
+    df = pd.DataFrame([{"cell": f"{r['pipeline']}x{r['edge']}", "f1": r["subject"]["macro_f1"]}
+                       for r in rows if r["tag"] == "main"])
+    means = df.groupby("cell")["f1"].agg(["mean", "size"]).sort_values("mean", ascending=False)
+    print(means.round(4).to_string())
+    return list(means.index[:top])
+
+
 def run_permutations(cache: FeatureCache, folds: dict, cfg: dict, store: ResultStore, *, pipeline: str, edge: str,
-                     n_perm: int, deadline: float = float("inf"), device: str = "cpu") -> int:
+                     n_perm: int, perm_start: int = 0, deadline: float = float("inf"), device: str = "cpu") -> int:
     """Label-permutation null for the best cell: subject labels shuffled (all windows of a subject keep
-    one label), first repeat's 5 folds per permutation. p = (1 + #null ≥ observed) / (1 + n_perm)."""
+    one label), first repeat's 5 folds per permutation. p = (1 + #null ≥ observed) / (1 + n_perm).
+    Permutations [perm_start, perm_start + n_perm) so the null can be split across kernels."""
     subjects, first = np.unique(cache.subject, return_index=True)
     true = cache.label[first]
     pos = np.searchsorted(subjects, cache.subject)
     done = 0
-    for p in range(n_perm):
+    for p in range(perm_start, perm_start + n_perm):
         perm_lab = np.random.default_rng(10_000 + p).permutation(true)
         sub_folds = {"meta": folds["meta"], "repeats": [{**folds["repeats"][0], "seed": 10_000 + p}]}
         done += run_cell(cache, sub_folds, cfg, store, pipeline=pipeline, edge=edge, tag=f"perm@{pipeline}x{edge}",

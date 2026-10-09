@@ -12,6 +12,14 @@ HERE = Path(__file__).parent
 OWNER = "dev123123456"            # account behind ~/.kaggle/access_token
 N_SHARDS = 3
 GRID_SHARDS = ["P1,P5", "P2,P3,P4", "P6,P7"]   # P5 (1280-dim) is the heaviest; balance by cost
+# (grid-rank index of the cell, ablations, n permutations, first permutation) — ≤ 5 kernels (Kaggle CPU limit)
+ABLATION_SHARDS = [
+    (0, "A1_no_graph,A2_random_graph,A3_k3,A3_k6,A3_full,A4_binary,A5_depth1", 0, 0),
+    (0, "A5_depth3,A6_gat,A9_unweighted,A12_residualized,RQ7_plus_P7,RQ7_pswe_edge,A10_window_split", 0, 0),
+    (1, "all", 0, 0),
+    (0, "none", 100, 0),
+    (0, "none", 100, 100),
+]
 
 SETUP = r"""REPO = 'https://github.com/Devguru-codes/Major_project_IIITN.git'
 BRANCH = 'feat/implementation'
@@ -170,6 +178,22 @@ def main():
              f"--edges spatial,functional,hybrid --tag main --out {{WORK}}/runs.jsonl --max-hours 10.5', "
              f"log=f'{{WORK}}/grid.log')"],
             extras="dev"), kernel_sources=nb02)
+
+    grid_sources = [f"{OWNER}/eegrep-nb04-grid-s{k}" for k in range(len(GRID_SHARDS))]
+    select = ("RUNS = sorted(glob.glob('/kaggle/input/**/runs.jsonl', recursive=True))\n"
+              f"print(RUNS); assert len(RUNS) == {len(GRID_SHARDS)}, 'missing grid shard outputs'\n"
+              "CELLS = sh(f'{PY} select-cells --runs {\" \".join(RUNS)} --top 2').strip().splitlines()[-1].split(',')\n"
+              "json.dump(CELLS, open(f'{WORK}/cells.json', 'w')); print('ablating', CELLS)")
+    for k, (cell_idx, which, n_perm, start) in enumerate(ABLATION_SHARDS):
+        write_kernel(f"nb05-ablations-s{k}", f"nb05 ablations s{k}", notebook(
+            f"NB05 — ablations / permutation null, shard {k} (CPU)",
+            f"Cell = main-grid rank {cell_idx + 1} (chosen on Kaggle from the NB04 outputs). Ablations: `{which}`. "
+            f"Permutations: {n_perm} starting at {start}. Same frozen folds as the grid, so runs are paired.",
+            [find_cache + "\n" + select,
+             f"sh(f'{{PY}} ablate --cache {{CACHE}} --folds {{FOLDS}} --participants {{PART}} --cells {{CELLS[{cell_idx}]}} "
+             f"--which {which} --n-perm {n_perm} --perm-start {start} --out {{WORK}}/ablations.jsonl --max-hours 10.5', "
+             f"log=f'{{WORK}}/ablate.log')"],
+            extras="dev"), kernel_sources=nb02 + grid_sources)
 
     write_kernel("nb03a-folds-demographics", "nb03a folds demographics", notebook(
         "NB03a — frozen folds + demographics confound check (CPU)",
