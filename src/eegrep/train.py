@@ -20,6 +20,15 @@ def fit_scaler(x_train: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     return flat.mean(0), flat.std(0) + 1e-6
 
 
+def residualize(X: np.ndarray, covariates: np.ndarray, idx_train: np.ndarray) -> np.ndarray:
+    """Remove the linear effect of per-window covariates (e.g. age, sex) from every feature;
+    coefficients are estimated on training windows only."""
+    z = np.column_stack([np.ones(len(X)), covariates]).astype(np.float64)
+    flat = X.reshape(len(X), -1).astype(np.float64)
+    beta, *_ = np.linalg.lstsq(z[idx_train], flat[idx_train], rcond=None)
+    return (flat - z @ beta).reshape(X.shape).astype(np.float32)
+
+
 def window_weights(subjects: np.ndarray, labels: np.ndarray, n_classes: int, subject_equal: bool) -> np.ndarray:
     """Inverse class frequency over *subjects*; optionally 1/n_windows(subject) so each subject counts equally."""
     uniq, first = np.unique(subjects, return_index=True)
@@ -52,12 +61,15 @@ def _softmax(z: np.ndarray) -> np.ndarray:
 
 def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: np.ndarray,
               idx_train: np.ndarray, idx_val: np.ndarray, idx_test: np.ndarray,
-              cfg: dict, seed: int, device: str = "cpu", n_classes: int = 3) -> dict:
+              cfg: dict, seed: int, device: str = "cpu", n_classes: int = 3,
+              covariates: np.ndarray | None = None) -> dict:
     t0 = time.time()
     torch.manual_seed(seed)
     np.random.seed(seed)
     tc = cfg["train"]
 
+    if covariates is not None:      # ablation A12: regress age/sex out of every feature (train fit only)
+        X = residualize(X, covariates, idx_train)
     mu, sd = fit_scaler(X[idx_train])
     Xt = torch.as_tensor((X - mu) / sd, dtype=torch.float32, device=device)
     At = torch.as_tensor(A, dtype=torch.float32, device=device)

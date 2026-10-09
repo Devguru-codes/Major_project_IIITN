@@ -43,13 +43,22 @@ def git_sha() -> str:
 
 def run_cell(cache: FeatureCache, folds: dict, cfg: dict, store: ResultStore, *, pipeline: str,
              edge: str, tag: str = "main", feature_set: list[str] | None = None, deadline: float = float("inf"),
-             device: str = "cpu", max_repeats: int | None = None, overrides: dict | None = None) -> int:
-    """Train every (repeat, fold) of one cell. Returns the number of runs executed now."""
+             device: str = "cpu", max_repeats: int | None = None, overrides: dict | None = None,
+             covariates: np.ndarray | None = None, labels: np.ndarray | None = None,
+             window_folds: list[dict] | None = None) -> int:
+    """Train every (repeat, fold) of one cell. Returns the number of runs executed now.
+
+    covariates: per-window (N, d) demographics to regress out (A12).
+    labels: per-window label override (permutation test).
+    window_folds: explicit window-index splits (A10 leakage protocol) instead of subject folds.
+    """
     cfg = apply_overrides(cfg, {"graph.edge": edge, **(overrides or {})})
     chash = config_hash(cfg)
     X = cache.X_concat(feature_set) if feature_set else cache.X(pipeline)
+    y = cache.label if labels is None else labels
     executed = 0
-    for rep in folds["repeats"][:max_repeats]:
+    repeats = window_folds if window_folds is not None else folds["repeats"]
+    for rep in repeats[:max_repeats]:
         seed = rep["seed"]
         A = cache.adjacency(cfg, seed=seed)
         for k, f in enumerate(rep["folds"]):
@@ -59,9 +68,12 @@ def run_cell(cache: FeatureCache, folds: dict, cfg: dict, store: ResultStore, *,
             if time.time() > deadline:
                 print(f"[runner] budget reached before {key}; stopping cleanly", flush=True)
                 return executed
-            res = train_one(X, A, cache.subject, cache.label,
-                            cache.window_indices(f["train"]), cache.window_indices(f["val"]),
-                            cache.window_indices(f["test"]), cfg, seed=seed * 100 + k, device=device)
+            if window_folds is not None:
+                idx = (f["train"], f["val"], f["test"])
+            else:
+                idx = tuple(cache.window_indices(f[s]) for s in ("train", "val", "test"))
+            res = train_one(X, A, cache.subject, y, *idx, cfg, seed=seed * 100 + k, device=device,
+                            covariates=covariates)
             store.append({"key": key, "tag": tag, "pipeline": pipeline, "edge": edge, "seed": seed, "fold": k,
                           "config_hash": chash, "overrides": overrides or {}, "git_sha": git_sha(),
                           "python": platform.python_version(), **res})
