@@ -320,3 +320,19 @@ Demšar 2006 (JMLR) has no DOI, so it will be cited by URL.
 - **Demographics confound check:** an age + sex logistic regression scores macro-F1 **0.411 [0.364, 0.458]**, against **0.302** for stratified chance. This is moderately above chance, consistent with the sex imbalance (AD 67% F vs CN 38% F). It is not a blocker, but:
   - every EEG result must be compared with 0.41, not 0.33;
   - ablation A12 (demographic-residualised features) is mandatory.
+
+### P1/P2 gates and the RQ6 result (2026-10-09, Kaggle NB01×3, NB02, NB03b)
+- **NB02 QC passed with no gate failures:**
+  - 88 subjects (36/23/29) and 7,013 windows;
+  - durations of 307.1–1291.1 s, matching the dataset files exactly;
+  - ICA removed 2.4 components per subject on average (157 eye, 51 muscle);
+  - θ/α ratio is AD 1.57 > FTD 0.68 > CN 0.28, p = 1.3e-7.
+- **RQ6 (PSWE), detailed in `reports/rq6/`:**
+  - After adjusting for age and sex, a negative-binomial regression gives PSWE rate ratios vs CN of **AD 2.96 [1.58–5.57], p = 0.0007** and **FTD 2.07 [1.03–4.15], p = 0.041**. This replicates Milikovsky 2019 for AD in an independent open cohort, and is the first such report for FTD.
+  - **However,** the PSWE rate correlates ρ = 0.88 with relative δ+θ power. After additionally adjusting for that slowing, the AD rate ratio becomes 0.50 (p = 0.0009).
+  - **Interpretation:** the fixed-threshold detector (MPF < 6 Hz) mostly tracks background slowing, and AD slowing is continuous rather than paroxysmal.
+  - PSWE vs MMSE within patients: ρ = −0.22, p = 0.095.
+  - Planned consequences:
+    1. report this as the pre-registered "is PSWE just slowing?" result;
+    2. expect RQ7 to be near-null;
+    3. treat a background-relative PSWE definition as an *exploratory* follow-up, labelled post hoc. This one awaits the user's decision.
