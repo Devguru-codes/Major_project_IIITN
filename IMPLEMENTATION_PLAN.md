@@ -432,3 +432,24 @@ Folds use seeds 0–4. They are generated in NB11a and committed before any trai
 - PD medication state is not recorded;
 - recordings are about 5× shorter than ds004504's;
 - a different disease, so the absolute scores are not comparable. Only the rankings and the protocol effects are compared.
+
+### PSWE robustness: zero-padded MPF and artefact rejection — fixed before any real-data run (2026-10-11)
+Added after internal review. Config is `pswe_robust`, which is outside the config hash. Kernel: NB14, covering both cohorts.
+
+**Why:**
+1. **MPF is quantised.** A 2-s FFT puts MPF on a 0.5 Hz grid, so the 6 Hz threshold falls on a bin edge.
+2. **Artefacts can mimic events.** Movement, electrode pops and residual ocular activity add low-frequency power and can produce sub-6 Hz runs.
+
+**Variants** (fixed-threshold rule otherwise unchanged):
+- `original`: must reproduce the main counts exactly;
+- `pad`: Hann 2 s window zero-padded to 8 s, giving a 0.125 Hz grid;
+- `reject`: a channel's 2-s segment is rejected if peak-to-peak > 200 µV or SD < 0.5 µV. Rejected seconds break events and are removed from exposure;
+- `pad_reject`: both; this is the primary variant.
+
+**Statistics:** the same RQ6 models — the NB GLM adjusted for age and sex, and additionally for δ+θ slowing; Spearman with slowing; cognition within patients. Also reported per variant:
+- the median rejected fraction per group;
+- the rank agreement with the main rates.
+
+**Pre-specified reading:** the conclusion "fixed-threshold PSWE excess is explained by background slowing" is robust if, under `pad_reject`, both of these hold:
+- the age/sex-adjusted AD/FTD rate ratios keep their direction (ds004504), and the PD ratio remains non-significant (ds004584);
+- the slowing-adjusted ratios no longer show an excess.

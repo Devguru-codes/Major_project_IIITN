@@ -71,3 +71,39 @@ def test_window_features_shape_and_fraction(cfg, rng):
     f = pswe.window_features(mpf, mask, events, ["a", "b"], starts, 10.0, step, 60.0, 60.0)
     assert f.shape == (6, 2, 4)
     assert f[2, 0, 0] > 0.5 and f[0, 0, 0] == 0.0             # window 20–30 s is mostly inside the event
+
+
+def test_zero_padding_removes_mpf_quantisation():
+    from eegrep.pswe import median_power_frequency
+
+    sf = 128.0
+    t = np.arange(int(60 * sf)) / sf
+    x = (20 * np.sin(2 * np.pi * 5.8 * t))[None, :]
+    coarse, _ = median_power_frequency(x, sf, 2.0, 1.0, 1.0, 45.0)
+    fine, _ = median_power_frequency(x, sf, 2.0, 1.0, 1.0, 45.0, nfft_s=8.0)
+    assert set(np.unique(coarse) % 0.5) == {0.0}                     # 0.5 Hz grid without padding
+    assert np.all(np.abs(fine - 5.8) <= 0.125)                       # true 5.8 Hz recovered on the 0.125 Hz grid
+
+
+def test_artifact_segments_flag_spikes_and_flat_channels():
+    from eegrep.pswe import artifact_segments
+
+    sf = 128.0
+    rng = np.random.default_rng(0)
+    x = rng.normal(0, 10, (3, int(30 * sf)))
+    x[0, int(10 * sf):int(10 * sf) + 5] += 400.0                    # electrode pop on channel 0 at 10 s
+    x[2] = 0.0                                                       # flat channel
+    bad = artifact_segments(x, sf, 2.0, 1.0, max_ptp_uv=200.0, min_std_uv=0.5)
+    assert bad[0, 9] and bad[0, 10] and not bad[0, 20]               # segments covering the pop only
+    assert not bad[1].any() and bad[2].all()
+
+
+def test_rejected_seconds_break_events():
+    from eegrep.pswe import events_below
+
+    mpf = np.full((1, 12), 4.0, dtype=np.float32)
+    ev, _ = events_below(mpf, np.array([6.0]), 1.0, 5.0, ["Cz"])
+    assert len(ev) == 1 and ev.duration_s.iloc[0] == 12
+    mpf[0, 6] = np.nan                                               # one rejected second in the middle
+    ev, _ = events_below(mpf, np.array([6.0]), 1.0, 5.0, ["Cz"])
+    assert list(ev.duration_s) == [6.0, 5.0]

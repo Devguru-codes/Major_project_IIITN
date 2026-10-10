@@ -1,0 +1,20 @@
+{
+  "id": "dev123123456/eegrep-nb14-pswe-robust",
+  "title": "eegrep nb14 pswe robust",
+  "code_file": "nb14_pswe_robust.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": [
+    "dev123123456/eegrep-nb01-preprocess-s0",
+    "dev123123456/eegrep-nb01-preprocess-s1",
+    "dev123123456/eegrep-nb01-preprocess-s2",
+    "dev123123456/eegrep-nb02-merge-qc",
+    "dev123123456/eegrep-nb11a-external-prep"
+  ]
+}

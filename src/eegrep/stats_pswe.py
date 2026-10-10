@@ -167,6 +167,58 @@ def write_relative(pre_dirs, cache_dir, participants, cfg, out_dir) -> dict:
     return results
 
 
+def robust_tables(pre_dirs: list[str | Path], subjects: list[str], cfg: dict) -> dict[str, pd.DataFrame]:
+    """ROBUSTNESS: per-subject fixed-threshold PSWE burden with a zero-padded MPF grid and/or artefact rejection
+    (config pswe_robust). With rejection, exposure is the clean time (mean over channels of non-rejected seconds)."""
+    from .preprocess import iter_preprocessed
+    from .pswe import artifact_segments, events_below, median_power_frequency
+
+    pc, rc = cfg["pswe"], cfg["pswe_robust"]
+    channels = cfg["dataset"]["channels"]
+    where = {f.stem: d for d in map(Path, pre_dirs) for f in d.glob("sub-*.npz")}
+    rows = {v: [] for v in rc["variants"]}
+    for s in subjects:
+        _, data, sfreq = next(iter_preprocessed(where[s], [s]))
+        duration = data.shape[-1] / sfreq
+        bad = artifact_segments(data, sfreq, pc["win_s"], pc["step_s"], rc["max_ptp_uv"], rc["min_std_uv"])
+        mpfs = {pad: median_power_frequency(data, sfreq, pc["win_s"], pc["step_s"], pc["fmin"], pc["fmax"],
+                                            rc["nfft_s"] if pad else None)[0] for pad in (False, True)}
+        for v, spec in rc["variants"].items():
+            mpf = mpfs[spec["pad"]].copy()
+            clean = 1.0
+            if spec["reject"]:
+                mpf[bad] = np.nan
+                clean = 1.0 - float(bad.mean())
+            ev, mask = events_below(mpf, np.full(len(channels), pc["mpf_threshold_hz"]), pc["step_s"],
+                                    pc["min_duration_s"], channels)
+            rows[v].append({"subject": s, "n_events": len(ev), "duration_s": duration * clean,
+                            "rate_per_min": len(ev) / len(channels) / (duration * clean / 60.0),
+                            "time_fraction": float(mask.sum() / max(1, np.isfinite(mpf).sum())),
+                            "rejected_fraction": float(bad.mean()) if spec["reject"] else 0.0})
+    return {v: pd.DataFrame(r).set_index("subject") for v, r in rows.items()}
+
+
+def write_robust(pre_dirs, cache_dir, participants, cfg, out_dir) -> dict:
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    names = cfg["dataset"]["class_names"]
+    base = subject_table(cache_dir, participants)          # main-analysis counts, rel δ+θ, demographics, MMSE
+    results = {"_note": "ROBUSTNESS of the fixed-threshold PSWE analysis (config pswe_robust)",
+               "primary": cfg["pswe_robust"]["primary"]}
+    for v, t in robust_tables(pre_dirs, list(base.index), cfg).items():
+        df = t.join(base[["rel_delta_theta", "group", "label", "age", "sex_male", "mmse"]])
+        df.to_csv(out / f"pswe_robust_{v}_subjects.csv")
+        res = rq6(df, names)
+        rho = stats.spearmanr(df["rate_per_min"], base["rate_per_min"].reindex(df.index))
+        res["rate_vs_main_spearman"] = float(rho.statistic)
+        res["identical_counts_to_main"] = bool((df["n_events"] == base["n_events"].reindex(df.index)).all())
+        res["rejected_fraction_by_group"] = {names[c]: float(df.loc[df.label == c, "rejected_fraction"].median())
+                                             for c in range(len(names))}
+        results[v] = res
+    (out / "rq6_robust_pswe_stats.json").write_text(json.dumps(results, indent=1))
+    return results
+
+
 def write_rq6(cache_dir, participants, class_names, out_dir) -> dict:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
