@@ -1,0 +1,14 @@
+{
+  "id": "dev123123456/eegrep-nb13-mixed-model",
+  "title": "eegrep nb13 mixed model",
+  "code_file": "nb13_mixed_model.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}
