@@ -1,0 +1,181 @@
+\section{Materials and methods}\label{sec:methods}
+
+\subsection{Dataset}
+We used OpenNeuro ds004504 \cite{F1,ds004504}: resting-state, eyes-closed scalp EEG from 88
+participants recorded at AHEPA University Hospital (36 AD, 23 FTD, 29 cognitively normal controls,
+CN). All values below were read from the dataset's own BIDS files rather than from the descriptor
+paper. Recordings use 19 electrodes of the 10--20 system (Fp1, Fp2, F3, F4, C3, C4, P3, P4, O1, O2,
+F7, F8, T3, T4, T5, T6, Fz, Cz, Pz) referenced to A1--A2, sampled at \SI{500}{\hertz} on a Nihon
+Kohden EEG~2100 system, with a 0.4--\SI{50}{\hertz} acquisition filter. Recording length per subject
+ranges from \SI{307}{} to \SI{1291}{\second} (mean \SI{802}{\second}; \SI{19.6}{\hour} in total).
+Group demographics are given in Table~\ref{tab:demographics}. The data are released under CC0; the
+study uses only de-identified public data. The dataset's own metadata cite a version-1.0.9 DOI that
+did not resolve when checked; we cite version 1.0.8, whose EEG data are identical (the 1.0.9
+changelog records only a README edit).
+
+\begin{table}[t]
+\centering\small
+\caption{Participant characteristics (mean $\pm$ SD), from \texttt{participants.tsv}. MMSE is
+reported for description only and is never a model input.}
+\label{tab:demographics}
+\begin{tabular}{lccc}
+\toprule
+ & AD ($n=36$) & FTD ($n=23$) & CN ($n=29$) \\
+\midrule
+Age (years) & $66.4\pm7.9$ & $63.7\pm8.2$ & $67.9\pm5.4$ \\
+Sex (F/M) & 24/12 & 9/14 & 11/18 \\
+MMSE & $17.8\pm4.5$ & $22.2\pm2.6$ & $30.0\pm0.0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Fixed preprocessing}\label{sec:preproc}
+Every condition shares one code path, implemented with MNE-Python \cite{mne}. Raw recordings were
+band-pass filtered at 0.5--\SI{45}{\hertz}, notch filtered at \SI{50}{\hertz}, and re-referenced to
+the common average. Independent component analysis (extended Infomax \cite{infomax}, 18 components
+--- one fewer than the channel count because of the average reference) was fitted on a
+\SI{1}{\hertz} high-passed copy of each recording, and components that ICLabel \cite{iclabel}
+assigned to eye or muscle artefact with probability $\ge 0.8$ were removed. Data were then resampled
+to \SI{128}{\hertz} and cut into non-overlapping \SI{10}{\second} windows (1,280 samples), giving
+7,013 windows in total (30--129 per subject). ICA is fitted per recording, without labels or other
+subjects' data, and therefore cannot leak information across cross-validation folds; every transform
+that is estimated across subjects (feature scaling, demographic residualisation) is fitted on
+training subjects only.
+
+\subsection{Factor A: node-feature representations}\label{sec:reps}
+Each window is a graph whose 19 nodes are the electrodes. Seven representations define the node
+features $X\in\mathbb{R}^{19\times F}$:
+\begin{description}
+  \item[P1, spectral ($F=7$).] Relative power in five bands (delta 0.5--4, theta 4--8, alpha 8--13,
+        beta 13--30, gamma \SIrange{30}{45}{\hertz}) from Welch's method \cite{welch}
+        (\SI{2}{\second} Hann segments, 50\% overlap), normalised spectral entropy, and peak
+        frequency within \SIrange{4}{15}{\hertz}.
+  \item[P2, connectivity ($F=5$).] Node strength of the weighted phase-lag index (wPLI)
+        \cite{wpli,F11} in each band: the mean wPLI between a channel and the other 18.
+  \item[P3, wavelet ($F=20$).] Five-level Daubechies-4 discrete wavelet transform \cite{pywavelets};
+        for the sub-bands A5, D5, D4, D3 and D2 (D1, 32--\SI{64}{\hertz}, lies above the low-pass
+        cut-off), relative energy, normalised coefficient entropy, mean absolute coefficient and
+        standard deviation.
+  \item[P4, time domain ($F=10$).] Mean, variance, root mean square, skewness, kurtosis, zero-crossing
+        rate, Hjorth mobility and complexity \cite{hjorth}, sample entropy \cite{sampen} ($m=2$,
+        $r=0.2\,\sigma$) and line length. Line length replaces Hjorth activity, which equals the
+        variance.
+  \item[P5, raw ($F=1280$).] The window z-scored per channel.
+  \item[P6, fused ($F=34$).] P1, P3 and P2 concatenated, plus each node's weighted clustering
+        coefficient \cite{onnela} and eigenvector centrality in the alpha-band wPLI graph.
+  \item[P7, PSWE ($F=4$).] From the PSWE detector (Section~\ref{sec:pswe}): fraction of the window
+        spent in a PSWE, mean and minimum median power frequency in the window, and the local PSWE
+        onset rate within $\pm\SI{60}{\second}$.
+\end{description}
+
+The wPLI between channels $i$ and $j$ was computed within each window from band-passed (4th-order
+Butterworth, zero-phase) analytic signals $z_i(t)$ as
+\begin{equation}
+  \mathrm{wPLI}_{ij} = \frac{\bigl|\langle \operatorname{Im}(z_i z_j^{*})\rangle_t\bigr|}
+                            {\langle |\operatorname{Im}(z_i z_j^{*})| \rangle_t},
+\end{equation}
+which is insensitive to zero-lag coupling from volume conduction \cite{wpli}.
+
+\subsection{Factor B: graph construction}\label{sec:graphs}
+Three edge definitions were crossed with every representation. \emph{Spatial}: a Gaussian kernel
+$w_{ij}=\exp(-d_{ij}^2/2\sigma^2)$ on Euclidean distances between standard 10--20 electrode positions,
+with $\sigma$ the median pairwise distance; this graph is identical for every window and subject.
+\emph{Functional}: the alpha-band wPLI of the window. \emph{Hybrid}: the element-wise product of the
+two. Each graph was sparsified by keeping the $k=4$ strongest edges per node, symmetrised as
+$A=\max(A,A^\top)$, kept weighted, and normalised as $\hat A = \tilde D^{-1/2}(A+I)\tilde D^{-1/2}$.
+
+\subsection{The fixed model}\label{sec:model}
+The model is the control variable, not the contribution, so a single small graph convolutional
+network (GCN) \cite{F13} was used everywhere:
+$H_1=\mathrm{Dropout}_{0.5}(\mathrm{BN}(\mathrm{ReLU}(\hat A X W_0)))$,
+$H_2=\mathrm{ReLU}(\hat A H_1 W_1)$, mean pooling over the 19 nodes, and a linear layer to three
+classes, with $W_0\in\mathbb{R}^{F\times64}$ and $W_1\in\mathbb{R}^{64\times32}$. This gives 2,819
+parameters for $F=7$ and 3,651 for $F=20$; P5 is the unavoidable exception (84,355 parameters,
+because $F=1280$). Two hops of propagation already reach most of a sparsified 19-node graph, and
+deeper GCNs risk over-smoothing; depth is tested as an ablation. Graph attention networks
+\cite{gat} learn edge weights and would partly undo the edge definitions being compared, so a GAT
+is used only as a sensitivity check.
+
+Training used AdamW (learning rate $10^{-3}$, weight decay $10^{-4}$), batch size 64, and at most
+200 epochs with early stopping (patience 20) on validation macro-F1 computed at subject level. The
+loss was weighted by inverse class frequency (over subjects) divided by each subject's window count,
+so every subject contributes equally regardless of recording length. A subject's prediction is the
+mean of its window logits. Features were standardised with statistics from training windows only.
+All hyperparameters were fixed before any result was seen and are identical in every condition.
+
+\subsection{Evaluation protocol}\label{sec:protocol}
+We used subject-level, stratified, repeated 5-fold cross-validation with five repeats (seeds 0--4),
+for 25 test splits of 17--18 subjects each. Within each training set, a stratified 20\% of subjects
+formed the early-stopping validation set; it was never used to tune hyperparameters. The fold
+assignment was generated once, verified by assertions that training, validation and test subjects
+are pairwise disjoint and that every subject is tested exactly once per repeat, and committed to the
+code repository before any training run. All conditions use the same 25 splits, so every comparison
+is paired. The full factorial comprises $7\times3$ cells $\times$ 25 splits $=525$ training runs.
+
+The primary metric is subject-level macro-averaged F1. We also report balanced accuracy, one-vs-rest
+macro ROC-AUC, PR-AUC, per-class sensitivity and specificity, Cohen's $\kappa$, the Brier score,
+expected calibration error and confusion matrices. Plain accuracy is reported but never used for
+ranking.
+
+\subsection{Baselines, ablations and controls}\label{sec:ablations}
+\paragraph{Baselines.} A logistic regression on age and sex alone (the demographic confound floor);
+a stratified random classifier (chance); and logistic regression, RBF-kernel SVM and random forest
+trained on the flattened node features of each representation with the same folds, weighting and
+subject aggregation as the GCN (a non-graph twin of every representation). The MMSE is never used as
+an input: control participants all score 30, so it is a proxy for the label.
+
+\paragraph{Ablations.} Run on the two best cells of the main grid, chosen automatically from the
+grid results, with the same 25 splits: no graph (identity adjacency, i.e.\ a per-node MLP);
+degree-preserving random graphs; $k\in\{3,6\}$ and a fully connected graph; binarised edges; depth
+1 and 3; GAT instead of GCN; no subject-equal weighting; demographic residualisation (age and sex
+regressed out of every feature, coefficients fitted on training windows); adding P7 (PSWE) features
+to the best representation; and the PSWE co-occurrence graph (Jaccard overlap of channels' PSWE
+time) as the edge type.
+
+\paragraph{Leakage.} The best cells were re-run with \emph{window-level} stratified splitting ---
+windows assigned to folds at random, ignoring subject identity --- with everything else unchanged.
+
+\paragraph{Permutation test.} For the best cell, subject labels were permuted 200 times (all windows
+of a subject keep one label) and the first repeat's five folds re-run each time; the $p$-value is
+$(1+\#\{\text{null}\ge\text{observed}\})/(1+200)$.
+
+\subsection{PSWE detection}\label{sec:pswe}
+Following Milikovsky et al.\ \cite{B1}, with parameters as reported in \cite{B3}, we computed the
+median power frequency (MPF) of each channel from FFTs of \SI{2}{\second} Hann-windowed segments with
+\SI{1}{\second} overlap (one MPF value per second) over 1--\SI{45}{\hertz}. The frequency range is not
+reported in the source and was set to our pass-band. A PSWE is a run of at least five consecutive
+seconds with MPF $<\SI{6}{\hertz}$. Detection is per channel and per recording, and uses no labels.
+For each subject we computed the PSWE rate (events per minute, averaged over channels) and the
+fraction of time spent in PSWEs.
+
+\paragraph{Background-relative PSWE (exploratory).} After observing that the fixed-threshold rate
+was strongly correlated with background slowing (Section~\ref{sec:res-pswe}), we added a
+post-hoc analysis, labelled as such throughout. Its definitions were fixed in the configuration
+before it was run on any real data. A relative PSWE is a run of at least \SI{5}{\second} in which a
+channel's MPF lies below that channel's own recording-median MPF by at least \SI{2}{\hertz}
+(primary), \SI{1.5}{\hertz} or \SI{3}{\hertz}, or by at least 2 or 3 robust standard deviations
+($1.4826\times$ median absolute deviation).
+
+\subsection{Statistical analysis}\label{sec:stats}
+The 25 test splits are the repeated-measures units. Main effects of representation and graph
+construction, and their interaction, were tested with a balanced two-way repeated-measures ANOVA on
+macro-F1, reporting partial $\eta^2$ and Greenhouse--Geisser-corrected $p$-values. Because
+cross-validation scores share training data and are therefore not independent, every pairwise
+comparison is reported with both the Wilcoxon signed-rank test and the Nadeau--Bengio corrected
+resampled $t$-test \cite{B7} (test/train ratio $17.6/70.4$), with Holm correction \cite{holm} within
+each family, Cohen's $d$ and the matched-pairs rank-biserial correlation. All 21 cells were also
+compared with a Friedman test and a Nemenyi critical-difference analysis \cite{demsar}. Cell-level
+95\% confidence intervals come from a subject-level bootstrap (2,000 resamples of subjects within each
+repeat) and from a $t$-interval over the 25 splits.
+
+For PSWEs, group differences were tested with Kruskal--Wallis and Dunn post-hoc tests (Holm-corrected,
+with rank-biserial effect sizes), and with negative-binomial regression of event counts using
+recording length as exposure, adjusted for age and sex and, in further models, for relative
+delta+theta power and background MPF. The relation to slowing was assessed with Spearman and
+partial (age- and sex-adjusted) rank correlations, and the relation to cognition with Spearman
+correlation against MMSE within patients only. All analyses were run with SciPy, statsmodels and
+custom code that is tested against reference implementations.
+
+\subsection{Compute}
+All experiments ran on free Kaggle CPU sessions (4 vCPUs); no GPU was used. The 525-run main grid
+took 2.4 CPU-hours. Every run is logged with its configuration hash, code version and seed.

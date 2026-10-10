@@ -1,0 +1,70 @@
+\section{Related work}\label{sec:related}
+
+\paragraph{Signal representations for EEG dementia classification.}
+Spectral representations dominate: relative band power and EEG slowing are the most replicated AD
+markers \cite{R3,F2,R15}. Time-domain and complexity features (Hjorth parameters, entropies) are
+cheap and interpretable \cite{R15,R14}. Time--frequency transforms such as the continuous or
+discrete wavelet transform retain non-stationary structure that a power spectrum averages away
+\cite{R2,R16}, and several recent studies encode EEG as images for convolutional networks
+\cite{R2,R6,R10}. Representation choice is thus treated as a first-class question --- but almost
+always with convolutional models, and without varying the spatial structure the model sees.
+
+\paragraph{Graph neural networks for EEG.}
+Spectral graph convolution \cite{F13} and attention-based variants \cite{gat} underpin most EEG
+GNNs, reviewed in \cite{F5}. For dementia, GNNs have been built on functional-connectivity graphs
+\cite{F3}, learned adjacency \cite{F4}, multi-connectivity inputs \cite{R12}, time-resolved graphs
+\cite{R10} and spatial--functional hybrids \cite{R9}; for Parkinson's disease, interpretable graph
+learning has been used to localise abnormal connectivity \cite{F7}. The closest precedent \cite{F3}
+compared connectivity measures as GNN inputs but held node features fixed. A 2025 preprint applied
+a graph transformer to ds004504 for FTD versus controls with window-level prediction \cite{B6}.
+None of these studies crosses node-feature representation with edge definition under a fixed model.
+
+\paragraph{Graph construction for EEG.}
+Edges may be defined spatially (inter-electrode distance), functionally (statistical coupling), by
+learning, or by combinations of these. Phase-lag-based measures \cite{F11,wpli} suppress the
+zero-lag coupling produced by volume conduction, which otherwise inflates functional graphs; weighted
+graphs are recommended over binarised ones for EEG \cite{F9}, and phase-synchronisation networks
+differ between dementia subtypes \cite{R13,R16}. Spatial graphs carry no subject-specific
+information on their own and act as a smoothing prior; whether that prior helps is an empirical
+question we test directly.
+
+\paragraph{Evaluation protocol and leakage.}
+Leakage --- information from test data reaching training --- is a general failure mode of
+machine-learning-based science \cite{F8}. In EEG it takes a specific form: windows cut from one
+recording are highly correlated, so splitting \emph{windows} rather than \emph{subjects} lets a model
+recognise individuals instead of disease. The 2026 scoping review of ds004504 attributes the upper
+end of reported accuracies to this effect \cite{R1}. We measure it directly on one pipeline.
+
+\paragraph{EEG and the blood--brain barrier.}
+BBB breakdown precedes and predicts cognitive decline \cite{B5,B8}. Milikovsky et al.\ proposed
+PSWEs as an EEG manifestation of BBB-related cortical dysfunction in AD and epilepsy \cite{B1}, with
+a companion study tracing the mechanism to albumin-activated TGF$\beta$ signalling \cite{B2}.
+Subsequent work found PSWEs uncommon in Parkinson's disease \cite{B3} and explored them as an
+epilepsy biomarker \cite{B4}. Because ds004504 includes no BBB imaging, we treat PSWEs strictly as a
+\emph{BBB-dysfunction-associated} EEG marker, not as a measurement of BBB integrity.
+
+\paragraph{Positioning.}
+Table~\ref{tab:positioning} summarises how this study differs from the closest prior work.
+
+\begin{table}[t]
+\centering\small
+\caption{Positioning against the closest prior work on EEG dementia classification.
+\checkmark\ = yes; -- = no; ? = not yet verified against the full text.}
+\label{tab:positioning}
+\begin{tabular}{lccccc}
+\toprule
+Study & Varies representation & Varies graph & Fixed model & Subject-level split & Public data \\
+\midrule
+DICE-Net \cite{F2} & -- & -- & \checkmark & \checkmark & \checkmark \\
+FC-measure GNN \cite{F3} & -- & \checkmark & \checkmark & ? & ? \\
+Adaptive GCN \cite{F4} & -- & \checkmark & -- & ? & ? \\
+TFR comparison \cite{R2} & \checkmark & -- & \checkmark & ? & \checkmark \\
+Spatial--functional GNN \cite{R9} & -- & -- & -- & ? & ? \\
+Multi-connectivity GCN \cite{R12} & -- & \checkmark & -- & ? & ? \\
+Graph transformer \cite{B6} & -- & -- & \checkmark & \checkmark & \checkmark \\
+\textbf{This study} & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+% TODO (author): resolve every "?" from the full text before submission (several of these papers
+% are paywalled; see paywalled_papers.md). Do not convert a "?" to a mark from the abstract alone.

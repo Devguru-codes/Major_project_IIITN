@@ -1,0 +1,69 @@
+\section{Introduction}\label{sec:intro}
+
+% TODO (author): add 2--3 current epidemiology references for this opening claim (paper_structure.md §1).
+Alzheimer's disease (AD) and frontotemporal dementia (FTD) are leading causes of neurodegenerative
+dementia, particularly with onset before 65, and telling them apart is clinically consequential:
+they differ in prognosis, in care needs and in which disease-modifying treatments are appropriate.
+Scalp electroencephalography (EEG) is attractive for this task because it is cheap, non-invasive and
+available in routine care, in contrast to amyloid PET or MRI. Its physiological basis is well
+established: AD is increasingly understood as a disorder of large-scale brain networks
+\cite{F12}, and graph-theoretical EEG studies have shown that AD and FTD disturb those networks in
+\emph{different} ways \cite{F9}, which is what makes a three-class AD/FTD/control problem
+scientifically meaningful rather than merely harder.
+
+Machine-learning work on this question has moved from spectral markers and handcrafted features with
+classical classifiers \cite{F10} to convolutional networks and transformers \cite{F2,R14} and,
+most recently, to graph neural networks (GNNs) that treat electrodes as nodes and inter-electrode
+coupling as edges \cite{F5,F3,F4,F6,R9,R10,R12}. The public OpenNeuro dataset ds004504
+\cite{F1,ds004504}, with 88 subjects recorded on one device under one protocol, has become the
+de-facto benchmark. Reported accuracies on this single dataset span roughly 80--99\%.
+
+That spread is implausibly wide for identical data, and it hides a methodological problem. Published
+studies change several things at once: (i) the \emph{signal representation} fed to the model,
+(ii) the \emph{graph construction} that defines which electrodes are connected, (iii) the
+\emph{model architecture}, and (iv) the \emph{evaluation protocol}. Independent evidence suggests
+that the last of these matters most. A 2026 scoping review of this exact benchmark concluded that
+apparent deep-learning gains ``arise not from inherent representational advantage, but from data
+leakage'' \cite{R1}, echoing a broader warning about leakage across machine-learning-based science
+\cite{F8}. A 2026 comparison of five time--frequency representations under a single convolutional
+network \cite{R2} isolated representation, but its authors note that it ``does not explicitly model
+the true spatial topology'' and that graph-based schemes remain unexplored; others observe that most
+studies ``overlook spatial connectivity between channels'' \cite{R9}, and explicitly call for graph
+convolutional networks in future work \cite{R8,F7}. No study has varied representation and graph
+construction together while holding the model and the evaluation protocol fixed.
+
+A second, biologically motivated gap concerns the blood--brain barrier (BBB). BBB breakdown is an
+early biomarker of cognitive dysfunction \cite{B5,B8}, and Milikovsky et al.\ described
+\emph{paroxysmal slow-wave events} (PSWEs) --- episodes in which the EEG median power frequency
+falls below \SI{6}{\hertz} for at least \SI{5}{\second} --- in patients with AD, linked them to
+cognitive impairment, localised them to cortex with BBB dysfunction in epilepsy, and induced them in
+rodents by albumin extravasation \cite{B1,B2}. PSWEs have since been examined in Parkinson's disease
+\cite{B3} and epilepsy \cite{B4}, but, to our knowledge, never in FTD and never on an open
+dementia cohort. Whether this BBB-associated EEG marker carries diagnostic information beyond
+ordinary EEG slowing has not been tested.
+
+We therefore ran a controlled factorial experiment. Seven node-feature representations (spectral,
+connectivity, wavelet, time-domain, raw, fused, and PSWE-derived) were crossed with three graph
+constructions (spatial, functional, hybrid) under a single fixed two-layer graph convolutional
+network \cite{F13}, with subject-level repeated cross-validation, identical frozen folds for every
+condition, and hyperparameters fixed before any result was seen. Because the model is the control
+variable rather than the contribution, it is deliberately small. Around this core we measured the
+inflation produced by window-level (leaky) splitting on the identical pipeline, quantified
+age/sex confounding, and characterised PSWE burden across AD, FTD and controls.
+
+Our contributions are:
+\begin{enumerate}
+  \item \textbf{Methodological.} A fully crossed $7\times3$ protocol that separates signal
+        representation, graph topology and model architecture, with paired statistics over 25
+        frozen subject-level test splits and ablations that test whether the graph matters at all.
+  \item \textbf{Empirical.} Effect sizes and confidence intervals for which representations a GNN
+        benefits from in three-class AD/FTD/control classification, with non-graph twins and a
+        demographic confound floor as reference points.
+  \item \textbf{Protocol.} A direct measurement, on one pipeline, of how much window-level splitting
+        inflates results --- a calibration factor for reading published numbers on this benchmark.
+  \item \textbf{Biological.} The first characterisation of BBB-associated PSWEs in FTD, an
+        independent-cohort test of the AD finding, and a test of whether the marker is separable
+        from background slowing.
+  \item \textbf{Reproducibility.} Code, seeds, frozen folds and every raw run released; the full
+        study re-runs on free cloud CPUs.
+\end{enumerate}
