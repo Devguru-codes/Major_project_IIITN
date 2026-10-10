@@ -1,0 +1,20 @@
+....                                                                     [100%]
+=============================== warnings summary ===============================
+tests/test_mixed.py: 32 warnings
+  /tmp/eegrep-src/src/eegrep/stats_mixed.py:64: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+    return md.fit(reml=True, method=["lbfgs", "powell"])     # Powell only if L-BFGS does not converge
+
+tests/test_mixed.py::test_null_false_positive_rate_is_nominal
+tests/test_mixed.py::test_null_false_positive_rate_is_nominal
+tests/test_mixed.py::test_null_false_positive_rate_is_nominal
+  /usr/local/lib/python3.13/dist-packages/statsmodels/regression/mixed_linear_model.py:2384: ConvergenceWarning: Maximum Likelihood optimization failed to converge. Check mle_retvals
+    rslt = super().fit(
+
+tests/test_mixed.py::test_null_false_positive_rate_is_nominal
+tests/test_mixed.py::test_null_false_positive_rate_is_nominal
+tests/test_mixed.py::test_null_false_positive_rate_is_nominal
+  /tmp/eegrep-src/src/eegrep/stats_mixed.py:64: ConvergenceWarning: Retrying MixedLM optimization with powell
+    return md.fit(reml=True, method=["lbfgs", "powell"])     # Powell only if L-BFGS does not converge
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
