@@ -43,20 +43,26 @@ def subject_long(runs: pd.DataFrame) -> pd.DataFrame:
                                        "model"])
 
 
+RHS = "C(pipeline, Sum) * C(edge, Sum) + C(true_class)"
+
+
 def fit_mixed(long: pd.DataFrame, outcome: str = "p_true"):
     import statsmodels.formula.api as smf
 
     d = long.assign(one=1)
-    md = smf.mixedlm(f"{outcome} ~ C(pipeline, Sum) * C(edge, Sum) + C(true_class)", d, groups="one",
+    md = smf.mixedlm(f"{outcome} ~ {RHS}", d, groups="one",
                      re_formula="0", vc_formula={"subject": "0 + C(subject)", "split": "0 + C(unit)",
                                                  "model": "0 + C(model)"})
     return md.fit(reml=True, method=["lbfgs"])
 
 
-def _design(fit, frame: pd.DataFrame) -> np.ndarray:
-    from patsy import build_design_matrices
+def _design(fit, data: pd.DataFrame, frame: pd.DataFrame) -> np.ndarray:
+    """Fixed-effects design rows for `frame`, using the coding learnt from the fitted data (same RHS formula)."""
+    from patsy import build_design_matrices, dmatrix
 
-    return np.asarray(build_design_matrices([fit.model.data.design_info], frame)[0])
+    info = dmatrix(RHS, data).design_info
+    assert list(info.column_names) == list(fit.fe_params.index), "design columns differ from fitted effects"
+    return np.asarray(build_design_matrices([info], frame)[0])
 
 
 def analyse_mixed(long: pd.DataFrame, outcome: str = "p_true") -> dict:
@@ -78,7 +84,7 @@ def analyse_mixed(long: pd.DataFrame, outcome: str = "p_true") -> dict:
     grid = pd.DataFrame([(p, e, c) for p in pipes for e in edges for c in classes.index],
                         columns=["pipeline", "edge", "true_class"])
     grid[outcome] = 0.0
-    X = _design(fit, grid)
+    X = _design(fit, long, grid)
     w = grid["true_class"].map(classes).to_numpy()
 
     def marginal(mask):
