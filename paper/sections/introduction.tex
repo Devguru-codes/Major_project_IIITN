@@ -57,16 +57,19 @@ age/sex confounding, and characterised PSWE burden across AD, FTD and controls.
 Our contributions are:
 \begin{enumerate}
   \item \textbf{Methodological.} A fully crossed $7\times3$ protocol that separates signal
-        representation, graph topology and model architecture, with paired statistics over 25
-        frozen subject-level test splits and ablations that test whether the graph matters at all.
+        representation, graph topology and model architecture, with a by-subject mixed model as the
+        primary analysis, paired statistics over 25 frozen subject-level test splits, an independent
+        set of confirmation splits that removes selection bias, and ablations that test whether the
+        graph matters at all.
   \item \textbf{Empirical.} Effect sizes and confidence intervals for which representations a GNN
         benefits from in three-class AD/FTD/control classification, with non-graph twins and a
         demographic confound floor as reference points.
   \item \textbf{Protocol.} A direct measurement, on one pipeline, of how much window-level splitting
-        inflates results --- a calibration factor for reading published numbers on this benchmark.
+        inflates results --- a calibration factor for reading published numbers on this benchmark ---
+        and an external test of the whole protocol on a Parkinson's disease cohort.
   \item \textbf{Biological.} The first characterisation of BBB-associated PSWEs in FTD, an
-        independent-cohort test of the AD finding, and a test of whether the marker is separable
-        from background slowing.
+        independent-cohort test of the AD finding, a replication in Parkinson's disease, and a test of
+        whether the marker is separable from background slowing.
   \item \textbf{Reproducibility.} Code, seeds, frozen folds and every raw run released; the full
         study re-runs on free cloud CPUs.
 \end{enumerate}

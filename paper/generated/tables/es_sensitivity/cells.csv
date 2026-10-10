@@ -1,0 +1,64 @@
+pipeline,edge,macro_f1,rule
+P1,functional,0.5508562753609193,patience 20 (main)
+P1,hybrid,0.5450874711803504,patience 20 (main)
+P1,spatial,0.5597754523884555,patience 20 (main)
+P2,functional,0.45486535468888406,patience 20 (main)
+P2,hybrid,0.45145896186143863,patience 20 (main)
+P2,spatial,0.45396837837085513,patience 20 (main)
+P3,functional,0.5532488165429342,patience 20 (main)
+P3,hybrid,0.5677474203356556,patience 20 (main)
+P3,spatial,0.5860840731336087,patience 20 (main)
+P4,functional,0.41751753692930166,patience 20 (main)
+P4,hybrid,0.42982141823318293,patience 20 (main)
+P4,spatial,0.4562013716131363,patience 20 (main)
+P5,functional,0.5035470542529366,patience 20 (main)
+P5,hybrid,0.47039065509653744,patience 20 (main)
+P5,spatial,0.4940575047014676,patience 20 (main)
+P6,functional,0.5561936190171484,patience 20 (main)
+P6,hybrid,0.5324139172374466,patience 20 (main)
+P6,spatial,0.5401878774819951,patience 20 (main)
+P7,functional,0.4435119564531329,patience 20 (main)
+P7,hybrid,0.44501872350788757,patience 20 (main)
+P7,spatial,0.4538494368834926,patience 20 (main)
+P1,functional,0.5444330328540855,patience 50
+P1,hybrid,0.5386979347908141,patience 50
+P1,spatial,0.5436009916009916,patience 50
+P2,functional,0.4550139098374392,patience 50
+P2,hybrid,0.4513762947292359,patience 50
+P2,spatial,0.4435767914003208,patience 50
+P3,functional,0.567106227106227,patience 50
+P3,hybrid,0.5698937184819538,patience 50
+P3,spatial,0.6027835893037131,patience 50
+P4,functional,0.43481299963652903,patience 50
+P4,hybrid,0.4323206771442066,patience 50
+P4,spatial,0.44975801758154704,patience 50
+P5,functional,0.4897756560604858,patience 50
+P5,hybrid,0.47224779795368027,patience 50
+P5,spatial,0.4912821825577244,patience 50
+P6,functional,0.54285714068067,patience 50
+P6,hybrid,0.5251857750093044,patience 50
+P6,spatial,0.5344522797463973,patience 50
+P7,functional,0.449751440280852,patience 50
+P7,hybrid,0.45033631441371375,patience 50
+P7,spatial,0.46363558445911385,patience 50
+P1,functional,0.5103381090873351,fixed 100 epochs
+P1,hybrid,0.5229597818761905,fixed 100 epochs
+P1,spatial,0.5238082424398214,fixed 100 epochs
+P2,functional,0.4477811549762014,fixed 100 epochs
+P2,hybrid,0.4595760267710732,fixed 100 epochs
+P2,spatial,0.47182282205811615,fixed 100 epochs
+P3,functional,0.5728528421469598,fixed 100 epochs
+P3,hybrid,0.5880413215955012,fixed 100 epochs
+P3,spatial,0.5931026284803375,fixed 100 epochs
+P4,functional,0.4486297079826491,fixed 100 epochs
+P4,hybrid,0.45397301287326863,fixed 100 epochs
+P4,spatial,0.46677988334335085,fixed 100 epochs
+P5,functional,0.4648689797761005,fixed 100 epochs
+P5,hybrid,0.4685913539504871,fixed 100 epochs
+P5,spatial,0.4868685161874016,fixed 100 epochs
+P6,functional,0.5304043826830205,fixed 100 epochs
+P6,hybrid,0.5429215173085142,fixed 100 epochs
+P6,spatial,0.5374979156836742,fixed 100 epochs
+P7,functional,0.4699440080616551,fixed 100 epochs
+P7,hybrid,0.4890681431857902,fixed 100 epochs
+P7,spatial,0.4765412082470906,fixed 100 epochs

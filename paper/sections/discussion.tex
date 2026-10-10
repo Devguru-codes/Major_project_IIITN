@@ -2,12 +2,15 @@
 
 \subsection{Principal findings}
 Holding the model, data and evaluation protocol fixed, we found four things. First, the node-feature
-representation strongly affects three-class AD/FTD/control classification (partial
-$\eta^2=\anovaRepEta$, and \canovaRepEta{} on independent confirmation folds), with wavelet,
-spectral and fused features leading. Second, how the graph is built matters little: a small effect on
-the selection folds (partial $\eta^2=\anovaEdgeEta$) vanished on the confirmation folds, the best
-representation does not depend on the graph, and the GCN is not significantly better than a random
-forest or SVM trained on the same features and the same subjects. Third, splitting windows instead
+representation strongly affects three-class AD/FTD/control classification, with subjects as the unit
+of inference ($F=\mixSelRepF$ and \mixConfRepF{} on two independent fold sets) and on split-level
+macro-F1 (partial $\eta^2=\anovaRepEta$ and \canovaRepEta{}), with wavelet, spectral and fused features
+leading. Second, how the graph is built matters little: its effect on macro-F1 did not replicate
+across fold sets, and although it is detectable per subject, the three graph types differ by less than
+0.01 in the probability assigned to the true class, in a direction that differs between cohorts; the
+GCN is not significantly better than a random forest or SVM trained on the same features and the same
+subjects. These conclusions held under three stopping rules, with \SI{5}{\second} to \SI{20}{\second}
+windows and without ICA. Third, splitting windows instead
 of subjects inflates subject-level macro-F1 from about 0.6 to about 0.98 on the identical pipeline,
 reproducing the top of the published range. Fourth, the
 blood--brain-barrier-associated PSWE marker is more frequent in AD and FTD than in controls, but this
@@ -75,25 +78,40 @@ machine-learning-based science generally \cite{F8,L1,L5}. The permutation test a
 show that the honest result is nonetheless real and is not an artefact of choosing the best of 21
 configurations.
 
+\subsection{What the external cohort adds}
+Applying the identical protocol to Parkinson's disease, a different site, device and recording state,
+reproduced the protocol-level findings --- a dominant representation effect, a negligible graph
+effect, no advantage of the GCN over non-graph twins, inflation under window-level splitting, and a
+fixed-threshold PSWE rate that tracks slowing --- but not the detailed ranking of representations
+($\rho=\extRepsRho$). The configuration chosen on dementia generalised reasonably (\extSelFOne{},
+\extSelRank{}th of 21), and wavelet and fused features were near the top in both cohorts, but
+time-domain and connectivity features, weak for dementia, were competitive for Parkinson's disease.
+This argues against treating any representation ranking from one disease as a general recommendation:
+the evaluation protocol transfers; the best representation is disease- and possibly
+recording-specific.
+
 \subsection{Limitations}
 The cohort is small, and cross-validation estimates in samples of this size carry wide error bars
 \cite{L6}: test folds contain 17--18 subjects, and under the conservative Nadeau--Bengio
 correction no pairwise difference between representations, and no single ablation, reached
 significance. We report both corrected and uncorrected tests and give effect sizes, but small
 differences between leading representations should not be over-interpreted. All data come from one
-site, device and protocol, and FTD is the smallest class ($n=23$). The planned external validation on
-an independent cohort (ds004584) and two planned ablations (window length and ICA on/off) were not
-run for this draft. The confirmation folds re-sample the same 88 subjects, so they remove the
+site, device and protocol, and FTD is the smallest class ($n=23$). The external cohort addresses
+generalisation of the protocol but differs in disease, task (eyes open), mains frequency and recording
+length (median about \SI{2.5}{\minute}), records no medication state, and is two-class, so it cannot test
+whether the AD/FTD results themselves replicate. The confirmation folds re-sample the same 88 subjects, so they remove the
 selection bias of choosing among configurations but are not an external replication. Hyperparameters
 were fixed a priori and not tuned. Early stopping on a validation set of about 14 subjects selected
 a median of \bestEpochMedian{} epochs (\bestEpochLeThree{}\% of runs stopped at epoch 3 or earlier;
-median \bestEpochPOne{} for P1 and \bestEpochPThree{} for P3), so many models are lightly trained; this
-may disadvantage higher-capacity configurations such as raw windows (P5, about 84k parameters), and
-refitting on training plus validation subjects for the selected epoch count changed macro-F1 by only
-\refitMeanGain{} on average. Calibration was poor. Graphs are
+median \bestEpochPOne{} for P1 and \bestEpochPThree{} for P3), so many models are lightly trained; however,
+training longer (patience 50, or 100 epochs without early stopping) changed no conclusion and did not
+help the highest-capacity configuration (raw windows, about 84k parameters), and refitting on training
+plus validation subjects for the selected epoch count changed macro-F1 by only \refitMeanGain{} on
+average. Calibration was poor. Graphs are
 defined on electrodes rather than cortical sources. The demographic floor (\demoFOne) shows residual
 age and sex information, which residualisation reduced but did not remove. For PSWEs, the MPF
-frequency range was not reported in the source and was set by us, we detected events per channel
+frequency range was not reported in the source and was set by us (zero-padding the spectrum and
+rejecting artefacts did not change the results), we detected events per channel
 rather than over averaged regions, the background-relative analysis is post hoc, and no BBB measure
 is available.
 

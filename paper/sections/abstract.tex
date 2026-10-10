@@ -4,21 +4,25 @@ representation, graph construction, model and evaluation protocol at once. We is
 and tested a blood--brain-barrier (BBB)-associated EEG marker.
 \textit{Approach.} Using OpenNeuro ds004504 (36 AD, 23 FTD, 29 controls), we crossed seven node-feature
 representations with three graph constructions under one fixed two-layer graph convolutional network,
-evaluated on 25 frozen, paired subject-level cross-validation splits (\nMainRuns{} runs) and
-re-evaluated on 25 independent confirmation splits, with non-graph baselines trained on matched
-subjects, ablation and permutation runs on the confirmation splits, and a leakage experiment. We also
-characterised paroxysmal slow-wave events (PSWEs), an EEG marker linked to BBB dysfunction.
-\textit{Main results.} Representation had a large effect on three-class macro-F1 (partial
-$\eta^2=\anovaRepEta$, replicated at \canovaRepEta{}); a small graph-construction effect
-($\eta^2=\anovaEdgeEta$) did not replicate, and there was no interaction. The best configuration
-(wavelet features, spatial graph) reached \confFOne{} on the independent confirmation splits (95\% CI
-\confFOneCiLo{}--\confFOneCiHi{}; permutation $p=\cpermPThreespatialP$), not significantly different
-from non-graph classifiers trained on the same subjects. Window-level splitting of the identical
-pipeline raised it to \cleakPThreespatialLeakySubj{}. Fixed-threshold PSWEs were more frequent in AD (rate ratio
-\psweAdjADRR{}) and FTD (\psweAdjFTDRR{}) than in controls, but this was explained by background slowing
-($\rho=\psweSlowRho$); relative to each person's background, transient slowing events were less
-frequent in dementia.
-\textit{Significance.} On this benchmark the signal representation and, above all, the evaluation
-protocol --- not the graph or the model --- determine reported performance, and an EEG marker of BBB
-dysfunction must be defined relative to background slowing. Code, frozen folds and all raw runs are
-released.
+evaluated on 25 frozen subject-level cross-validation splits (\nMainRuns{} runs) and re-evaluated on 25
+independent confirmation splits, with a by-subject mixed model as the primary analysis, matched
+non-graph baselines, 16 ablations, label permutations, a leakage experiment, stopping-rule sensitivity,
+and external validation of the whole protocol on a Parkinson's disease cohort (ds004584, 149
+participants). We also characterised paroxysmal slow-wave events (PSWEs), an EEG marker linked to BBB
+dysfunction.
+\textit{Main results.} Representation dominated ($F(\mixSelRepDf,\mixSelRepDenDf)=\mixSelRepF$, replicated at
+\mixConfRepF{} on independent splits and \mixExtRepF{} externally); graph construction mattered little,
+with graph types differing by less than 0.01 in the probability assigned to the true class, in a
+direction that differed between cohorts. The best configuration (wavelet features, spatial graph)
+reached macro-F1 \confFOne{} on the confirmation splits (95\% CI \confFOneCiLo{}--\confFOneCiHi{};
+permutation $p=\cpermPThreespatialP$), not significantly better than non-graph classifiers; window-level
+splitting of the identical pipeline raised it to \cleakPThreespatialLeakySubj{}. Externally the same
+configuration reached \extSelFOne{}, leakage again inflated it (\extLeakySubj{}), but the ranking of
+representations did not transfer ($\rho=\extRepsRho$). Fixed-threshold PSWEs were more frequent in AD
+(rate ratio \psweAdjADRR{}) and FTD (\psweAdjFTDRR{}) but not in Parkinson's disease (\extPsweAdjRR{}); in
+both cohorts the rate tracked background slowing ($\rho=\psweSlowRho$ and \extPsweSlowRho{}), robustly to
+spectral zero-padding and artefact rejection.
+\textit{Significance.} The evaluation protocol and the signal representation, not the graph or the
+model, determine reported performance; representation rankings are disease-specific; and an EEG marker
+of BBB dysfunction must be defined relative to background slowing. Code, frozen folds and all raw runs
+are released.

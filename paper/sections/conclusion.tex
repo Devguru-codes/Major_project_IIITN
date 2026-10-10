@@ -4,12 +4,16 @@ from how the signal is represented, how the brain graph is built, or the model. 
 88-subject benchmark, with the model, data and evaluation protocol held fixed and seven
 representations crossed with three graph constructions over 25 paired subject-level splits, the
 answer is mostly the representation: wavelet and spectral node features lead, graph construction
-matters little, and the GCN does not outperform non-graph classifiers on the same features. The best
+matters little, and the GCN does not outperform non-graph classifiers on the same features. These
+conclusions held with subjects as the unit of inference, on independent splits, under different
+stopping rules and preprocessing choices, and --- at the level of the protocol --- in an external
+Parkinson's disease cohort, although which representation works best did not transfer between
+diseases. The best
 configuration, chosen on one set of splits and re-evaluated on an independent set, reached an honest
 three-class macro-F1 of \confFOne{}, clearly above chance ($p=\cpermPThreespatialP$) but far below
 published figures --- a gap that window-level splitting alone closes on our own pipeline, inflating
 subject-level macro-F1 to \cleakPThreespatialLeakySubj{}. A blood--brain-barrier-associated
 EEG marker, the paroxysmal slow-wave event, was elevated in AD and FTD under its original definition
-but was explained by background slowing, and defining it relative to each person's background
-reversed the effect. We release the code, seeds, frozen folds and every raw run so that each number
+but was explained by background slowing, was not elevated in Parkinson's disease, and reversed
+when defined relative to each person's background. We release the code, seeds, frozen folds and every raw run so that each number
 in this paper can be regenerated from the data.

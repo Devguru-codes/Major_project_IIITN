@@ -150,8 +150,11 @@ confirmation-grid run: no graph (identity adjacency, i.e.\ a per-node MLP);
 degree-preserving random graphs; $k\in\{3,6\}$ and a fully connected graph; binarised edges; depth
 1 and 3; GAT instead of GCN; no subject-equal weighting; demographic residualisation (age and sex
 regressed out of every feature, coefficients fitted on training windows); adding P7 (PSWE) features
-to the best representation; and the PSWE co-occurrence graph (Jaccard overlap of channels' PSWE
-time) as the edge type.
+to the best representation; the PSWE co-occurrence graph (Jaccard overlap of channels' PSWE
+time) as the edge type; \SI{5}{\second} and \SI{20}{\second} instead of \SI{10}{\second} windows (A7; the
+preprocessed recordings re-windowed and every feature and graph rebuilt); and preprocessing without
+ICA/ICLabel artefact removal (A8; every other step unchanged). Holm correction is applied within each
+cell's family of 16 ablations.
 
 \paragraph{Leakage.} The best cells were re-run with \emph{window-level} stratified splitting ---
 windows assigned to folds at random, ignoring subject identity (record-wise cross-validation in the
@@ -163,6 +166,12 @@ $p$-value is $(1+\#\{\text{null}\ge\text{observed}\})/(1+N)$. The primary test u
 \cpermPThreespatialN{} permutations on the first confirmation repeat (seed 5); the original
 \permPThreespatialN{} permutations on the first selection repeat (seed 0) are reported for
 completeness.
+
+\paragraph{Stopping-rule sensitivity.} Early stopping on about 14 validation subjects often selected
+an early epoch. To test whether this shaped the conclusions, the full $7\times3$ grid was re-run on
+the 25 selection splits with patience 50 instead of 20, and with no early stopping at all (100
+epochs on the training subjects, final weights kept; validation subjects unused), each paired with
+the main grid split by split.
 
 \subsection{PSWE detection}\label{sec:pswe}
 Following Milikovsky et al.\ \cite{B1}, with parameters as reported in \cite{B3}, we computed the
@@ -181,10 +190,59 @@ channel's MPF lies below that channel's own recording-median MPF by at least \SI
 (primary), \SI{1.5}{\hertz} or \SI{3}{\hertz}, or by at least 2 or 3 robust standard deviations
 ($1.4826\times$ median absolute deviation).
 
+\paragraph{Detector robustness.} Two properties of the fixed-threshold detector could bias it: with
+\SI{2}{\second} windows the MPF is quantised to \SI{0.5}{\hertz} steps, so the \SI{6}{\hertz} threshold
+falls on a bin edge; and artefacts add low-frequency power. In a pre-specified robustness analysis we
+re-detected events with each segment zero-padded to an \SI{8}{\second} FFT (MPF on a
+\SI{0.125}{\hertz} grid, window unchanged), with amplitude-based artefact rejection (a channel's
+\SI{2}{\second} segment rejected if its peak-to-peak amplitude exceeded \SI{200}{\micro\volt} or it was
+flat, SD $<\SI{0.5}{\micro\volt}$; rejected seconds break events and are removed from the exposure
+time), and with both (primary), and repeated the statistics below. The unmodified variant reproduced
+the main event counts exactly in both cohorts. The fixed-threshold statistics were also repeated on
+the recordings preprocessed without ICA (A8).
+
+\subsection{External validation cohort}\label{sec:external}
+To test whether the conclusions depend on one cohort, the identical protocol was applied to OpenNeuro
+ds004584 \cite{ds004584}: 149 participants (100 with Parkinson's disease, 49 controls), \SIrange{2}{5}{\minute}
+of eyes-open resting EEG, 63 channels at \SI{500}{\hertz}. Only what must differ between datasets was
+changed, in a configuration overlay: the 19 electrodes of the main montage were selected in the same
+node order, the online reference (Pz), which is not stored, was restored as a flat channel before
+average re-referencing (exact, because every stored channel is referenced to it); the mains notch was
+\SI{60}{\hertz}; the task is two-class; and the Montreal Cognitive Assessment replaced the MMSE as the
+analysis-only cognitive score (the UPDRS, a Parkinson's-only label proxy, is never used). Features,
+graphs, model, training, cross-validation (seeds 0--4, frozen before any training on this cohort) and
+statistics were unchanged. Questions were fixed before the first run: whether the ranking of the 21
+cells and of the 7 representations transfers (Spearman and Kendall correlations of cell means); how the
+configuration selected on ds004504 performs without re-selection (with 100 label permutations);
+whether matched-training non-graph twins, the age-and-sex floor and window-level leakage behave as on
+ds004504; and whether fixed-threshold PSWEs are more frequent in Parkinson's disease and track
+slowing, as a test of the earlier report that they are uncommon in this disease \cite{B3}. The two
+datasets differ in site, device, disease, eyes-open versus eyes-closed recording and recording length,
+so absolute scores are not compared.
+
 \subsection{Statistical analysis}\label{sec:stats}
-The 25 test splits are the repeated-measures units. Main effects of representation and graph
-construction, and their interaction, were tested with a balanced two-way repeated-measures ANOVA on
-macro-F1, reporting partial $\eta^2$ and Greenhouse--Geisser-corrected $p$-values. Because
+\paragraph{Primary inference: by-subject mixed model.} A diagnostic claim is about new subjects, so
+the primary test of the factorial treats the held-out subject as the unit of inference. For every run
+we take the probability the model assigns to each test subject's true class and average it over the
+five repeats (each from a different partition), giving one value per subject and cell
+(\mixSelNRows{} values from \mixSelNScores{} subject-level predictions for ds004504). These were modelled
+with a linear mixed model with representation, graph construction and their interaction as fixed
+effects (sum-to-zero coding), true class as a covariate, and random intercepts for subject,
+subject~$\times$~representation and subject~$\times$~graph, fitted by REML in statsmodels. The
+subject-by-factor terms matter: a subject's advantage under one representation recurs in every repeat
+and graph type, so omitting them treats thousands of correlated predictions as independent (a first
+version without them gave implausibly small $p$-values and was discarded). Each term is tested with a
+Wald $F$ test against its own subject-level stratum (containment degrees of freedom); for balanced data
+the model reduces to a by-subject repeated-measures ANOVA, which our implementation reproduces
+exactly in tests, and its false-positive rate is nominal in simulations with subject-by-representation
+variation. We report model-based marginal means with 95\% confidence intervals and Holm-corrected
+pairwise contrasts between representations. The same model was fitted to the confirmation folds and to
+the external cohort.
+
+\paragraph{Secondary analyses on macro-F1.} The 25 test splits are the repeated-measures units. Main
+effects of representation and graph construction, and their interaction, were tested with a balanced
+two-way repeated-measures ANOVA on macro-F1, reporting partial $\eta^2$ and
+Greenhouse--Geisser-corrected $p$-values. Because
 cross-validation scores share training data and are therefore not independent, every pairwise
 comparison is reported with both the Wilcoxon signed-rank test and the Nadeau--Bengio corrected
 resampled $t$-test \cite{B7}, with Holm correction \cite{holm} within
@@ -207,4 +265,6 @@ custom code that is tested against reference implementations.
 \subsection{Compute}
 All experiments ran on free Kaggle CPU sessions (4 vCPUs); no GPU was used. The 525-run main grid
 took \cpuHoursGrid{} CPU-hours, and the \nConfirmRuns{} further runs (confirmation grid, ablations and permutations on the
-confirmation folds, and the train + val refits) took \cpuHoursConfirm{} CPU-hours. Every run is logged with its configuration hash, code version and seed.
+confirmation folds, and the train + val refits) took \cpuHoursConfirm{} CPU-hours. The stopping-rule sensitivity grid and the
+external cohort added 
+ExtraRuns{} runs and \cpuHoursExtra{} CPU-hours. The mixed models fit in seconds. Every run is logged with its configuration hash, code version and seed.

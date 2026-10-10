@@ -154,6 +154,7 @@ for _, r in cabl.iterrows():
     put(k + "Lo", r.delta_ci_lo, "{:+.3f}"); put(k + "Hi", r.delta_ci_hi, "{:+.3f}")
     put(k + "P", p_fmt(r.nb_p_holm)); put(k + "WilP", p_fmt(r.wilcoxon_p_holm))
 put("cablNSigNb", int((cabl.nb_p_holm < 0.05).sum()), "{:d}")
+put("cablN", len(cabl), "{:d}")
 put("cablNSigWil", int((cabl.wilcoxon_p_holm < 0.05).sum()), "{:d}")
 fair = pd.read_csv(ct / "fair_comparisons.csv")
 for _, r in fair.iterrows():
@@ -174,6 +175,9 @@ ctrain = pd.read_csv(REP / "confirm" / "classical_train.csv")
 ctv = pd.read_csv(REP / "nb03c_classical.csv")
 put("classicalTrBest", ctrain.groupby(["pipeline", "model"])["macro_f1"].mean().max())
 put("classicalTvBest", ctv.groupby(["pipeline", "model"])["macro_f1"].mean().max())
+extra = [f for d in ("es_sensitivity", "external") for f in sorted((REP / d).glob("*.jsonl"))]
+xrun = pd.concat([pd.read_json(f, lines=True)[["seconds"]] for f in extra])
+put("nExtraRuns", len(xrun), "{:,}"); put("cpuHoursExtra", xrun["seconds"].sum() / 3600, "{:.1f}")
 crun = pd.concat([pd.read_json(f, lines=True) for f in sorted((REP / "confirm").glob("*.jsonl"))])
 put("nConfirmRuns", len(crun), "{:,}"); put("cpuHoursConfirm", crun["seconds"].sum() / 3600, "{:.1f}")
 put("nConfirmGridRuns", int((crun.tag == "confirm").sum()), "{:,}")
@@ -334,6 +338,23 @@ if (mix / "selection_summary.json").exists():
             cols.append(f"{r['F']:.2f} ({r['df']}, {r['den_df']}) & {p_txt_(r['p'])}")
         rows.append(f"{label} & {' & '.join(cols)} \\\\")
     MIX_ROWS = "\n".join(rows)
+
+# ---- PSWE robustness: zero-padded MPF + artefact rejection (NB14) ----
+for ds, tag, groups in (("ds004504", "Rob", (("AD", AD), ("FTD", FTD))),
+                        ("ds004584", "ExtRob", (("PD", "C(group, Treatment('CN'))[T.PD]"),))):
+    f = REP / "pswe_robust" / f"robust_{ds}" / "rq6_robust_pswe_stats.json"
+    if not f.exists():
+        continue
+    rb = json.loads(f.read_text())
+    pr = rb[rb["primary"]]
+    put(f"pswe{tag}Identical", "yes" if rb["original"]["identical_counts_to_main"] else "no")
+    put(f"pswe{tag}RhoMain", pr["rate_vs_main_spearman"], "{:.2f}")
+    put(f"pswe{tag}SlowRho", pr["pswe_vs_slowing_spearman"]["rho"], "{:.2f}")
+    put(f"pswe{tag}RejectPct", 100 * max(pr["rejected_fraction_by_group"].values()), "{:.1f}")
+    for grp, key in groups:
+        for m, mt in (("nb_glm_adjusted", "Adj"), ("nb_glm_adjusted_slowing", "AdjSlow")):
+            put(f"pswe{tag}{mt}{grp}RR", pr[m]["rate_ratio"][key], "{:.2f}")
+            put(f"pswe{tag}{mt}{grp}P", p_fmt(pr[m]["p"][key]))
 
 # ---- A8 without ICA: fixed-threshold PSWE statistics ----
 a8 = REP / "a7_a8" / "rq6_no_ica" / "rq6_pswe_stats.json"
