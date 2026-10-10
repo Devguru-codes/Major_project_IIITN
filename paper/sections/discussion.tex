@@ -70,12 +70,14 @@ several times larger than any graph or architecture change we tested. Figures in
 splitting protocol, and studies that report window-level metrics or allow a subject's windows into
 both training and test sets cannot be compared with subject-level results. We name no individual
 study: the point is that the protocol, not the model, determines most of the reported number, as
-argued independently in \cite{R1,F8}. The permutation test and the independent confirmation folds
+argued independently for this benchmark \cite{R1}, for translational EEG \cite{L2,L3,L4} and for
+machine-learning-based science generally \cite{F8,L1,L5}. The permutation test and the independent confirmation folds
 show that the honest result is nonetheless real and is not an artefact of choosing the best of 21
 configurations.
 
 \subsection{Limitations}
-The cohort is small: test folds contain 17--18 subjects, and under the conservative Nadeau--Bengio
+The cohort is small, and cross-validation estimates in samples of this size carry wide error bars
+\cite{L6}: test folds contain 17--18 subjects, and under the conservative Nadeau--Bengio
 correction no pairwise difference between representations, and no single ablation, reached
 significance. We report both corrected and uncorrected tests and give effect sizes, but small
 differences between leading representations should not be over-interpreted. All data come from one

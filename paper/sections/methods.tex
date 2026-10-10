@@ -154,7 +154,8 @@ to the best representation; and the PSWE co-occurrence graph (Jaccard overlap of
 time) as the edge type.
 
 \paragraph{Leakage.} The best cells were re-run with \emph{window-level} stratified splitting ---
-windows assigned to folds at random, ignoring subject identity --- with everything else unchanged.
+windows assigned to folds at random, ignoring subject identity (record-wise cross-validation in the
+terminology of \cite{L1}; segment-based holdout in \cite{L2}) --- with everything else unchanged.
 
 \paragraph{Permutation test.} For the best cell, subject labels were permuted (all windows of a
 subject keep one label) and the first repeat's five folds re-run for each permutation; the
