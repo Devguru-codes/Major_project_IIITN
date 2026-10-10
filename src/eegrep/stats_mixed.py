@@ -53,7 +53,7 @@ def fit_mixed(long: pd.DataFrame, outcome: str = "p_true"):
     md = smf.mixedlm(f"{outcome} ~ {RHS}", d, groups="one",
                      re_formula="0", vc_formula={"subject": "0 + C(subject)", "split": "0 + C(unit)",
                                                  "model": "0 + C(model)"})
-    return md.fit(reml=True, method=["lbfgs"])
+    return md.fit(reml=True, method=["lbfgs", "powell"])     # Powell only if L-BFGS does not converge
 
 
 def _design(fit, data: pd.DataFrame, frame: pd.DataFrame) -> np.ndarray:
