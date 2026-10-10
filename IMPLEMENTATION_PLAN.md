@@ -453,3 +453,22 @@ Added after internal review. Config is `pswe_robust`, which is outside the confi
 **Pre-specified reading:** the conclusion "fixed-threshold PSWE excess is explained by background slowing" is robust if, under `pad_reject`, both of these hold:
 - the age/sex-adjusted AD/FTD rate ratios keep their direction (ds004504), and the PD ratio remains non-significant (ds004584);
 - the slowing-adjusted ratios no longer show an excess.
+
+### Mixed-effects primary analysis (2026-10-11, NB13)
+**Version 1 — discarded, never used in the paper.**
+- Model: row-level LMM on about 9,240 subject × run scores, with crossed random intercepts for subject, split and trained model.
+- Result: representation F = 153, p ≈ 1e-108, with the trained-model variance at 0.
+- Diagnosis: pseudo-replication.
+  - A subject's advantage under a given representation recurs in every repeat and graph type, so it is not independent residual noise.
+  - Without a subject × representation random effect, representation is tested against ~9,000 correlated rows.
+  - The v1 null-calibration simulation contained no such effect, so it did not catch the problem.
+
+**Version 2 — primary.**
+- Model: a by-subject LMM on subject × cell means (each the mean over the 5 repeats); 1,848 rows for ds004504.
+  - Fixed effects: representation × graph (sum coding) + true class.
+  - Random effects: (1|subject) + (1|subject:representation) + (1|subject:graph).
+  - Wald F tests with containment df, e.g. representation on (88−3)·6 = 510 df.
+- Tests:
+  - the F values equal statsmodels AnovaRM for balanced data;
+  - recovery of a planted effect;
+  - null calibration over 30 simulations that include subject × representation variance.

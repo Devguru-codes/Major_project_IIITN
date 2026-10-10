@@ -314,7 +314,7 @@ if (mix / "selection_summary.json").exists():
     summ_mix = {s: json.loads((mix / f"{s}_summary.json").read_text()) for s, _ in sets}
     for s, t in sets:
         m = summ_mix[s]
-        put(f"mix{t}NRows", m["n_rows"], "{:,}"); put(f"mix{t}NModels", m["n_models"], "{:,}")
+        put(f"mix{t}NRows", m["n_rows"], "{:,}"); put(f"mix{t}NScores", m["n_scores"], "{:,}")
         put(f"mix{t}NPairsSig", m["n_pairs_sig_holm"], "{:d}")
         for r in m["terms"]:
             k = {"representation": "Rep", "graph": "Edge", "interaction": "Inter", "true class": "Class"}[r["term"]]
