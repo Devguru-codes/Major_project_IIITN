@@ -53,3 +53,36 @@ def test_runner_trains_and_resumes(cfg, small_cache, tmp_path):
     changed = run_cell(small_cache, folds, apply_overrides(cfg, {"graph.knn_k": 3}), store,
                        pipeline="P1", edge="hybrid", overrides=quick)
     assert changed == 3                                          # config change => new keys
+
+
+def test_refit_trains_on_train_plus_val_for_given_epochs(cfg, small_cache, tmp_path):
+    import json
+
+    subjects = sorted(set(small_cache.subject))
+    labels = [int(small_cache.label[small_cache.subject == s][0]) for s in subjects]
+    folds = make_folds(subjects, labels, [0], n_folds=3, val_frac=0.34)
+    epochs = {("P1", "hybrid", 0, k): 3 + k for k in range(3)}
+    store = ResultStore(tmp_path / "refit.jsonl")
+    assert run_cell(small_cache, folds, cfg, store, pipeline="P1", edge="hybrid", tag="refit",
+                    refit_epochs=epochs) == 3
+    rows = [json.loads(l) for l in open(tmp_path / "refit.jsonl")]
+    assert [r["epochs_run"] for r in sorted(rows, key=lambda r: r["fold"])] == [3, 4, 5]
+
+
+def test_classical_fit_on_train_only_uses_fewer_windows(cfg, small_cache):
+    from eegrep.baselines import classical_baseline
+
+    subjects = sorted(set(small_cache.subject))
+    labels = [int(small_cache.label[small_cache.subject == s][0]) for s in subjects]
+    folds = make_folds(subjects, labels, [0], n_folds=3, val_frac=0.34)
+    res = classical_baseline(small_cache, folds, "P1", cfg, fit_on="train")
+    assert set(res["fit_on"]) == {"train"} and len(res) == 9          # 3 folds x 3 models
+
+
+def test_confirmation_folds_differ_from_main_folds():
+    subjects = [f"sub-{i:03d}" for i in range(1, 89)]
+    lab = [0] * 36 + [1] * 23 + [2] * 29
+    main = make_folds(subjects, lab, [0, 1, 2, 3, 4], 5, 0.2)
+    confirm = make_folds(subjects, lab, [5, 6, 7, 8, 9], 5, 0.2)
+    assert [r["seed"] for r in confirm["repeats"]] == [5, 6, 7, 8, 9]
+    assert all(a["folds"][0]["test"] != b["folds"][0]["test"] for a, b in zip(main["repeats"], confirm["repeats"]))

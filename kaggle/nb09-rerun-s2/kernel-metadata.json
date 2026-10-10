@@ -1,0 +1,16 @@
+{
+  "id": "dev123123456/eegrep-nb09-rerun-s2",
+  "title": "eegrep nb09 rerun s2",
+  "code_file": "nb09_rerun_s2.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": [
+    "dev123123456/eegrep-nb02-merge-qc"
+  ]
+}

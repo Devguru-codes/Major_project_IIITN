@@ -160,7 +160,11 @@ def critical_difference(wide: pd.DataFrame, alpha: float = 0.05) -> dict:
             "avg_rank": ranks.sort_values().to_dict(), "k": k, "n_units": n}
 
 
-def analyse_grid(df: pd.DataFrame, n_test_over_train: float = 17.6 / 70.4, n_boot: int = 2000) -> dict:
+RATIO_TRAIN = 17.6 / 56.3      # test / training subjects when models train on the train split only (GCN)
+RATIO_TRAINVAL = 17.6 / 70.4   # ... and when they train on train + validation (refit GCN, classical)
+
+
+def analyse_grid(df: pd.DataFrame, n_test_over_train: float = RATIO_TRAIN, n_boot: int = 2000) -> dict:
     df = df[df["tag"] == "main"].copy()
     complete = df.groupby("unit").size()
     n_cells = df.groupby(["pipeline", "edge"]).ngroups

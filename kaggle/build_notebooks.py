@@ -210,6 +210,51 @@ def main():
         extras="dev,stats"),
         kernel_sources=nb02 + [f"{OWNER}/eegrep-nb01-preprocess-s0"])
 
+    # ---- must-fix re-runs after internal review (see IMPLEMENTATION_PLAN.md log) ----
+    write_kernel("nb03f-tests-confirm-folds", "nb03f tests confirm folds", notebook(
+        "NB03f — full tests + frozen confirmation folds (seeds 5–9) (CPU)",
+        "Runs the full test suite, then generates the independent confirmation fold assignment used to "
+        "re-evaluate the grid, ablations and permutation null free of selection bias. Committed before any "
+        "confirmation run.",
+        [f"sh(f'cd {{SRC}} && {{sys.executable}} -m pytest -q -p no:cacheprovider', log=f'{{WORK}}/pytest.txt')",
+         f"sh(f'curl -sSf -o {{WORK}}/participants.tsv {PARTICIPANTS_URL}')\n"
+         "sh(f'{PY} folds --participants {WORK}/participants.tsv --seeds 5,6,7,8,9 "
+         "--out {WORK}/folds_ds004504_confirm.json')"],
+        extras="dev,stats"))
+
+    confirm = "{{SRC}}/splits/folds_ds004504_confirm.json"     # doubled braces survive .format below
+    refit_src = "{{SRC}}/reports/grid/runs_s*.jsonl"
+    job = {
+        "grid_confirm": "sh(f'{{PY}} grid --cache {{CACHE}} --folds " + confirm + " --pipelines {p} "
+                        "--edges spatial,functional,hybrid --tag confirm --out {{WORK}}/confirm_runs.jsonl "
+                        "--max-hours 5', log=f'{{WORK}}/confirm_{n}.log')",
+        "refit": "sh(f'{{PY}} grid --cache {{CACHE}} --folds {{FOLDS}} --pipelines {p} --edges spatial,functional,hybrid "
+                 "--tag refit --refit-from " + refit_src + " --out {{WORK}}/refit_runs.jsonl --max-hours 5', "
+                 "log=f'{{WORK}}/refit_{n}.log')",
+        "ablate": "sh(f'{{PY}} ablate --cache {{CACHE}} --folds " + confirm + " --participants {{PART}} --cells {p} "
+                  "--which all --out {{WORK}}/ablations_confirm.jsonl --max-hours 6', log=f'{{WORK}}/ablate_{n}.log')",
+        "perm": "sh(f'{{PY}} ablate --cache {{CACHE}} --folds " + confirm + " --participants {{PART}} --cells {p} "
+                "--which none --n-perm 100 --perm-start 1000 --out {{WORK}}/perm_confirm.jsonl --max-hours 5', "
+                "log=f'{{WORK}}/perm_{n}.log')",
+        "classical_train": "sh(f'{{PY}} classical --cache {{CACHE}} --folds {{FOLDS}} --fit-on train "
+                           "--out {{WORK}}/classical_train.csv', log=f'{{WORK}}/classical_{n}.log')",
+    }
+    RERUN_SHARDS = [
+        [("grid_confirm", "P1,P2,P5"), ("perm", "P3xspatial")],
+        [("grid_confirm", "P3,P4,P6,P7"), ("refit", "P1,P2,P3")],
+        [("ablate", "P3xspatial"), ("refit", "P4,P5")],
+        [("ablate", "P3xhybrid"), ("refit", "P6,P7")],
+        [("classical_train", "all")],
+    ]
+    for k, jobs in enumerate(RERUN_SHARDS):
+        cells = [find_cache] + [job[j].format(p=p, n=i) for i, (j, p) in enumerate(jobs)]
+        write_kernel(f"nb09-rerun-s{k}", f"nb09 rerun s{k}", notebook(
+            f"NB09 — must-fix re-runs, shard {k} (CPU)",
+            "Jobs: " + "; ".join(f"`{j}` {p}" for j, p in jobs) + ". Confirmation runs use fresh frozen folds "
+            "(seeds 5–9); refits train the GCN on train+val for the early-stopped epoch count of the matching "
+            "main-grid run; classical baselines are refit on the GCN's training subjects only.",
+            cells, extras="dev"), kernel_sources=nb02)
+
     write_kernel("nb03a-folds-demographics", "nb03a folds demographics", notebook(
         "NB03a — frozen folds + demographics confound check (CPU)",
         "Writes the frozen subject-level fold assignment (5 repeats x 5 folds) and runs the "

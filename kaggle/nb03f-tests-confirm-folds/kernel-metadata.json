@@ -1,0 +1,14 @@
+{
+  "id": "dev123123456/eegrep-nb03f-tests-confirm-folds",
+  "title": "eegrep nb03f tests confirm folds",
+  "code_file": "nb03f_tests_confirm_folds.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}

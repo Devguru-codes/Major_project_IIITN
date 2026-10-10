@@ -53,7 +53,7 @@ def _classical_models(seed: int) -> dict:
     }
 
 
-def classical_baseline(cache, folds: dict, pipeline: str, cfg: dict) -> pd.DataFrame:
+def classical_baseline(cache, folds: dict, pipeline: str, cfg: dict, fit_on: str = "trainval") -> pd.DataFrame:
     """Non-graph twin of each representation: flattened (C·F) window features, fixed default
     hyperparameters, same subject-equal × inverse-class weights as the GCN, subject prediction
     = mean of window log-probabilities. Scaler fit on training windows only."""
@@ -63,7 +63,9 @@ def classical_baseline(cache, folds: dict, pipeline: str, cfg: dict) -> pd.DataF
     rows = []
     for rep in folds["repeats"]:
         for k, f in enumerate(rep["folds"]):
-            tr = cache.window_indices(f["train"] + f["val"])
+            # "train": the same subjects the GCN trains on (fair comparison);
+            # "trainval": train + validation subjects (no tuning, so validation is otherwise unused)
+            tr = cache.window_indices(f["train"] + (f["val"] if fit_on == "trainval" else []))
             te = cache.window_indices(f["test"])
             w = window_weights(cache.subject[tr], cache.label[tr], 3, cfg["train"]["subject_equal_weighting"])
             scaler = StandardScaler().fit(X[tr])
@@ -73,7 +75,7 @@ def classical_baseline(cache, folds: dict, pipeline: str, cfg: dict) -> pd.DataF
                 _, y, mean_logp = aggregate_by_subject(logp, cache.subject[te], cache.label[te])
                 prob = np.exp(mean_logp - mean_logp.max(1, keepdims=True))
                 met = classification_metrics(y, prob / prob.sum(1, keepdims=True))
-                rows.append({"model": name, "pipeline": pipeline, "seed": rep["seed"], "fold": k, **met})
+                rows.append({"model": name, "pipeline": pipeline, "fit_on": fit_on, "seed": rep["seed"], "fold": k, **met})
                 print(f"[classical] {pipeline} {name} seed{rep['seed']} fold{k} macroF1={met['macro_f1']:.3f}",
                       flush=True)
     return pd.DataFrame(rows)
