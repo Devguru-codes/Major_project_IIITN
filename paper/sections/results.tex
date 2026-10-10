@@ -27,7 +27,7 @@ for a stratified random classifier. Demographics therefore carry some group info
 with the sex imbalance between groups (Table~\ref{tab:demographics}). We use \demoFOne{}, not 1/3, as
 the floor that EEG-based models must clear.
 
-\subsection{Representation matters; graph construction does not}\label{sec:res-grid}
+\subsection{Representation matters; graph construction barely does}\label{sec:res-grid}
 Across the 21 cells on the selection folds (\nMainRuns{} runs; Table~\ref{tab:cells}), the best
 configuration was \bestCell{}, with subject-level macro-F1 \bestFOne{}~$\pm$~\bestFOneSd{}
 (subject-bootstrap 95\% CI \bestFOneCiLo{}--\bestFOneCiHi{}). Because this cell was chosen as the
@@ -38,7 +38,51 @@ ranked first of 21. The ordering of all cells was largely preserved (Spearman $\
 between the two fold sets; Figure~\ref{fig:confirm}). We therefore take \confFOne{} as the
 selection-free estimate for the best configuration.
 
-Representation had a large effect on both fold sets (Table~\ref{tab:anova}; selection:
+In the primary, by-subject mixed model (Table~\ref{tab:mixed}, Figure~\ref{fig:mixed}), representation
+had a strong effect on both fold sets (selection $F(\mixSelRepDf,\mixSelRepDenDf)=\mixSelRepF$,
+$p\mixSelRepP$; confirmation $F=\mixConfRepF$, $p\mixConfRepP$). The marginal mean probability assigned
+to a subject's true class ranged from \mixSelMPTwo{} (P2) and \mixSelMPFour{} (P4) to \mixSelMPSix{} (P6)
+and \mixSelMPThree{} (P3), and \mixSelNPairsSig{} of the 21 representation pairs differed after Holm
+correction on each fold set. Graph construction and its interaction with representation were also
+detectable at the subject level (selection: graph $F(\mixSelEdgeDf,\mixSelEdgeDenDf)=\mixSelEdgeF$,
+$p\mixSelEdgeP$; interaction $F(\mixSelInterDf,\mixSelInterDenDf)=\mixSelInterF$, $p\mixSelInterP$;
+confirmation: $p\mixConfEdgeP$ and $p\mixConfInterP$) but negligible in size: the three graph types'
+marginal means differed by less than 0.01 (\mixSelMspatial{} spatial, \mixSelMfunctional{} functional,
+\mixSelMhybrid{} hybrid). Subjects accounted for \mixSelShareSubject\% of the variance and
+subject~$\times$~representation for \mixSelShareSubjectxrepresentation\%, while subject~$\times$~graph
+variance was estimated at zero: individuals differ in which representation suits them, not in which
+graph does.
+
+\begin{table}[t]
+\centering\small
+\caption{By-subject linear mixed model (primary analysis) of the probability assigned to each
+subject's true class: Wald $F$ (numerator, denominator df) and $p$ for each fixed-effect term, on the
+selection and confirmation folds of ds004504 and on the external cohort ds004584.}
+\label{tab:mixed}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lcccccc}
+\toprule
+ & \multicolumn{2}{c}{Selection} & \multicolumn{2}{c}{Confirmation} & \multicolumn{2}{c}{ds004584} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+Term & $F$ (df) & $p$ & $F$ (df) & $p$ & $F$ (df) & $p$ \\
+\midrule
+\inputtab{generated/tab/mixed.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\linewidth]{fig15_mixed_model}
+\caption{Model-based marginal mean probability on the true class (95\% CI) for each representation
+(left, averaged over graph types) and each graph type (right), from the by-subject mixed model, on the
+selection and confirmation folds. The intervals include between-subject variation; the tests in
+Table~ef{tab:mixed} compare levels within subjects, which is why a difference much smaller than these
+intervals can still be detected.}
+\label{fig:mixed}
+\end{figure}
+
+On macro-F1 with the 25 splits as units (secondary analysis), representation had a large effect on both fold sets (Table~\ref{tab:anova}; selection:
 $F(\anovaRepDfOne,\anovaRepDfTwo)=\anovaRepF$, Greenhouse--Geisser $p\anovaRepP$, partial
 $\eta^2=\anovaRepEta$; confirmation: $F=\canovaRepF$, $p\canovaRepP$, $\eta^2=\canovaRepEta$).
 Averaged over graph types, the wavelet (P3, \repPThree{}; confirmation \crepPThree{}), spectral
@@ -188,7 +232,7 @@ Representation & Model & Train only & Train + val \\
 \subsection{Ablations}\label{sec:res-ablations}
 Table~\ref{tab:ablations} and Figure~\ref{fig:forest} report each ablation on the confirmation folds
 as a paired difference from the same cell's confirmation-grid run. No ablation reached significance
-under either Holm-corrected test (\cablNSigWil{} of 26 with Wilcoxon, \cablNSigNb{} with
+under either Holm-corrected test (\cablNSigWil{} of \cablN{} with Wilcoxon, \cablNSigNb{} with
 Nadeau--Bengio), and every point estimate except one was negative or zero: no modification improved
 on the reference configuration. Removing the graph altogether (identity adjacency) changed
 macro-F1 by \cablPThreespatialAOnenographDelta{} [\cablPThreespatialAOnenographLo{},
@@ -204,8 +248,41 @@ accounts for the overlap between cross-validation training sets. Sparsity ($k=3$
 edges, depth and loss weighting changed macro-F1 by at most about 0.02. Regressing age and sex out of
 every feature cost \cablPThreespatialAOneTworesidualizedDelta{} [\cablPThreespatialAOneTworesidualizedLo{},
 \cablPThreespatialAOneTworesidualizedHi{}] for the spatial cell, leaving performance well above the
-demographic floor. The selection-fold ablations (Table~\ref{tab:ablations-main}) gave the same
-conclusions.
+demographic floor. Shorter (\SI{5}{\second}) or longer (\SI{20}{\second}) windows changed macro-F1 by
+\cablPThreespatialASevenwindowFiveDelta{} and \cablPThreespatialASevenwindowTwoZeroDelta{} for the spatial
+cell (\cablPThreehybridASevenwindowFiveDelta{} and \cablPThreehybridASevenwindowTwoZeroDelta{} for the
+hybrid cell), so \SI{10}{\second} windows were never improved upon. Removing ICA artefact rejection
+cost \cablPThreespatialAEightnoicaDelta{} [\cablPThreespatialAEightnoicaLo{},
+\cablPThreespatialAEightnoicaHi{}] and \cablPThreehybridAEightnoicaDelta{}, the largest of the
+preprocessing changes but still not significant. The selection-fold ablations
+(Table~\ref{tab:ablations-main}) led to the same conclusions.
+
+\subsection{The stopping rule does not drive the results}\label{sec:res-es}
+Early stopping selected a median of epoch \bestEpochMedian{}. Re-running the whole grid with patience
+50 (median epoch \esPFiftyEpochMedian{}) or with no early stopping (100 epochs, final weights) left the
+conclusions unchanged (Table~\ref{tab:es}, Figure~\ref{fig:es}): \bestCell{} remained the best cell
+under every rule (\esPFiftyBestFOne{} and \esFixedBestFOne{}), the mean over all cells moved by at most
+0.003, cell rankings were preserved (Spearman $\rho=\esPFiftyRho$ and \esFixedRho{} against the main
+grid), representation stayed significant, and no representation's score changed significantly under
+either rule (\esNSigWil{} of 14 Holm-corrected Wilcoxon tests). Raw windows (P5), the configuration
+with most parameters, did not benefit from longer training (\esPFiftyPFiveDelta{} and
+\esFixedPFiveDelta{}), and no GCN-versus-classical comparison became significant.
+
+\begin{table}[t]
+\centering\scriptsize
+\caption{Stopping-rule sensitivity on the 25 selection splits: median epoch of the kept weights, best
+cell, macro-F1 of \bestCell{}, mean over the 21 cells, split-level ANOVA $F$ for representation and
+graph, and Spearman correlation of the 21 cell means with the main grid.}
+\label{tab:es}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccccccc}
+\toprule
+Stopping rule & Epoch & Best cell & P3 $\times$ spatial & Mean & $F_\mathrm{rep}$ & $F_\mathrm{graph}$ & $\rho$ \\
+\midrule
+\inputtab{generated/tab/es.tex}
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{table}[t]
 \centering\scriptsize
@@ -274,6 +351,14 @@ classifier, PSWE features alone (P7) performed near the demographic floor (\repP
 them to the best representation, or using PSWE co-occurrence as the graph, did not help
 (Section~\ref{sec:res-ablations}).
 
+\paragraph{Detector robustness.} Neither the coarse MPF grid nor artefacts explain these results. With
+zero-padded spectra and artefact rejection together (a median of at most \psweRobRejectPct\% of segments
+rejected per group), rates correlated $\rho=\psweRobRhoMain$ with the original ones, the age- and sex-adjusted
+rate ratios were \psweRobAdjADRR{} for AD ($p\psweRobAdjADP$) and \psweRobAdjFTDRR{} for FTD
+($p\psweRobAdjFTDP$), and adjusting for slowing again reversed them (\psweRobAdjSlowADRR{} and
+\psweRobAdjSlowFTDRR{}). Without ICA, the rate ratios were \noIcaPsweADRR{} and \noIcaPsweFTDRR{}
+($\rho=\noIcaPsweSlowRho$ with slowing), so ocular artefacts do not create the excess either.
+
 \paragraph{Background-relative PSWEs (exploratory).} Defining PSWEs relative to each channel's own
 background reversed the group pattern. With the primary definition (a drop of at least \SI{2}{\hertz}
 below the channel median), AD showed \emph{fewer} transient slowing events than controls (rate ratio
@@ -303,3 +388,69 @@ already slow, most of the recording is flagged --- the pattern behind the collin
 (middle), and rate against MMSE in patients (right; analysis only).}
 \label{fig:pswe}
 \end{figure}
+
+\subsection{External validation: Parkinson's disease (ds004584)}\label{sec:res-external}
+The ds004584 recordings passed the same quality gates (\extNWindows{} windows from 149 subjects;
+\extIcaExcluded{} ICA components removed per recording on average), and theta/alpha slowing was again
+higher in patients (\extThetaAlphaPD{}) than in controls (\extThetaAlphaCN{}). Age and sex alone
+reached a macro-F1 of \extDemoFOne{} against \extChanceFOne{} for chance in this two-class problem.
+
+\paragraph{Protocol effects replicated.} Representation again dominated: in the by-subject mixed
+model, $F(\mixExtRepDf,\mixExtRepDenDf)=\mixExtRepF$, $p\mixExtRepP$, with \mixExtNPairsSig{} of 21 pairs
+separated, whereas graph construction was small (marginal means \mixExtMspatial{} spatial,
+\mixExtMfunctional{} functional, \mixExtMhybrid{} hybrid; $p\mixExtEdgeP$) and favoured a different graph
+type than on ds004504; on macro-F1 with splits as units, representation was significant
+($F=\extAnovaRepF$, $p\extAnovaRepP$, partial $\eta^2=\extAnovaRepEta$) and graph construction was not
+($p\extAnovaEdgeP$). The GCN was not significantly better than non-graph classifiers trained on the
+same subjects (differences \extGvcDeltaMin{} to \extGvcDeltaMax{}, none significant after Holm correction).
+Window-level splitting of the configuration selected on ds004504 inflated subject-level macro-F1 from
+\extSelFOne{} to \extLeakySubj{} (window-level \extLeakyWin{}), in line with an independent audit of the
+same cohort \cite{L3}.
+
+\paragraph{The ranking only partly transferred.} The configuration selected on ds004504
+(P3~$\times$~spatial), evaluated without re-selection, reached macro-F1 \extSelFOne{}~$\pm$~\extSelFOneSd{}
+(subject-bootstrap 95\% CI \extSelCiLo{}--\extSelCiHi{}; balanced accuracy \extSelBalAcc{}, ROC-AUC
+\extSelAuc{}), well above its permutation null (observed \extPermObs{} on the first repeat against a
+null maximum of \extPermNullMax{}; $p=\extPermP$, \extPermN{} permutations) and ranked \extSelRank{}th of
+21; the best cell was \extBestCell{} (\extBestFOne{}). Wavelet and fused features were among the top three on both datasets
+(Table~\ref{tab:external}), but the full ordering did not transfer: Spearman $\rho=\extCellsRho$
+($p\extCellsRhoP$) across the 21 cells and $\rho=\extRepsRho$ ($p\extRepsRhoP$) across the seven
+representations, mainly because time-domain (P4) and connectivity (P2) features, near the bottom on
+ds004504, ranked third and fourth on ds004584, and raw windows (P5) fell to last (Figure~\ref{fig:external}).
+
+\paragraph{PSWEs in Parkinson's disease.} Fixed-threshold PSWEs were not more frequent in Parkinson's
+disease than in controls (median \extPsweRatePD{} versus \extPsweRateCN{} events/min; age- and
+sex-adjusted rate ratio \extPsweAdjRR{}, 95\% CI \extPsweAdjLo{}--\extPsweAdjHi{}, $p\extPsweAdjP$),
+consistent with the earlier report that they are uncommon in this disease \cite{B3}. As on ds004504, the
+rate tracked background slowing ($\rho=\extPsweSlowRho$), and adjusting for slowing reversed the ratio
+(\extPsweAdjSlowRR{}, $p\extPsweAdjSlowP$). The rate was not associated with MoCA within patients
+($\rho=\extPsweMocaRho$, $p\extPsweMocaP$), no background-relative variant differed between groups
+(smallest $p\extRelMinP$), and zero-padding with artefact rejection left the result unchanged (rate
+ratio \psweExtRobAdjPDRR{}, $p\psweExtRobAdjPDP$).
+
+\begin{table}[t]
+\centering\small
+\caption{Mean macro-F1 of each representation (averaged over graph types) and its rank on ds004504
+(AD/FTD/CN, three classes) and on the external cohort ds004584 (PD/CN, two classes). Absolute values
+are not comparable across datasets; ranks are.}
+\label{tab:external}
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{ds004504} & \multicolumn{2}{c}{ds004584} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Representation & Macro-F1 & Rank & Macro-F1 & Rank \\
+\midrule
+\inputtab{generated/tab/external.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig14_external}
+\caption{External validation on ds004584. Left: every cell's mean macro-F1 on ds004504 against
+ds004584. Middle: representation means on both datasets. Right: fixed-threshold PSWE rate per subject
+in Parkinson's disease and controls.}
+\label{fig:external}
+\end{figure}
+

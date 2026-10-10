@@ -1,0 +1,30 @@
+{
+ "friedman_chi2": 187.5788480192958,
+ "friedman_p": 3.167195929666434e-29,
+ "cd": 6.263639831998871,
+ "avg_rank": {
+  "P6\u00d7hybrid": 5.52,
+  "P6\u00d7spatial": 5.66,
+  "P3\u00d7functional": 5.84,
+  "P6\u00d7functional": 6.78,
+  "P3\u00d7spatial": 6.92,
+  "P3\u00d7hybrid": 7.12,
+  "P4\u00d7functional": 8.26,
+  "P4\u00d7spatial": 8.62,
+  "P4\u00d7hybrid": 9.16,
+  "P2\u00d7hybrid": 11.54,
+  "P1\u00d7hybrid": 11.92,
+  "P2\u00d7spatial": 11.92,
+  "P2\u00d7functional": 12.06,
+  "P1\u00d7functional": 13.68,
+  "P1\u00d7spatial": 13.7,
+  "P7\u00d7spatial": 14.66,
+  "P5\u00d7functional": 15.02,
+  "P5\u00d7spatial": 15.12,
+  "P7\u00d7functional": 15.14,
+  "P7\u00d7hybrid": 16.04,
+  "P5\u00d7hybrid": 16.32
+ },
+ "k": 21,
+ "n_units": 25
+}

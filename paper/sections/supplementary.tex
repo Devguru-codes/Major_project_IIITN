@@ -60,3 +60,36 @@ Ablation & $\Delta$ [95\% CI] & $p_\mathrm{Holm}$ & $\Delta$ [95\% CI] & $p_\mat
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{figS7_early_stopping}
+\caption{Stopping-rule sensitivity: macro-F1 per representation (mean and 95\% CI over the 25 selection
+splits, averaged over graph types) under each stopping rule (left) and the epoch of the kept weights
+(right).}
+\label{fig:es}
+\end{figure}
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{Per-representation macro-F1 under each stopping rule (selection splits, averaged over graph
+types): change from the main grid and Holm-corrected Wilcoxon $p$ (paired over the 25 splits).}
+\label{tab:es-rep}
+\begin{tabular}{lccccccc}
+\toprule
+ & Patience 20 & \multicolumn{3}{c}{Patience 50} & \multicolumn{3}{c}{Fixed 100 epochs} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}
+Representation & Macro-F1 & Macro-F1 & $\Delta$ & $p_\mathrm{Holm}$ & Macro-F1 & $\Delta$ & $p_\mathrm{Holm}$ \\
+\midrule
+\inputtab{generated/tab/es_rep.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{figS8_external_confusion}
+\caption{External cohort ds004584: row-normalised confusion matrices (summed over the 25 test splits)
+of the best graph type for each representation.}
+\label{fig:ext-confusion}
+\end{figure}
