@@ -7,9 +7,14 @@
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern,microtype,amsmath,amssymb,booktabs,graphicx,xcolor,siunitx}
 \usepackage[numbers,sort&compress]{natbib}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
 \usepackage[hidelinks]{hyperref}
 \graphicspath{{generated/figures/}}
-\newcommand{\gen}[1]{\input{generated/#1}}   % generated numbers / tables
+\input{generated/numbers}   % every result quoted in the text (paper/make_numbers.py)
+\makeatletter
+\newcommand{\inputtab}[1]{\@@input #1 }   % primitive \input: safe inside tabular
+\makeatother
 
 \title{Representation, Topology, and a Blood--Brain-Barrier-Associated Slow-Wave Marker:\\
 A Controlled Graph Neural Network Study of EEG in Alzheimer's Disease and Frontotemporal Dementia}
@@ -39,4 +44,7 @@ data leakage; reproducibility
 
 \bibliographystyle{unsrtnat}
 \bibliography{references}
+
+\clearpage
+\input{sections/supplementary}
 \end{document}

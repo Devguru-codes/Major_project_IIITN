@@ -21,3 +21,13 @@ dist/
 # kaggle
 kaggle/**/output/
 .ipynb_checkpoints/
+
+# latex build artefacts
+paper/*.aux
+paper/*.log
+paper/*.bbl
+paper/*.blg
+paper/*.out
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz

@@ -1,0 +1,22 @@
+\textit{Objective.} EEG-based classification of Alzheimer's disease (AD) and frontotemporal dementia
+(FTD) on the same public dataset reports accuracies from 80\% to 99\%, but studies change the signal
+representation, graph construction, model and evaluation protocol at once. We isolated these factors
+and tested a blood--brain-barrier (BBB)-associated EEG marker.
+\textit{Approach.} Using OpenNeuro ds004504 (36 AD, 23 FTD, 29 controls), we crossed seven node-feature
+representations with three graph constructions under one fixed two-layer graph convolutional network,
+evaluated on 25 frozen, paired subject-level cross-validation splits (\nMainRuns{} runs), with
+non-graph baselines, \nAblRuns{} ablation and permutation runs, and a leakage experiment. We also
+characterised paroxysmal slow-wave events (PSWEs), an EEG marker linked to BBB dysfunction.
+\textit{Main results.} Representation had a large effect on three-class macro-F1 (partial
+$\eta^2=\anovaRepEta$); graph construction had a small one ($\eta^2=\anovaEdgeEta$) and no interaction.
+The best configuration (wavelet features, spatial graph) reached \bestFOne{} (95\% CI
+\bestFOneCiLo{}--\bestFOneCiHi{}; permutation $p=\permPThreespatialP$), matching but not exceeding
+non-graph classifiers. Window-level splitting of the identical pipeline raised it to
+\leakPThreespatialLeakySubj{}. Fixed-threshold PSWEs were more frequent in AD (rate ratio
+\psweAdjADRR{}) and FTD (\psweAdjFTDRR{}) than in controls, but this was explained by background slowing
+($\rho=\psweSlowRho$); relative to each person's background, transient slowing events were less
+frequent in dementia.
+\textit{Significance.} On this benchmark the signal representation and, above all, the evaluation
+protocol --- not the graph or the model --- determine reported performance, and an EEG marker of BBB
+dysfunction must be defined relative to background slowing. Code, frozen folds and all raw runs are
+released.
