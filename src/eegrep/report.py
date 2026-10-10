@@ -127,6 +127,12 @@ def build_report(reports: str | Path, cache_dir: str | Path, preproc_dirs: list[
     else:
         confirmation_summary = None
 
+    # ---- by-subject mixed model (NB13; present once reports/mixed/ is committed) ----
+    if (rep / "mixed" / "selection_marginal.csv").exists():
+        step("fig15 mixed model", lambda: F.fig_mixed(
+            {"selection (seeds 0-4)": pd.read_csv(rep / "mixed" / "selection_marginal.csv"),
+             "confirmation (seeds 5-9)": pd.read_csv(rep / "mixed" / "confirmation_marginal.csv")}, figs))
+
     # ---- external validation on ds004584 (present once reports/external/ is committed) ----
     ext_dir, ext_summary = rep / "external", None
     if ext_dir.exists() and glob.glob(str(ext_dir / "ext_runs_s*.jsonl")):

@@ -394,13 +394,7 @@ def main():
          "sh(f'{PY} mixed --runs {SRC}/reports/confirm/confirm_runs_s0.jsonl {SRC}/reports/confirm/confirm_runs_s1.jsonl "
          "--tag confirm --out {WORK}/mixed --prefix confirmation', log=f'{WORK}/mixed_confirmation.log')",
          "sh(f'{PY} mixed --runs {SRC}/reports/external/ext_runs_s0.jsonl {SRC}/reports/external/ext_runs_s1.jsonl "
-         "--tag main --out {WORK}/mixed --prefix external', log=f'{WORK}/mixed_external.log')",
-         "import pandas as pd\n"
-         "sys.path.insert(0, f'{SRC}/src')\n"
-         "from eegrep import figures as F\n"
-         "F.fig_mixed({'selection (seeds 0-4)': pd.read_csv(f'{WORK}/mixed/selection_marginal.csv'),\n"
-         "             'confirmation (seeds 5-9)': pd.read_csv(f'{WORK}/mixed/confirmation_marginal.csv')},\n"
-         "            f'{WORK}/mixed/figures')"],
+         "--tag main --out {WORK}/mixed --prefix external', log=f'{WORK}/mixed_external.log')"],
         extras="dev,stats"))
 
     # ---- PSWE robustness: zero-padded MPF grid and artefact rejection (both cohorts) ----
