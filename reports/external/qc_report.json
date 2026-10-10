@@ -1,0 +1,51 @@
+{
+ "n_subjects": 149,
+ "class_counts": {
+  "PD": 100,
+  "CN": 49
+ },
+ "n_windows": 2327,
+ "windows_per_subject": {
+  "min": 12,
+  "max": 34,
+  "mean": 15.61744966442953
+ },
+ "duration_s": {
+  "min": 120.56,
+  "max": 342.7,
+  "mean": 160.45463087248322
+ },
+ "ica_excluded": {
+  "mean": 2.1812080536912752,
+  "min": 0,
+  "max": 9,
+  "labels": {
+   "eye blink": 242,
+   "muscle artifact": 83
+  }
+ },
+ "finite": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true
+ },
+ "theta_alpha_ratio": {
+  "PD": 0.9549603462219238,
+  "CN": 0.7239332795143127
+ },
+ "theta_alpha_AD_gt_CN_p": NaN,
+ "pswe_rate_per_min_median": {
+  "PD": 0.09136784125622617,
+  "CN": 0.10105263157894737
+ },
+ "pswe_time_fraction_median": {
+  "PD": 0.009792531349346517,
+  "CN": 0.01018675721561969
+ },
+ "pswe_rate_kruskal_p": 0.6698264463567671,
+ "gate_failures": []
+}

@@ -1,0 +1,5257 @@
+{
+ "dataset": "ds004584",
+ "bucket": "openneuro.org",
+ "version": "1.0.0",
+ "files": [
+  {
+   "path": ".datalad/config",
+   "size": 63,
+   "sha256": "b0b7ec70314eb67b5b516bcada12f3823264ac2a9446737db4a1702512e1e90d"
+  },
+  {
+   "path": "CHANGES",
+   "size": 35,
+   "sha256": "bd60cbafdd8c9e721142415902b44e1e94a11d04e3e97563a3af0a9d487722be"
+  },
+  {
+   "path": "README",
+   "size": 259,
+   "sha256": "4b22718f92c91b98f761da43e7f91a0c07bbdc361c1b323606aa3f2bfe1d99d4"
+  },
+  {
+   "path": "dataset_description.json",
+   "size": 504,
+   "sha256": "fc5928408c4930c142c3b00b0016889f57eab49cfd628ab0cebf958d56cafbb7"
+  },
+  {
+   "path": "participants.json",
+   "size": 615,
+   "sha256": "6913c5b45c2bb8b91325ece6d33c29faf9b25188e9ec0d56a0c6f20a183930f5"
+  },
+  {
+   "path": "participants.tsv",
+   "size": 5915,
+   "sha256": "f4ead5d1590e0a8fc2ead9ffc2b653fa65bb685d85fa2f7174f10f44823b5926"
+  },
+  {
+   "path": "sub-001/eeg/sub-001_task-Rest_channels.tsv",
+   "size": 745,
+   "sha256": "7483c59062d6288b84176e1654455a039b6c6515e283f1fb2541d51616845a85"
+  },
+  {
+   "path": "sub-001/eeg/sub-001_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-001/eeg/sub-001_task-Rest_eeg.fdt",
+   "size": 35489160,
+   "sha256": "7d60ef6f91905ad9f8a25a6151cee31eb3d538e8c0d8c502f1d902c0101d9865"
+  },
+  {
+   "path": "sub-001/eeg/sub-001_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "a3b71bee7f948bc20b0832b1070f4464f15c15489239ed4f868ba4f1e4f1afc7"
+  },
+  {
+   "path": "sub-001/eeg/sub-001_task-Rest_eeg.set",
+   "size": 614256,
+   "sha256": "12057f1c22970885f5e76d9069e5bcc0be8b206f7dfd34815987ba7a97c188f0"
+  },
+  {
+   "path": "sub-001/eeg/sub-001_task-Rest_electrodes.tsv",
+   "size": 1999,
+   "sha256": "1211ceb3e32c99fc2c631357b379c5b61c8a46e9cd90495950cb72f532bc7aba"
+  },
+  {
+   "path": "sub-001/eeg/sub-001_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-002/eeg/sub-002_task-Rest_channels.tsv",
+   "size": 745,
+   "sha256": "7483c59062d6288b84176e1654455a039b6c6515e283f1fb2541d51616845a85"
+  },
+  {
+   "path": "sub-002/eeg/sub-002_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-002/eeg/sub-002_task-Rest_eeg.fdt",
+   "size": 41081040,
+   "sha256": "7a322a71ded45be6272cdc60f3c7af137b4dbdbfd60f5e679bf96fec62a04af4"
+  },
+  {
+   "path": "sub-002/eeg/sub-002_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "02f6db6825b41e2d6d8a96814bc79513cef4aeaafba0cfb966aee1d7b46ff08a"
+  },
+  {
+   "path": "sub-002/eeg/sub-002_task-Rest_eeg.set",
+   "size": 703016,
+   "sha256": "aafb97ef8e16b72a256a0524f8739d268d2b5f96178eec2f29de6cfafb8f5e56"
+  },
+  {
+   "path": "sub-002/eeg/sub-002_task-Rest_electrodes.tsv",
+   "size": 1999,
+   "sha256": "1211ceb3e32c99fc2c631357b379c5b61c8a46e9cd90495950cb72f532bc7aba"
+  },
+  {
+   "path": "sub-002/eeg/sub-002_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-003/eeg/sub-003_task-Rest_channels.tsv",
+   "size": 745,
+   "sha256": "7483c59062d6288b84176e1654455a039b6c6515e283f1fb2541d51616845a85"
+  },
+  {
+   "path": "sub-003/eeg/sub-003_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-003/eeg/sub-003_task-Rest_eeg.fdt",
+   "size": 31797360,
+   "sha256": "55d185d001c66dc3c723c237eb6bf0280fc405c10d39f311570280928f6d09ac"
+  },
+  {
+   "path": "sub-003/eeg/sub-003_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "a04b6182373ebb9dcdc4c7fda910472dd1d882437bec41a8b8002ba025a86a1a"
+  },
+  {
+   "path": "sub-003/eeg/sub-003_task-Rest_eeg.set",
+   "size": 555656,
+   "sha256": "f407c5e441d65458ac3ee0d221386603f1ebb073abed11d16475c1ca3940b333"
+  },
+  {
+   "path": "sub-003/eeg/sub-003_task-Rest_electrodes.tsv",
+   "size": 1999,
+   "sha256": "1211ceb3e32c99fc2c631357b379c5b61c8a46e9cd90495950cb72f532bc7aba"
+  },
+  {
+   "path": "sub-003/eeg/sub-003_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-004/eeg/sub-004_task-Rest_channels.tsv",
+   "size": 745,
+   "sha256": "7483c59062d6288b84176e1654455a039b6c6515e283f1fb2541d51616845a85"
+  },
+  {
+   "path": "sub-004/eeg/sub-004_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-004/eeg/sub-004_task-Rest_eeg.fdt",
+   "size": 33258960,
+   "sha256": "8f876cf014c156062d87f06208f2f9e664de4b7ca15796756c119fc535052d2c"
+  },
+  {
+   "path": "sub-004/eeg/sub-004_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "17204cfc1ba1747c930e11f6ee6542ad1a572a721b961e4d32177269f74c1660"
+  },
+  {
+   "path": "sub-004/eeg/sub-004_task-Rest_eeg.set",
+   "size": 578856,
+   "sha256": "8c2a59b97f9026f75e279b9e05827dc63361b3219c1647896b20a84b19203ef9"
+  },
+  {
+   "path": "sub-004/eeg/sub-004_task-Rest_electrodes.tsv",
+   "size": 1999,
+   "sha256": "1211ceb3e32c99fc2c631357b379c5b61c8a46e9cd90495950cb72f532bc7aba"
+  },
+  {
+   "path": "sub-004/eeg/sub-004_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-005/eeg/sub-005_task-Rest_channels.tsv",
+   "size": 745,
+   "sha256": "7483c59062d6288b84176e1654455a039b6c6515e283f1fb2541d51616845a85"
+  },
+  {
+   "path": "sub-005/eeg/sub-005_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-005/eeg/sub-005_task-Rest_eeg.fdt",
+   "size": 31442040,
+   "sha256": "4e0a136f64317bee6aa4ede1e42c9ad17f9091ffc1d7584aaf043ac2a935d1b3"
+  },
+  {
+   "path": "sub-005/eeg/sub-005_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "52e872ff475702166e9cf99c1c994bc738b1f9930e3d80daf773fe5fa822ed94"
+  },
+  {
+   "path": "sub-005/eeg/sub-005_task-Rest_eeg.set",
+   "size": 550016,
+   "sha256": "287032177ec09ba3f0fd0624ad56eec2ea10386aa565cc1a05a15dd21fd37e31"
+  },
+  {
+   "path": "sub-005/eeg/sub-005_task-Rest_electrodes.tsv",
+   "size": 1999,
+   "sha256": "1211ceb3e32c99fc2c631357b379c5b61c8a46e9cd90495950cb72f532bc7aba"
+  },
+  {
+   "path": "sub-005/eeg/sub-005_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-006/eeg/sub-006_task-Rest_channels.tsv",
+   "size": 745,
+   "sha256": "7483c59062d6288b84176e1654455a039b6c6515e283f1fb2541d51616845a85"
+  },
+  {
+   "path": "sub-006/eeg/sub-006_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-006/eeg/sub-006_task-Rest_eeg.fdt",
+   "size": 33019560,
+   "sha256": "c9991b276821143b35e2d310a7e65e0a56e8efa30dae64426599833fbca74f2c"
+  },
+  {
+   "path": "sub-006/eeg/sub-006_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "b4defb066d1e39f6cdf5a0d5bf5344a8785dcde864349b75640cce0b126a3497"
+  },
+  {
+   "path": "sub-006/eeg/sub-006_task-Rest_eeg.set",
+   "size": 575056,
+   "sha256": "2571b927aa988dbc2180f358d707ca4c11a81bfc4bad447fa638132060e5b79b"
+  },
+  {
+   "path": "sub-006/eeg/sub-006_task-Rest_electrodes.tsv",
+   "size": 1999,
+   "sha256": "1211ceb3e32c99fc2c631357b379c5b61c8a46e9cd90495950cb72f532bc7aba"
+  },
+  {
+   "path": "sub-006/eeg/sub-006_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-007/eeg/sub-007_task-Rest_channels.tsv",
+   "size": 745,
+   "sha256": "7483c59062d6288b84176e1654455a039b6c6515e283f1fb2541d51616845a85"
+  },
+  {
+   "path": "sub-007/eeg/sub-007_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-007/eeg/sub-007_task-Rest_eeg.fdt",
+   "size": 30217320,
+   "sha256": "b5d9b0fef3f3528cc8dfba0ed65a05bcd1a9c05a24e1855bf69c856554d59bd2"
+  },
+  {
+   "path": "sub-007/eeg/sub-007_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "5ca834b3edc17206b52fc68cfc3c465e71f5ebf5b76cbc9ce4a3f3448a4b72b5"
+  },
+  {
+   "path": "sub-007/eeg/sub-007_task-Rest_eeg.set",
+   "size": 530576,
+   "sha256": "bb549a377ce789e660efbf67b0e31665d9402aa34eba4e010cd91654b6588d37"
+  },
+  {
+   "path": "sub-007/eeg/sub-007_task-Rest_electrodes.tsv",
+   "size": 1999,
+   "sha256": "1211ceb3e32c99fc2c631357b379c5b61c8a46e9cd90495950cb72f532bc7aba"
+  },
+  {
+   "path": "sub-007/eeg/sub-007_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-008/eeg/sub-008_task-Rest_channels.tsv",
+   "size": 745,
+   "sha256": "7483c59062d6288b84176e1654455a039b6c6515e283f1fb2541d51616845a85"
+  },
+  {
+   "path": "sub-008/eeg/sub-008_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-008/eeg/sub-008_task-Rest_eeg.fdt",
+   "size": 29544480,
+   "sha256": "7dc46b3c9f62dc2eacfe9afe9680ea77343169b7e9907a744874de0edd795d64"
+  },
+  {
+   "path": "sub-008/eeg/sub-008_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "a584c3895dcdb93075384d62e4663cec71e066ec354bc436a16a9dc55eb30137"
+  },
+  {
+   "path": "sub-008/eeg/sub-008_task-Rest_eeg.set",
+   "size": 519896,
+   "sha256": "a94a1c077ad088c7789c6744c75f358da5ec7dc764537d04252e170a25a3c442"
+  },
+  {
+   "path": "sub-008/eeg/sub-008_task-Rest_electrodes.tsv",
+   "size": 1999,
+   "sha256": "1211ceb3e32c99fc2c631357b379c5b61c8a46e9cd90495950cb72f532bc7aba"
+  },
+  {
+   "path": "sub-008/eeg/sub-008_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-009/eeg/sub-009_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-009/eeg/sub-009_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-009/eeg/sub-009_task-Rest_eeg.fdt",
+   "size": 31268160,
+   "sha256": "aedd062643b412130d5a32fd8a56c3084cf67f2ac8114cf6b57607c722d44de7"
+  },
+  {
+   "path": "sub-009/eeg/sub-009_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "7c1af33b5e56def4a0862942ba410fb35b1c433d411d81035165ae60ec29a456"
+  },
+  {
+   "path": "sub-009/eeg/sub-009_task-Rest_eeg.set",
+   "size": 547232,
+   "sha256": "f30bf057b02434fa15def3605f698ff09ca077fc042351ee347379d98cfac01d"
+  },
+  {
+   "path": "sub-009/eeg/sub-009_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-009/eeg/sub-009_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-010/eeg/sub-010_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-010/eeg/sub-010_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-010/eeg/sub-010_task-Rest_eeg.fdt",
+   "size": 43180200,
+   "sha256": "1b4d08c676b5ebc900d328123edeb2dc7de36c81674aa9d8c441263c4f46f582"
+  },
+  {
+   "path": "sub-010/eeg/sub-010_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "25aec27b0f3d83f3d55dc76678f8ed59b60e581ec9826e9fab80780d8a234dd0"
+  },
+  {
+   "path": "sub-010/eeg/sub-010_task-Rest_eeg.set",
+   "size": 736312,
+   "sha256": "a525024083b12c1cacad4a080168a99e516cb420f3c127bc10d08b04f5a1ee77"
+  },
+  {
+   "path": "sub-010/eeg/sub-010_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-010/eeg/sub-010_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-011/eeg/sub-011_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-011/eeg/sub-011_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-011/eeg/sub-011_task-Rest_eeg.fdt",
+   "size": 19671120,
+   "sha256": "53c333821e1b28b6b9f1f0932189b3a79bdd5dbb3e619f90a570dc52f7304509"
+  },
+  {
+   "path": "sub-011/eeg/sub-011_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "459c78cf3001c6b720f90d330217c3f83ed848b5d6f1811ac2a9b22d09b4c2cd"
+  },
+  {
+   "path": "sub-011/eeg/sub-011_task-Rest_eeg.set",
+   "size": 363152,
+   "sha256": "49f699c1d9936c2232331b707824d50fba8ce3abf7e854103cd618a5fc72955c"
+  },
+  {
+   "path": "sub-011/eeg/sub-011_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-011/eeg/sub-011_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-012/eeg/sub-012_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-012/eeg/sub-012_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-012/eeg/sub-012_task-Rest_eeg.fdt",
+   "size": 15190560,
+   "sha256": "47806dd645e5d8f222620e216a9e67fd1eb9df0becc2cefe7c507c77cff5ed47"
+  },
+  {
+   "path": "sub-012/eeg/sub-012_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "fc962f33e6434c25b57d21c86b39ca1c608ad625b843dec81fa0a2589d987a17"
+  },
+  {
+   "path": "sub-012/eeg/sub-012_task-Rest_eeg.set",
+   "size": 292032,
+   "sha256": "87b258535a0c05b23861da05db61bd9e3f64174a2ddfd7c4bdc678cd1c817c9f"
+  },
+  {
+   "path": "sub-012/eeg/sub-012_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-012/eeg/sub-012_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-013/eeg/sub-013_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-013/eeg/sub-013_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-013/eeg/sub-013_task-Rest_eeg.fdt",
+   "size": 15505560,
+   "sha256": "502e0d3d5601142ff18a522d8ca7272ca3768420ba6ae3f07bb99d52d030e965"
+  },
+  {
+   "path": "sub-013/eeg/sub-013_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "cac1fff740f989d36dec224bbde379b71f0bc2604f4abb4cf05cf483a87cce4e"
+  },
+  {
+   "path": "sub-013/eeg/sub-013_task-Rest_eeg.set",
+   "size": 297032,
+   "sha256": "1bfee9a942cb23977a1ae31e03b16354bdb0086487ff3aff2c6e609890d75f4a"
+  },
+  {
+   "path": "sub-013/eeg/sub-013_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-013/eeg/sub-013_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-014/eeg/sub-014_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-014/eeg/sub-014_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-014/eeg/sub-014_task-Rest_eeg.fdt",
+   "size": 15825600,
+   "sha256": "14b91e2c1b6b78bfcaecd6741a631ad2c0e923fa6c0a07f98b0256167013f9e2"
+  },
+  {
+   "path": "sub-014/eeg/sub-014_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "1df05a4ec78bae4c2cef267a908957b4ad10f7501e7f535990e791076fd20062"
+  },
+  {
+   "path": "sub-014/eeg/sub-014_task-Rest_eeg.set",
+   "size": 302112,
+   "sha256": "f9b30e104a2a50bb8e491f2ec5526c4b32a0aefbb3daa607b8c6bb5440eb76f3"
+  },
+  {
+   "path": "sub-014/eeg/sub-014_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-014/eeg/sub-014_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-015/eeg/sub-015_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-015/eeg/sub-015_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-015/eeg/sub-015_task-Rest_eeg.fdt",
+   "size": 15223320,
+   "sha256": "123c466644f2606f6405affce3644edae50926467ac99fed319659fe6fb0acad"
+  },
+  {
+   "path": "sub-015/eeg/sub-015_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "a38e5a45639cdce2806c3f2edfbb76f505a4d6624a64cfd65ab9c09aa2ea7b2e"
+  },
+  {
+   "path": "sub-015/eeg/sub-015_task-Rest_eeg.set",
+   "size": 292552,
+   "sha256": "c2713cc5b6da3123daee22c9a10bd1c67f115afad824fe3b3861dfe629d3887f"
+  },
+  {
+   "path": "sub-015/eeg/sub-015_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-015/eeg/sub-015_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-016/eeg/sub-016_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-016/eeg/sub-016_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-016/eeg/sub-016_task-Rest_eeg.fdt",
+   "size": 15329160,
+   "sha256": "a59d90bee751de32c67dbeb2af09987bd4494990d4b7af6d972588b619079744"
+  },
+  {
+   "path": "sub-016/eeg/sub-016_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "027bcf4989251dab97438b74608dbe82556ae6bdb05c4b4f7a7ed58aff2b5864"
+  },
+  {
+   "path": "sub-016/eeg/sub-016_task-Rest_eeg.set",
+   "size": 294232,
+   "sha256": "1149b4af5752f11cdaca6b06e173bff6be8dc80aeb7ebc6509f34cfa62150b71"
+  },
+  {
+   "path": "sub-016/eeg/sub-016_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-016/eeg/sub-016_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-017/eeg/sub-017_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-017/eeg/sub-017_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-017/eeg/sub-017_task-Rest_eeg.fdt",
+   "size": 23337720,
+   "sha256": "9445e1db7516c19bc060b4e77bbaa3aeefe8632af858e5a313fd114f02d9484d"
+  },
+  {
+   "path": "sub-017/eeg/sub-017_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "084505c7d6f7b6f034e4d634a3bd58a824cc0dc612ad056ae284a3c0e496510b"
+  },
+  {
+   "path": "sub-017/eeg/sub-017_task-Rest_eeg.set",
+   "size": 421352,
+   "sha256": "a6d6ec4b834b705c42cd93847cc5da17f80f7e20488b850e9475caa9296fe3ef"
+  },
+  {
+   "path": "sub-017/eeg/sub-017_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-017/eeg/sub-017_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-018/eeg/sub-018_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-018/eeg/sub-018_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-018/eeg/sub-018_task-Rest_eeg.fdt",
+   "size": 19096560,
+   "sha256": "8704be2681acdbfdac27fbdb178b94612461df524432f93bb55902e0726e54ec"
+  },
+  {
+   "path": "sub-018/eeg/sub-018_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "b055df11bf8eca1f5603d063c7c2481f0a8b6c5b941fe50e444821306a8352ee"
+  },
+  {
+   "path": "sub-018/eeg/sub-018_task-Rest_eeg.set",
+   "size": 354032,
+   "sha256": "20886bfea85db7cf6a54b404d764d6fab16d97c8a3ca170443d8b87f5b28b35e"
+  },
+  {
+   "path": "sub-018/eeg/sub-018_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-018/eeg/sub-018_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-019/eeg/sub-019_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-019/eeg/sub-019_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-019/eeg/sub-019_task-Rest_eeg.fdt",
+   "size": 23446080,
+   "sha256": "b04168f28678e0b0cfa826e984ba33c0c97fbd26bcbbe40ba0462e0424cf8c97"
+  },
+  {
+   "path": "sub-019/eeg/sub-019_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "1ccabf4cbf4a09a8c2f668a4ccbf5375748e8835df9291b572bd58cf404b5735"
+  },
+  {
+   "path": "sub-019/eeg/sub-019_task-Rest_eeg.set",
+   "size": 423072,
+   "sha256": "e15b5bb848c635968f42fc995f92ebf2fbd4553594e5042d92e26a79f4b070b9"
+  },
+  {
+   "path": "sub-019/eeg/sub-019_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-019/eeg/sub-019_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-020/eeg/sub-020_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-020/eeg/sub-020_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-020/eeg/sub-020_task-Rest_eeg.fdt",
+   "size": 22828680,
+   "sha256": "ca6e446a984f5047f00d94baa51ebe8334795716015f8cd7f9cf1bb2fe2a5580"
+  },
+  {
+   "path": "sub-020/eeg/sub-020_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "bb4616dbd746f4d07e3279e812b5bf218025dcf0fcf353e31056aef493b20047"
+  },
+  {
+   "path": "sub-020/eeg/sub-020_task-Rest_eeg.set",
+   "size": 413272,
+   "sha256": "1ab29388fb260a5d2164efcf254f4997fa5a73a42dede002ffdb487ba8379884"
+  },
+  {
+   "path": "sub-020/eeg/sub-020_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-020/eeg/sub-020_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-021/eeg/sub-021_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-021/eeg/sub-021_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-021/eeg/sub-021_task-Rest_eeg.fdt",
+   "size": 20076840,
+   "sha256": "65518df8abd2f5243d890ba32cf3388973e4b416d6d3f1b1b460aa7e16e30b4d"
+  },
+  {
+   "path": "sub-021/eeg/sub-021_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "d7d005f8669af560ba43d974d1893c77ec8852e0aad79e4baaea1ab925af4314"
+  },
+  {
+   "path": "sub-021/eeg/sub-021_task-Rest_eeg.set",
+   "size": 369592,
+   "sha256": "4efcc20da86eb537bf7f0cf753326c353d9a8123a5acac770d376f8e2c46625f"
+  },
+  {
+   "path": "sub-021/eeg/sub-021_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-021/eeg/sub-021_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-022/eeg/sub-022_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-022/eeg/sub-022_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-022/eeg/sub-022_task-Rest_eeg.fdt",
+   "size": 19371240,
+   "sha256": "f52016a020dbd31a4f1ad9098f0eec594cbfd2edb1a51509d866d893560a28aa"
+  },
+  {
+   "path": "sub-022/eeg/sub-022_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "556441f99d2c5507d735661a6d5c7a8c00360e3505765ca5baeb8bc206b2be3a"
+  },
+  {
+   "path": "sub-022/eeg/sub-022_task-Rest_eeg.set",
+   "size": 358392,
+   "sha256": "c555a5a2537a85bf16e6b03274f6cd15ee135f42e451e2c70fa4ddb63f86f5ef"
+  },
+  {
+   "path": "sub-022/eeg/sub-022_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-022/eeg/sub-022_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-023/eeg/sub-023_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-023/eeg/sub-023_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-023/eeg/sub-023_task-Rest_eeg.fdt",
+   "size": 21306600,
+   "sha256": "2423cfe2b0e86ddbbb7efadc932d52ac39c275d89c896e52e0755a59a1c2c0d2"
+  },
+  {
+   "path": "sub-023/eeg/sub-023_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "c58604097c28e6f050f42e7405585f1f8c0485c8a85d5793e7ddb544bdd5b698"
+  },
+  {
+   "path": "sub-023/eeg/sub-023_task-Rest_eeg.set",
+   "size": 389112,
+   "sha256": "958c9bf319c03174977793918d4156db1d5abfc82be273ff58e8979f0e1cb0b0"
+  },
+  {
+   "path": "sub-023/eeg/sub-023_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-023/eeg/sub-023_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-024/eeg/sub-024_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-024/eeg/sub-024_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-024/eeg/sub-024_task-Rest_eeg.fdt",
+   "size": 19063800,
+   "sha256": "ad87ee9b0c0b390c5d76077cc8316a1cc15ad6e156b1b3644b824b68f79df2f8"
+  },
+  {
+   "path": "sub-024/eeg/sub-024_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "b4290caa0a9cc776c1a16479c4c2d7cc425ba301ddf31f32b35bce228e2b346d"
+  },
+  {
+   "path": "sub-024/eeg/sub-024_task-Rest_eeg.set",
+   "size": 353512,
+   "sha256": "25a991ed7185b618f71f9ad395a15a15007d3b093916063d540df7d65eca3764"
+  },
+  {
+   "path": "sub-024/eeg/sub-024_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-024/eeg/sub-024_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-025/eeg/sub-025_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-025/eeg/sub-025_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-025/eeg/sub-025_task-Rest_eeg.fdt",
+   "size": 20651400,
+   "sha256": "63a5574da7dec945b71e82b1da40077b41b56823a4d4b71a8af0379679832cdc"
+  },
+  {
+   "path": "sub-025/eeg/sub-025_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "82b80adc84482a739545c3662657d74c3fb43bfb105374cba42f03c7a4b59e35"
+  },
+  {
+   "path": "sub-025/eeg/sub-025_task-Rest_eeg.set",
+   "size": 378712,
+   "sha256": "8b705a03a897d97401819a1cb44787ae041c103052d6eff4164d1b5ec2e6fad7"
+  },
+  {
+   "path": "sub-025/eeg/sub-025_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-025/eeg/sub-025_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-026/eeg/sub-026_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-026/eeg/sub-026_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-026/eeg/sub-026_task-Rest_eeg.fdt",
+   "size": 17995320,
+   "sha256": "96ea5510ede0257975ad598054547e06eafcd72bac0d3071e58b62d0a984ace0"
+  },
+  {
+   "path": "sub-026/eeg/sub-026_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "b65f6aeaabc6178c2f61c9e4ae18d71cebfb55244a2d11c752d46ad9bfb69a95"
+  },
+  {
+   "path": "sub-026/eeg/sub-026_task-Rest_eeg.set",
+   "size": 336552,
+   "sha256": "7426683829b80e97abf013f3cf8f1e6526f97a7a1602a03f145ab72a247a3950"
+  },
+  {
+   "path": "sub-026/eeg/sub-026_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-026/eeg/sub-026_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-027/eeg/sub-027_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-027/eeg/sub-027_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-027/eeg/sub-027_task-Rest_eeg.fdt",
+   "size": 15271200,
+   "sha256": "7f87b94152e65e079e3f885ca3e69857a88d33bda0079c6714e9d0f196267ed7"
+  },
+  {
+   "path": "sub-027/eeg/sub-027_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "a782b6eed3a5dc9c231697d033a4f067e7ed3356cfde236c8172ffeed0bab636"
+  },
+  {
+   "path": "sub-027/eeg/sub-027_task-Rest_eeg.set",
+   "size": 293312,
+   "sha256": "17c04b80595eaf0b86fc27f26c6387a1792373b46c49b67230bc70103ead9336"
+  },
+  {
+   "path": "sub-027/eeg/sub-027_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-027/eeg/sub-027_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-028/eeg/sub-028_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-028/eeg/sub-028_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-028/eeg/sub-028_task-Rest_eeg.fdt",
+   "size": 19479600,
+   "sha256": "76ead5a319ff7cd2c42a6282f8ebf87630cce45c4b844b657ab347d6d56b0e73"
+  },
+  {
+   "path": "sub-028/eeg/sub-028_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "fef9cfac70a054735fe1eff755a0b17a33143fa166eac3448f953799bbd323e7"
+  },
+  {
+   "path": "sub-028/eeg/sub-028_task-Rest_eeg.set",
+   "size": 360112,
+   "sha256": "9e700c6866de46b045c8c34e056756cb7545c2281dd4a77dba003b3c6a18fbab"
+  },
+  {
+   "path": "sub-028/eeg/sub-028_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-028/eeg/sub-028_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-029/eeg/sub-029_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-029/eeg/sub-029_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-029/eeg/sub-029_task-Rest_eeg.fdt",
+   "size": 25620840,
+   "sha256": "89d853495b0bae16f5b93cf607219a6d2c44f4fbb268c4058c2bbbc87c510f8c"
+  },
+  {
+   "path": "sub-029/eeg/sub-029_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "f02ae82d7e5e00fad2b1fc10c7044541a2b30fb9b74a713aab7455230de3bbf0"
+  },
+  {
+   "path": "sub-029/eeg/sub-029_task-Rest_eeg.set",
+   "size": 457592,
+   "sha256": "ac4208e5e0259a00af1aa2126320ca1b8889080e752266a5256d32a7d4a85800"
+  },
+  {
+   "path": "sub-029/eeg/sub-029_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-029/eeg/sub-029_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-030/eeg/sub-030_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-030/eeg/sub-030_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-030/eeg/sub-030_task-Rest_eeg.fdt",
+   "size": 22193640,
+   "sha256": "31f12a6de7b750b0d71960854eae6fca65820c2c5d310fbf251cedf5bc283dec"
+  },
+  {
+   "path": "sub-030/eeg/sub-030_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "9fe84fbae400b18c49edcf43fb0f799f04315e9c98d9f36bcc21f9bb27d85044"
+  },
+  {
+   "path": "sub-030/eeg/sub-030_task-Rest_eeg.set",
+   "size": 403192,
+   "sha256": "d0cef478542d8ded0b18e57424af134b930b615989913fbf573bc5336f59e594"
+  },
+  {
+   "path": "sub-030/eeg/sub-030_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-030/eeg/sub-030_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-031/eeg/sub-031_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-031/eeg/sub-031_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-031/eeg/sub-031_task-Rest_eeg.fdt",
+   "size": 22848840,
+   "sha256": "50324665bcaf0c931c044d903def7d625e946c2bb30fa01901fbababe80f9834"
+  },
+  {
+   "path": "sub-031/eeg/sub-031_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "6c08e639c3cdd735ae6fcd5a541ebca758153c946bda12728556f3a4ee7a54ff"
+  },
+  {
+   "path": "sub-031/eeg/sub-031_task-Rest_eeg.set",
+   "size": 413592,
+   "sha256": "14d78066821eb6c8c21a203d3b6942b77f0a0f3e9c83abe379ba60e75b536f8d"
+  },
+  {
+   "path": "sub-031/eeg/sub-031_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-031/eeg/sub-031_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-032/eeg/sub-032_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-032/eeg/sub-032_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-032/eeg/sub-032_task-Rest_eeg.fdt",
+   "size": 19101600,
+   "sha256": "cc931c6dabd87da651aeb2521f56455c3d9b498adca40035dc028d1f48ff9276"
+  },
+  {
+   "path": "sub-032/eeg/sub-032_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "8a2d7134ca05bfc2229379ad12635a4cf120029ae914ccb91641750f4be8b0e4"
+  },
+  {
+   "path": "sub-032/eeg/sub-032_task-Rest_eeg.set",
+   "size": 354112,
+   "sha256": "b6534162b6de2f34b0671247a1c34360329f711902acb18302c1961be229d84e"
+  },
+  {
+   "path": "sub-032/eeg/sub-032_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-032/eeg/sub-032_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-033/eeg/sub-033_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-033/eeg/sub-033_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-033/eeg/sub-033_task-Rest_eeg.fdt",
+   "size": 16551360,
+   "sha256": "fd15ed885fd9789e019730fbed62d16adf48df3a26666119938bda541cfb4bed"
+  },
+  {
+   "path": "sub-033/eeg/sub-033_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "75b3a6d2089b1efd06585269df0e04bed415eba9c0a72115bc50de10da997912"
+  },
+  {
+   "path": "sub-033/eeg/sub-033_task-Rest_eeg.set",
+   "size": 313632,
+   "sha256": "8ea34e54dce7b84e668f9a2596f75e169892968103bbdef94ee660c3157eda58"
+  },
+  {
+   "path": "sub-033/eeg/sub-033_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-033/eeg/sub-033_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-034/eeg/sub-034_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-034/eeg/sub-034_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-034/eeg/sub-034_task-Rest_eeg.fdt",
+   "size": 22037400,
+   "sha256": "eeadd5bc4cadef6497bd2014c5882a72958d5ee32195bb26552381e201321da3"
+  },
+  {
+   "path": "sub-034/eeg/sub-034_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "a9e1b5b284ea558a73b0134c6b13084f29b809423ca01025f7867ae3c51e700f"
+  },
+  {
+   "path": "sub-034/eeg/sub-034_task-Rest_eeg.set",
+   "size": 400712,
+   "sha256": "3acd793426dabc1f36b765b410353313f2084093b9e39fe57fd83b734afecff5"
+  },
+  {
+   "path": "sub-034/eeg/sub-034_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-034/eeg/sub-034_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-035/eeg/sub-035_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-035/eeg/sub-035_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-035/eeg/sub-035_task-Rest_eeg.fdt",
+   "size": 25507440,
+   "sha256": "873fbe36efd5ac01eac94057d41d9d3461bc7818f314124a5f65ad54fe9a81a1"
+  },
+  {
+   "path": "sub-035/eeg/sub-035_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "087f93eed07fd105c3e948fdbd8fd47a3c623f8f68344e9400d7047e62c9c7aa"
+  },
+  {
+   "path": "sub-035/eeg/sub-035_task-Rest_eeg.set",
+   "size": 455792,
+   "sha256": "98ae83588a4714cbab2aa0aa462b78d07c69b6f59a699837dbc706e8119b58d3"
+  },
+  {
+   "path": "sub-035/eeg/sub-035_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-035/eeg/sub-035_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-036/eeg/sub-036_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-036/eeg/sub-036_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-036/eeg/sub-036_task-Rest_eeg.fdt",
+   "size": 15336720,
+   "sha256": "3ddb433f253ad23c965a75f915a3dceb7c83b163108cc46793f95f53486c7272"
+  },
+  {
+   "path": "sub-036/eeg/sub-036_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "fb263ec9fafd2832b59d8ffe50b8fbef9f064956a35496d4e6064be14e253a1a"
+  },
+  {
+   "path": "sub-036/eeg/sub-036_task-Rest_eeg.set",
+   "size": 294352,
+   "sha256": "664ef0163984fc7b24d0746a46702d432d758c9a89d7ffdf1d55df375eaa97d6"
+  },
+  {
+   "path": "sub-036/eeg/sub-036_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-036/eeg/sub-036_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-037/eeg/sub-037_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-037/eeg/sub-037_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-037/eeg/sub-037_task-Rest_eeg.fdt",
+   "size": 16349760,
+   "sha256": "6d8ef215c1e352363f9a87f0d42a74d13d8545babcdbdb514e26e9777f3101c5"
+  },
+  {
+   "path": "sub-037/eeg/sub-037_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "a32a0bed316ef782e60a3515186296f3ad690e25e01eb1e319730bbc2b57f257"
+  },
+  {
+   "path": "sub-037/eeg/sub-037_task-Rest_eeg.set",
+   "size": 569952,
+   "sha256": "524ed641ec84605da345191bee376b58f8c15e7240effb18b57fa1c390f33044"
+  },
+  {
+   "path": "sub-037/eeg/sub-037_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-037/eeg/sub-037_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-038/eeg/sub-038_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-038/eeg/sub-038_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-038/eeg/sub-038_task-Rest_eeg.fdt",
+   "size": 17141040,
+   "sha256": "87394e69e7981746b019c4aac77839f90b8b66c5c1b9e55d01fa9b3b629a42a6"
+  },
+  {
+   "path": "sub-038/eeg/sub-038_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "d5d4aec434f0d2513c61142d6cca94d4244c55aee7b5439ef735db138c2911c5"
+  },
+  {
+   "path": "sub-038/eeg/sub-038_task-Rest_eeg.set",
+   "size": 322992,
+   "sha256": "14d07b8baffeac3b4f4238dfbe0103890492b15f10602c99bd795b9e42a6ceaa"
+  },
+  {
+   "path": "sub-038/eeg/sub-038_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-038/eeg/sub-038_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-039/eeg/sub-039_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-039/eeg/sub-039_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-039/eeg/sub-039_task-Rest_eeg.fdt",
+   "size": 20830320,
+   "sha256": "e30c9ca9ba8f272b2107bcb675b36e24e72e0303b53808d06160da5e3c368b47"
+  },
+  {
+   "path": "sub-039/eeg/sub-039_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "6fd15d372a6406f9c5d1d79ffa46454d0fe5c111433d580ce5ab6f898291e5df"
+  },
+  {
+   "path": "sub-039/eeg/sub-039_task-Rest_eeg.set",
+   "size": 381552,
+   "sha256": "7cb7488501c19b5fcd20b733d185c9db18460b5853a9ac399b05302a6fa0d2d4"
+  },
+  {
+   "path": "sub-039/eeg/sub-039_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-039/eeg/sub-039_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-040/eeg/sub-040_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-040/eeg/sub-040_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-040/eeg/sub-040_task-Rest_eeg.fdt",
+   "size": 17302320,
+   "sha256": "d630801a8c889c336a6456add3fef9ba2a3282716394ed2573893e9394bb7f23"
+  },
+  {
+   "path": "sub-040/eeg/sub-040_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "8e282fe99ac3fc97773b8a9019360422590f9ba968f5fca117b9307c43ae3704"
+  },
+  {
+   "path": "sub-040/eeg/sub-040_task-Rest_eeg.set",
+   "size": 325552,
+   "sha256": "e88ebcd112ee6b5e0491480380deeb1d2887e9d0e63392a4f60e81118942e6f5"
+  },
+  {
+   "path": "sub-040/eeg/sub-040_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-040/eeg/sub-040_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-041/eeg/sub-041_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-041/eeg/sub-041_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-041/eeg/sub-041_task-Rest_eeg.fdt",
+   "size": 18970560,
+   "sha256": "6604d48f8fad30bfeed3fbc67bbd6c567f28a25df30e4381865d4e92dbfa5791"
+  },
+  {
+   "path": "sub-041/eeg/sub-041_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "40e4d5bdd51fe0ac533e2aa70ff814f5ef4d1ed00c54e687b7616f909c9b6d89"
+  },
+  {
+   "path": "sub-041/eeg/sub-041_task-Rest_eeg.set",
+   "size": 352032,
+   "sha256": "032a375f2d58a9bc4ef6445eed7fb8ff9863c69bf04e3b69f1f8d4c744598ce1"
+  },
+  {
+   "path": "sub-041/eeg/sub-041_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-041/eeg/sub-041_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-042/eeg/sub-042_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-042/eeg/sub-042_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-042/eeg/sub-042_task-Rest_eeg.fdt",
+   "size": 18479160,
+   "sha256": "aa28d7d13016f1f1cf0cecb0d8ff1676f5ef08999f65d41f86d40a0668edb6c3"
+  },
+  {
+   "path": "sub-042/eeg/sub-042_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "3b0a86e0bbf8bca27c56bca49a91cb38a0217fd25c99d2456ac5ae312ffd0296"
+  },
+  {
+   "path": "sub-042/eeg/sub-042_task-Rest_eeg.set",
+   "size": 344232,
+   "sha256": "496d1dece89cdfcd338ed6939f28af82733c4f26840024f3f7b5edbf1eb9deb2"
+  },
+  {
+   "path": "sub-042/eeg/sub-042_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-042/eeg/sub-042_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-043/eeg/sub-043_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-043/eeg/sub-043_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-043/eeg/sub-043_task-Rest_eeg.fdt",
+   "size": 16538760,
+   "sha256": "8e851fe0fcaafb12f036d33fba8ee758c3dbf8118fa202088c915b364e9adedc"
+  },
+  {
+   "path": "sub-043/eeg/sub-043_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "f0096d4626ecc1e624791f9a350f878314e0c6dff8c4e63434c0f1b63970d9d0"
+  },
+  {
+   "path": "sub-043/eeg/sub-043_task-Rest_eeg.set",
+   "size": 313432,
+   "sha256": "acb027f82600d53c6bcd56c8de1b3b8fb309f77012a14adde67b9ebd37a266af"
+  },
+  {
+   "path": "sub-043/eeg/sub-043_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-043/eeg/sub-043_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-044/eeg/sub-044_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-044/eeg/sub-044_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-044/eeg/sub-044_task-Rest_eeg.fdt",
+   "size": 17577000,
+   "sha256": "66d2c66a3119d01037e48553c6398404d4cc6ad9201d7e6f9b0f8a9cc4372e5c"
+  },
+  {
+   "path": "sub-044/eeg/sub-044_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "0f387b5097406482c7da5fd3be6e6c713aea7fde40da4771aa5f43d26c89ed9f"
+  },
+  {
+   "path": "sub-044/eeg/sub-044_task-Rest_eeg.set",
+   "size": 329912,
+   "sha256": "a37616c1889d8bc12c0703e846e3af4f362132070d1e8dec244e575e630f8e78"
+  },
+  {
+   "path": "sub-044/eeg/sub-044_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-044/eeg/sub-044_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-045/eeg/sub-045_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-045/eeg/sub-045_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-045/eeg/sub-045_task-Rest_eeg.fdt",
+   "size": 18312840,
+   "sha256": "9c6444b89c750933ecb563c9417156c01bc2d4213c2b866d9e760c59ee348619"
+  },
+  {
+   "path": "sub-045/eeg/sub-045_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "8ead26e36d0e5b6e1d97c7c2ebd3da5877352dc67464e1320fed4f71602f4e7a"
+  },
+  {
+   "path": "sub-045/eeg/sub-045_task-Rest_eeg.set",
+   "size": 341592,
+   "sha256": "342fbda9230bf91e8fc1ea0293b8c77996152ff3532a9838b7603bef7c70e7c4"
+  },
+  {
+   "path": "sub-045/eeg/sub-045_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-045/eeg/sub-045_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-046/eeg/sub-046_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-046/eeg/sub-046_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-046/eeg/sub-046_task-Rest_eeg.fdt",
+   "size": 16541280,
+   "sha256": "ef9afd6a074fe51e198a97ab6453734dc628850b01cd5e554eee65d75da0519b"
+  },
+  {
+   "path": "sub-046/eeg/sub-046_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "edfc5fa9c493e8dda36960a2b3e2d100918f88bf422c5ae796147ee84e8c80e9"
+  },
+  {
+   "path": "sub-046/eeg/sub-046_task-Rest_eeg.set",
+   "size": 313472,
+   "sha256": "3ed319f56bf5b268d43df9a02759493fe131fe532b0aecfe902bac9090c8f633"
+  },
+  {
+   "path": "sub-046/eeg/sub-046_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-046/eeg/sub-046_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-047/eeg/sub-047_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-047/eeg/sub-047_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-047/eeg/sub-047_task-Rest_eeg.fdt",
+   "size": 16498440,
+   "sha256": "68d02e050df1b25c978f4e540195d0c16bb8514e17f16791924fe85a9a7adc9b"
+  },
+  {
+   "path": "sub-047/eeg/sub-047_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "4e3ef42f3b14ca0f99d52cae215d3d49be57c4a77669b1e621a0347190cc8dae"
+  },
+  {
+   "path": "sub-047/eeg/sub-047_task-Rest_eeg.set",
+   "size": 574672,
+   "sha256": "6765bf157dcec8d8306bdd2b845bcc0cbcac19a37dad2e7404dc82757c9baa53"
+  },
+  {
+   "path": "sub-047/eeg/sub-047_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-047/eeg/sub-047_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-048/eeg/sub-048_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-048/eeg/sub-048_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-048/eeg/sub-048_task-Rest_eeg.fdt",
+   "size": 29990520,
+   "sha256": "7c62e0d8b3323a7c746433cb04563b09b13febab02c9ce6c9723ccdd37bcce0e"
+  },
+  {
+   "path": "sub-048/eeg/sub-048_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "15f3fc77ff5575ebe31570cc2fb6b782aa8dffb1be30ea679193e99a55c165ea"
+  },
+  {
+   "path": "sub-048/eeg/sub-048_task-Rest_eeg.set",
+   "size": 526952,
+   "sha256": "a5e975a28e61b875fcce896c04d434f14b64b9aa2352723801cc1979b15e76f5"
+  },
+  {
+   "path": "sub-048/eeg/sub-048_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-048/eeg/sub-048_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-049/eeg/sub-049_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-049/eeg/sub-049_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-049/eeg/sub-049_task-Rest_eeg.fdt",
+   "size": 15572480,
+   "sha256": "8b3978bc590e5dfa4cb8dd48b0c77f1c5fd1505f0cf2a66e2c67f0d99a8fdb02"
+  },
+  {
+   "path": "sub-049/eeg/sub-049_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "aa88718223ed08593549e7385229632863c04655afd906fb4aa878671d6d6860"
+  },
+  {
+   "path": "sub-049/eeg/sub-049_task-Rest_eeg.set",
+   "size": 295000,
+   "sha256": "0ba1cf22ddb2c45f3dfabd76647316345c8fa858dff66c7da8a93186f57c83c7"
+  },
+  {
+   "path": "sub-049/eeg/sub-049_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-049/eeg/sub-049_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-050/eeg/sub-050_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-050/eeg/sub-050_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-050/eeg/sub-050_task-Rest_eeg.fdt",
+   "size": 15928320,
+   "sha256": "1c79aae60c0126c058b65eec369fa207f17fd2a961129531912efc7814b7a8e1"
+  },
+  {
+   "path": "sub-050/eeg/sub-050_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "093799a0f36826fefe3fc4c2da9b075f438f85791b061d5ca134c93f59324cb8"
+  },
+  {
+   "path": "sub-050/eeg/sub-050_task-Rest_eeg.set",
+   "size": 300560,
+   "sha256": "d7e3897a89cb606de2e99e0cf364a424f5de7fac8d3d7c63551bb5fb74959fe2"
+  },
+  {
+   "path": "sub-050/eeg/sub-050_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-050/eeg/sub-050_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-051/eeg/sub-051_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-051/eeg/sub-051_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-051/eeg/sub-051_task-Rest_eeg.fdt",
+   "size": 15681960,
+   "sha256": "b24c1d9e5d278bbb76fd0ad5f5f076f76500a46cc78af50b6b19046982b87b62"
+  },
+  {
+   "path": "sub-051/eeg/sub-051_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "8305585f3b35423252866f81dd3e3edbb497253a5fe26c8ced4f7168cb0622bd"
+  },
+  {
+   "path": "sub-051/eeg/sub-051_task-Rest_eeg.set",
+   "size": 299832,
+   "sha256": "0da33e247de39d1030b8887fa9c2313a76aa014b8ebc9916cbd8dce7ea345985"
+  },
+  {
+   "path": "sub-051/eeg/sub-051_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-051/eeg/sub-051_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-052/eeg/sub-052_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-052/eeg/sub-052_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-052/eeg/sub-052_task-Rest_eeg.fdt",
+   "size": 16498440,
+   "sha256": "9209ca238a1123ce172aa19c8e05ae3585fb49883fd9f3ff458ffe902bc1ce7b"
+  },
+  {
+   "path": "sub-052/eeg/sub-052_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "4e3ef42f3b14ca0f99d52cae215d3d49be57c4a77669b1e621a0347190cc8dae"
+  },
+  {
+   "path": "sub-052/eeg/sub-052_task-Rest_eeg.set",
+   "size": 574672,
+   "sha256": "2cbe2528e40705df8bc96389609d9a9299300baa23f8b151a444827bbe353c88"
+  },
+  {
+   "path": "sub-052/eeg/sub-052_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-052/eeg/sub-052_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-053/eeg/sub-053_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-053/eeg/sub-053_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-053/eeg/sub-053_task-Rest_eeg.fdt",
+   "size": 15931440,
+   "sha256": "c253828c3fd3a750e9a4f1087e91544c247b40bc32e6bb0141fcbb230b06696f"
+  },
+  {
+   "path": "sub-053/eeg/sub-053_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "c0e2ddfc47cbdbb4523a2a26b1d6a8a6cd14257fc7211fb78c2fa89c15a86d09"
+  },
+  {
+   "path": "sub-053/eeg/sub-053_task-Rest_eeg.set",
+   "size": 303792,
+   "sha256": "471ec0a69ba3c5b6567cd4f5c21c8ca278b5e9f9e3d853c11ab652c5693e3acd"
+  },
+  {
+   "path": "sub-053/eeg/sub-053_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-053/eeg/sub-053_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-054/eeg/sub-054_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-054/eeg/sub-054_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-054/eeg/sub-054_task-Rest_eeg.fdt",
+   "size": 15750000,
+   "sha256": "9e34f78140edc6ffdb7306a131b234fd2c93e109f4c6b52d441e660d2954d4bf"
+  },
+  {
+   "path": "sub-054/eeg/sub-054_task-Rest_eeg.json",
+   "size": 536,
+   "sha256": "06a6ca516e77c62719f02c646a680d5f6b0f5159fb8b9e5ced4a8f1b6f39e08a"
+  },
+  {
+   "path": "sub-054/eeg/sub-054_task-Rest_eeg.set",
+   "size": 300912,
+   "sha256": "374355d506c78e796051aac5e952a7f84b5fb95cb96f25f84dcecec01fa48c8c"
+  },
+  {
+   "path": "sub-054/eeg/sub-054_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-054/eeg/sub-054_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-055/eeg/sub-055_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-055/eeg/sub-055_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-055/eeg/sub-055_task-Rest_eeg.fdt",
+   "size": 15669360,
+   "sha256": "22f94dc558301072fee9bdc6962628e78481ef5e122c98f95a9841094fd0a7c9"
+  },
+  {
+   "path": "sub-055/eeg/sub-055_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "6f24f2f7f90a1b7f05daa02e363a0abf6e38098e24d117dcc8ebbcf4f386e90b"
+  },
+  {
+   "path": "sub-055/eeg/sub-055_task-Rest_eeg.set",
+   "size": 299632,
+   "sha256": "0c358e4cd0293f43a44a612c7621ed7318fcfd26f28356a21722a6637f750cac"
+  },
+  {
+   "path": "sub-055/eeg/sub-055_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-055/eeg/sub-055_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-056/eeg/sub-056_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-056/eeg/sub-056_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-056/eeg/sub-056_task-Rest_eeg.fdt",
+   "size": 17536680,
+   "sha256": "8584f5ee429d7efe631499e6889a8facbee8ddef6d5b3a67bac31108b8aaea4a"
+  },
+  {
+   "path": "sub-056/eeg/sub-056_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "d0720fdc56d11cb5f16714a2ad8ff8b64a85935dd4f8c8cc9478a82b8ffd503a"
+  },
+  {
+   "path": "sub-056/eeg/sub-056_task-Rest_eeg.set",
+   "size": 329272,
+   "sha256": "00dfc538c50f0515615a3d40cdf563f9cdb62ccd0bf169e5b44d05ec1cd867d1"
+  },
+  {
+   "path": "sub-056/eeg/sub-056_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-056/eeg/sub-056_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-057/eeg/sub-057_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-057/eeg/sub-057_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-057/eeg/sub-057_task-Rest_eeg.fdt",
+   "size": 16604280,
+   "sha256": "f51a8dd29a63d8f1e0ef7ebd8850a546be7f9399989aec8d3be12b51c37a3e91"
+  },
+  {
+   "path": "sub-057/eeg/sub-057_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "93ea809098a8290a243ec5b09bf21daa868cdb63e0a3477ce38d740701c99350"
+  },
+  {
+   "path": "sub-057/eeg/sub-057_task-Rest_eeg.set",
+   "size": 314472,
+   "sha256": "910946e45dbc76f461cfe53b67002df42709a43acd99a45af327670f1cc0b4ca"
+  },
+  {
+   "path": "sub-057/eeg/sub-057_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-057/eeg/sub-057_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-058/eeg/sub-058_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-058/eeg/sub-058_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-058/eeg/sub-058_task-Rest_eeg.fdt",
+   "size": 15765120,
+   "sha256": "d1453aa6069141ce6324bacbb8ddf55b128e4be461d7ee461fd9fb2aac4e00fb"
+  },
+  {
+   "path": "sub-058/eeg/sub-058_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "5de5a845e5b04f9896bab2bc1a074fcac5c0f1be72e9986bc08763b9879e9fdc"
+  },
+  {
+   "path": "sub-058/eeg/sub-058_task-Rest_eeg.set",
+   "size": 301152,
+   "sha256": "8fe09aacb573ce6268dbf7c6aa5f7a677b7797124f43c3ed7b06f8eb25a08628"
+  },
+  {
+   "path": "sub-058/eeg/sub-058_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-058/eeg/sub-058_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-059/eeg/sub-059_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-059/eeg/sub-059_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-059/eeg/sub-059_task-Rest_eeg.fdt",
+   "size": 17098200,
+   "sha256": "75676f7768573dc9125a9f60c8c9b3ec4d29cb79d1836422a05341d9574b2176"
+  },
+  {
+   "path": "sub-059/eeg/sub-059_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "79439502e2bcd31a10a43c3f1060550786215d123a3c48b1e50646b08d8ff27c"
+  },
+  {
+   "path": "sub-059/eeg/sub-059_task-Rest_eeg.set",
+   "size": 322312,
+   "sha256": "b86ac980215e47f7bd4e0efe0acdf411539d048490778a342c8e04ddc36e5a08"
+  },
+  {
+   "path": "sub-059/eeg/sub-059_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-059/eeg/sub-059_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-060/eeg/sub-060_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-060/eeg/sub-060_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-060/eeg/sub-060_task-Rest_eeg.fdt",
+   "size": 18461520,
+   "sha256": "d744bb5a3b862ee90be1765024399700f763634a7c356bf10b068a55d412d617"
+  },
+  {
+   "path": "sub-060/eeg/sub-060_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "45964338919a149329b2bc283090d86de4e0499313772795e972e04f41396ece"
+  },
+  {
+   "path": "sub-060/eeg/sub-060_task-Rest_eeg.set",
+   "size": 343952,
+   "sha256": "8841df7d296b77efc1115aa351109430b8d15c40553a3273f8c4fdf1cbd6f442"
+  },
+  {
+   "path": "sub-060/eeg/sub-060_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-060/eeg/sub-060_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-061/eeg/sub-061_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-061/eeg/sub-061_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-061/eeg/sub-061_task-Rest_eeg.fdt",
+   "size": 15750000,
+   "sha256": "e0dddb375079cc5034b1ec3725924e0a8f19523b3d8ec641b26600505e672805"
+  },
+  {
+   "path": "sub-061/eeg/sub-061_task-Rest_eeg.json",
+   "size": 536,
+   "sha256": "06a6ca516e77c62719f02c646a680d5f6b0f5159fb8b9e5ced4a8f1b6f39e08a"
+  },
+  {
+   "path": "sub-061/eeg/sub-061_task-Rest_eeg.set",
+   "size": 300912,
+   "sha256": "5214352e75db6076421f49fda65e3210dd95e86878a2c9be80bb186bbc171f17"
+  },
+  {
+   "path": "sub-061/eeg/sub-061_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-061/eeg/sub-061_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-062/eeg/sub-062_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-062/eeg/sub-062_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-062/eeg/sub-062_task-Rest_eeg.fdt",
+   "size": 15760080,
+   "sha256": "45e8e7f6cc251a9b8d0c4579e55ce0aefa56839b2218bb72bf2a9a848a88c1a0"
+  },
+  {
+   "path": "sub-062/eeg/sub-062_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "c1c32f3b48c89f46eea41ece79c436b15e91fed8411784778e49be51a637cf1b"
+  },
+  {
+   "path": "sub-062/eeg/sub-062_task-Rest_eeg.set",
+   "size": 301072,
+   "sha256": "03131887e8debd8e83d8914ea624945c14e3e95f07cf8e8243d41642bb541d10"
+  },
+  {
+   "path": "sub-062/eeg/sub-062_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-062/eeg/sub-062_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-063/eeg/sub-063_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-063/eeg/sub-063_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-063/eeg/sub-063_task-Rest_eeg.fdt",
+   "size": 19698840,
+   "sha256": "2fd187b6f37ceb8a9168af49f9e10015e6ca026f0f0c49653afa783c4efe17a1"
+  },
+  {
+   "path": "sub-063/eeg/sub-063_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "5a8e333786068d72062c091d9962a913d67b878cc62ffa3dc004a4b72ae2881c"
+  },
+  {
+   "path": "sub-063/eeg/sub-063_task-Rest_eeg.set",
+   "size": 363592,
+   "sha256": "b3dd89a12253c425de1082d9c1846e7222724725a610ee5a85e285fa523b2f8a"
+  },
+  {
+   "path": "sub-063/eeg/sub-063_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-063/eeg/sub-063_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-064/eeg/sub-064_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-064/eeg/sub-064_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-064/eeg/sub-064_task-Rest_eeg.fdt",
+   "size": 20364120,
+   "sha256": "ade5fe2b96d4eaa555357701489797852dca8f2587f96b2afeda9e5b76378a25"
+  },
+  {
+   "path": "sub-064/eeg/sub-064_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "28ea34b136a96e382ecc4679d1a129f9af638d0d92610b701b135672826ab51b"
+  },
+  {
+   "path": "sub-064/eeg/sub-064_task-Rest_eeg.set",
+   "size": 374152,
+   "sha256": "9d09028a96049c5263b1a95d81946dbe0b0d79a5834e1a87150c9c078242840a"
+  },
+  {
+   "path": "sub-064/eeg/sub-064_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-064/eeg/sub-064_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-065/eeg/sub-065_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-065/eeg/sub-065_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-065/eeg/sub-065_task-Rest_eeg.fdt",
+   "size": 15854080,
+   "sha256": "5dd598959a7cbbc9e3420c3bbc0f58733aabfe2b87973e12efa4e30aca700e8e"
+  },
+  {
+   "path": "sub-065/eeg/sub-065_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "0ca0d4a9a25bfa32795a7b8cc2b8659d2f38a8bcac504583853fec57fec67d25"
+  },
+  {
+   "path": "sub-065/eeg/sub-065_task-Rest_eeg.set",
+   "size": 299400,
+   "sha256": "8ce3c16837eb4c547e7b8d5ef9b01d6863298a66cef3e4265810d06cdce6569a"
+  },
+  {
+   "path": "sub-065/eeg/sub-065_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-065/eeg/sub-065_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-066/eeg/sub-066_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-066/eeg/sub-066_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-066/eeg/sub-066_task-Rest_eeg.fdt",
+   "size": 17743360,
+   "sha256": "203f59e6f4288d354f2fd640f8502f1dd1d68b576a9b831c402d28b3e433fd5a"
+  },
+  {
+   "path": "sub-066/eeg/sub-066_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "c1ff010cdf59cff7459ab36552cc43753812f0984731dc6d02cf293ae4806dc4"
+  },
+  {
+   "path": "sub-066/eeg/sub-066_task-Rest_eeg.set",
+   "size": 328920,
+   "sha256": "8e9bbf5c9ecc64b543b6b096f5cfd3b7b9c344b05ce00b3528a98bd4843097d9"
+  },
+  {
+   "path": "sub-066/eeg/sub-066_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-066/eeg/sub-066_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-067/eeg/sub-067_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-067/eeg/sub-067_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-067/eeg/sub-067_task-Rest_eeg.fdt",
+   "size": 16216200,
+   "sha256": "e3e7b3ebcf3aa17e13f37c096318fc47077d5497331a45db1bb91d930e05a411"
+  },
+  {
+   "path": "sub-067/eeg/sub-067_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "89d6972093846b59b0e67f0fde73e56cfce2b5716a0f8a61a2e4e6a1f8fd1692"
+  },
+  {
+   "path": "sub-067/eeg/sub-067_task-Rest_eeg.set",
+   "size": 565712,
+   "sha256": "36ad123a5886a065ab78e2d058614e9a4ce9bb084543e6a74e545579bbdce76f"
+  },
+  {
+   "path": "sub-067/eeg/sub-067_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-067/eeg/sub-067_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-068/eeg/sub-068_task-Rest_channels.tsv",
+   "size": 772,
+   "sha256": "22e82a48a961f5db5caafc8af6d51e1778a07de720c9d79ed84fba1751530efb"
+  },
+  {
+   "path": "sub-068/eeg/sub-068_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-068/eeg/sub-068_task-Rest_eeg.fdt",
+   "size": 16064400,
+   "sha256": "deea43e1de15e4468946c2bbb0cb7b8407a8afb2eabb6995a96c9364544279aa"
+  },
+  {
+   "path": "sub-068/eeg/sub-068_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "e39d4d3ab8514d8f3f55eebc75b43211b1ea80ff42a799ec4086117482d3e947"
+  },
+  {
+   "path": "sub-068/eeg/sub-068_task-Rest_eeg.set",
+   "size": 295840,
+   "sha256": "ef2fcd459c3e04523c37ce8436f110cf98fab0f74b9a75aa24362c4b05a35833"
+  },
+  {
+   "path": "sub-068/eeg/sub-068_task-Rest_electrodes.tsv",
+   "size": 2042,
+   "sha256": "400e72646fa3c3c393364635a3bd420834e14417f48b8f262fe6d1dc23fa251b"
+  },
+  {
+   "path": "sub-068/eeg/sub-068_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-069/eeg/sub-069_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-069/eeg/sub-069_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-069/eeg/sub-069_task-Rest_eeg.fdt",
+   "size": 16194560,
+   "sha256": "47a66d96302ac3bf5efcf41f4c4ffd0ad45eff5c6914896840311050c11ed0a9"
+  },
+  {
+   "path": "sub-069/eeg/sub-069_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "9a1a65b3b5082c49f607628a40c69b93c10eef9286222fc10ee58389932c8fca"
+  },
+  {
+   "path": "sub-069/eeg/sub-069_task-Rest_eeg.set",
+   "size": 304720,
+   "sha256": "757a0130f428463f9ea6fac22bd7599fc591855b82816afb66be92c34ada208b"
+  },
+  {
+   "path": "sub-069/eeg/sub-069_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-069/eeg/sub-069_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-070/eeg/sub-070_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-070/eeg/sub-070_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-070/eeg/sub-070_task-Rest_eeg.fdt",
+   "size": 15293880,
+   "sha256": "e07269d543845c16d823e673257eae7a6419a04c5c2da82f009287433d7ef68b"
+  },
+  {
+   "path": "sub-070/eeg/sub-070_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "d6ce0d7dc06ea2bbd07670e38d639046b13af3cc02ff4db7d34bcf57942b9695"
+  },
+  {
+   "path": "sub-070/eeg/sub-070_task-Rest_eeg.set",
+   "size": 293672,
+   "sha256": "9e77fe082a2a080d6bae224dd4735eea19ad8983359f399394e7c0cb93c88e3f"
+  },
+  {
+   "path": "sub-070/eeg/sub-070_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-070/eeg/sub-070_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-071/eeg/sub-071_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-071/eeg/sub-071_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-071/eeg/sub-071_task-Rest_eeg.fdt",
+   "size": 17168760,
+   "sha256": "df971c6bc657023b814938917baea85b53532c02a4954d575a91a03b2c73805a"
+  },
+  {
+   "path": "sub-071/eeg/sub-071_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "0b61cd49ce7a0ead62b47fc63d127bb38cadbfb5e8e090d47e05ffd18f78f6ab"
+  },
+  {
+   "path": "sub-071/eeg/sub-071_task-Rest_eeg.set",
+   "size": 323432,
+   "sha256": "8c2d137719866f3082fb01474f1f4946161300b63c17184245fb9ed2b7e5c71a"
+  },
+  {
+   "path": "sub-071/eeg/sub-071_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-071/eeg/sub-071_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-072/eeg/sub-072_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-072/eeg/sub-072_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-072/eeg/sub-072_task-Rest_eeg.fdt",
+   "size": 19094040,
+   "sha256": "e68cf78a1bc2477e3aca8174e00acda13bfb126760faad8509a9a6fb5aee62bf"
+  },
+  {
+   "path": "sub-072/eeg/sub-072_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "1efeff9f3fbba3653146342a9571a8224ab886756faf00e348c679375e6b818d"
+  },
+  {
+   "path": "sub-072/eeg/sub-072_task-Rest_eeg.set",
+   "size": 353992,
+   "sha256": "f605a48bbb1e7ed4f1186cefa62ac28dad1bdc98129c63c5bc2de05ba719ee46"
+  },
+  {
+   "path": "sub-072/eeg/sub-072_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-072/eeg/sub-072_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-073/eeg/sub-073_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-073/eeg/sub-073_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-073/eeg/sub-073_task-Rest_eeg.fdt",
+   "size": 16805880,
+   "sha256": "53c4441a136031cccbec285da6d5698d0da9f2ca8f531695941d7bafca97331b"
+  },
+  {
+   "path": "sub-073/eeg/sub-073_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "8d06fde5db599cafb676e316612bd60b38c011ffc56adc7064f014d7a941f56f"
+  },
+  {
+   "path": "sub-073/eeg/sub-073_task-Rest_eeg.set",
+   "size": 317672,
+   "sha256": "4e1276fdfdbb77013455b810ef59d00f7bfe2b5f7944e7117926aabc0493eeeb"
+  },
+  {
+   "path": "sub-073/eeg/sub-073_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-073/eeg/sub-073_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-074/eeg/sub-074_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-074/eeg/sub-074_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-074/eeg/sub-074_task-Rest_eeg.fdt",
+   "size": 17627400,
+   "sha256": "04f44f84ab2f60a79cf0173cfd353fd2b46f58c5cd8e5e6f513311796228f41e"
+  },
+  {
+   "path": "sub-074/eeg/sub-074_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "1f4636bd6e4bfc4c3db286676602f40e02ab66c4fd11da1013fa771e01bf7ed6"
+  },
+  {
+   "path": "sub-074/eeg/sub-074_task-Rest_eeg.set",
+   "size": 330712,
+   "sha256": "faedd6f4241ece67d445bbb3f9524925778bd174307d09f08c003f8624307fe9"
+  },
+  {
+   "path": "sub-074/eeg/sub-074_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-074/eeg/sub-074_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-075/eeg/sub-075_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-075/eeg/sub-075_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-075/eeg/sub-075_task-Rest_eeg.fdt",
+   "size": 16584120,
+   "sha256": "7e69588ea00f4397161751e24cf3e9c5cfb5b788e45299e096e0e6d2ae399d71"
+  },
+  {
+   "path": "sub-075/eeg/sub-075_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "6289dcc2fdbf03f47ceca6d365da440744bf5bd280f7777ee6354c1d352151f0"
+  },
+  {
+   "path": "sub-075/eeg/sub-075_task-Rest_eeg.set",
+   "size": 314152,
+   "sha256": "c81694e3e53094a92b1c58ab81ec8d837a8a5fcb3162a97d88d42f7a0ef7f1ba"
+  },
+  {
+   "path": "sub-075/eeg/sub-075_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-075/eeg/sub-075_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-076/eeg/sub-076_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-076/eeg/sub-076_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-076/eeg/sub-076_task-Rest_eeg.fdt",
+   "size": 16644600,
+   "sha256": "05d9f74ab8aca13464129e43189dec0ff632f3990abaa966dc24068bef4481e0"
+  },
+  {
+   "path": "sub-076/eeg/sub-076_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "fc20d57a1a4ea3242782074d4a1f774bfb381e623946e113d1564a271a0354c7"
+  },
+  {
+   "path": "sub-076/eeg/sub-076_task-Rest_eeg.set",
+   "size": 315112,
+   "sha256": "c7bb008cc6fa0d881d75f531d8729a7af6fd796d6c303f8eb37f21ffc7f0e283"
+  },
+  {
+   "path": "sub-076/eeg/sub-076_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-076/eeg/sub-076_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-077/eeg/sub-077_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-077/eeg/sub-077_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-077/eeg/sub-077_task-Rest_eeg.fdt",
+   "size": 20766720,
+   "sha256": "6ab5094d69fc0f1a6e18beeedb4a359a74f12a2750c51c866be62938caec3aa3"
+  },
+  {
+   "path": "sub-077/eeg/sub-077_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "039725cb7a745e65c969b75a76795e2eed447fecf99c742ae1c4c67e41c7763d"
+  },
+  {
+   "path": "sub-077/eeg/sub-077_task-Rest_eeg.set",
+   "size": 376160,
+   "sha256": "bfcf77b0e1f97627a398d5dbd0e5ce3f3ef2e3fe2f52b0e021a9a94a04f233f4"
+  },
+  {
+   "path": "sub-077/eeg/sub-077_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-077/eeg/sub-077_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-078/eeg/sub-078_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-078/eeg/sub-078_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-078/eeg/sub-078_task-Rest_eeg.fdt",
+   "size": 18670080,
+   "sha256": "9ea97f93ede0e78224d6e01c2c4b232ac801ea264e5da8bbd383374fde271618"
+  },
+  {
+   "path": "sub-078/eeg/sub-078_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "c49d16c87537071fa913798ec11811c3e61f9dee8c1a3eb516cd1e809f9b9080"
+  },
+  {
+   "path": "sub-078/eeg/sub-078_task-Rest_eeg.set",
+   "size": 343400,
+   "sha256": "b58591b8ac4e902de95f8196d84b54d37a431340b99201ce476f9fc8f44e4a0b"
+  },
+  {
+   "path": "sub-078/eeg/sub-078_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-078/eeg/sub-078_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-079/eeg/sub-079_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-079/eeg/sub-079_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-079/eeg/sub-079_task-Rest_eeg.fdt",
+   "size": 20344320,
+   "sha256": "51fabe50e6bceb9e2ce2a86dea5eb482e121ceee6d5b5c5a29194ed9c4f51aa7"
+  },
+  {
+   "path": "sub-079/eeg/sub-079_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "97030cdae2771de839f9a3ba4ab4408af03d3211e56893967f770d769e865f4a"
+  },
+  {
+   "path": "sub-079/eeg/sub-079_task-Rest_eeg.set",
+   "size": 369560,
+   "sha256": "3510e2bb4e2a43391e6a91d1277c4ba60076e312c7773ee3084f833336cb1655"
+  },
+  {
+   "path": "sub-079/eeg/sub-079_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-079/eeg/sub-079_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-080/eeg/sub-080_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-080/eeg/sub-080_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-080/eeg/sub-080_task-Rest_eeg.fdt",
+   "size": 18539640,
+   "sha256": "d52f9851f5cc910e2dc315e55726bbc1af919679a749bbc70e7e1888adafe14d"
+  },
+  {
+   "path": "sub-080/eeg/sub-080_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "30ac077c1ebf8bfc66853924489bf6f832f77e9c1e1a5cc6c7d386e62a60b886"
+  },
+  {
+   "path": "sub-080/eeg/sub-080_task-Rest_eeg.set",
+   "size": 345192,
+   "sha256": "aac5b8a2601ad9f2377bf30a3eb82f3f4e57fa5831a0de86985ca24920529af2"
+  },
+  {
+   "path": "sub-080/eeg/sub-080_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-080/eeg/sub-080_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-081/eeg/sub-081_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-081/eeg/sub-081_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-081/eeg/sub-081_task-Rest_eeg.fdt",
+   "size": 16506000,
+   "sha256": "9868e9c4211a865a1c3bc9456a98922bd2488d7d0a286d5f7bfa992e084aa41e"
+  },
+  {
+   "path": "sub-081/eeg/sub-081_task-Rest_eeg.json",
+   "size": 536,
+   "sha256": "1abb2018c9159f5f76e4f43064bc4a83965614239f59ff0c80e45c2033035473"
+  },
+  {
+   "path": "sub-081/eeg/sub-081_task-Rest_eeg.set",
+   "size": 574912,
+   "sha256": "2aca148eb347b3091048e52f1be95db3bf1767045cf9ec595744eafa9b2f50e4"
+  },
+  {
+   "path": "sub-081/eeg/sub-081_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-081/eeg/sub-081_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-082/eeg/sub-082_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-082/eeg/sub-082_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-082/eeg/sub-082_task-Rest_eeg.fdt",
+   "size": 20238120,
+   "sha256": "b11820b4a38f3e8f606fc2e7583f4990b38eeb38d8895e6d831c9722d5986f82"
+  },
+  {
+   "path": "sub-082/eeg/sub-082_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "b42f7a96296eaf65a4caa3f69e4841fbbdbf93c3cabe9cdcc5b884fcb8abac13"
+  },
+  {
+   "path": "sub-082/eeg/sub-082_task-Rest_eeg.set",
+   "size": 372152,
+   "sha256": "bee20aa1877dfdd0eda9800d1232d82b595e4ec24bb92e3b6105c1663fe83401"
+  },
+  {
+   "path": "sub-082/eeg/sub-082_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-082/eeg/sub-082_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-083/eeg/sub-083_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-083/eeg/sub-083_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-083/eeg/sub-083_task-Rest_eeg.fdt",
+   "size": 23090760,
+   "sha256": "67a1d5a03e2849492748ce3a2d81aa4fbd73a0ddb1e05156d31d5170b78cb091"
+  },
+  {
+   "path": "sub-083/eeg/sub-083_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "9887cce6fd9ee66e2117e13b6a8576a43cf89758dc89323aa61435e5b736c1c1"
+  },
+  {
+   "path": "sub-083/eeg/sub-083_task-Rest_eeg.set",
+   "size": 417432,
+   "sha256": "a1b495e969af484158313184e61554c9090101185f6eddd2db4dbdf0d908f251"
+  },
+  {
+   "path": "sub-083/eeg/sub-083_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-083/eeg/sub-083_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-084/eeg/sub-084_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-084/eeg/sub-084_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-084/eeg/sub-084_task-Rest_eeg.fdt",
+   "size": 15807960,
+   "sha256": "1afcf4234ddbc2e4ed8617f9e7abe60603166bcb149b0d7061d2156eae812284"
+  },
+  {
+   "path": "sub-084/eeg/sub-084_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "be00e8015ab9f344e64852cfceb864d15f6963c04dbb9753b36bc15182dbd5bd"
+  },
+  {
+   "path": "sub-084/eeg/sub-084_task-Rest_eeg.set",
+   "size": 301832,
+   "sha256": "329e7bced7256af8764046d21f80c2fc4dc9f44c0a0a2c15075f0b91d4a113c6"
+  },
+  {
+   "path": "sub-084/eeg/sub-084_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-084/eeg/sub-084_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-085/eeg/sub-085_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-085/eeg/sub-085_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-085/eeg/sub-085_task-Rest_eeg.fdt",
+   "size": 16027200,
+   "sha256": "7f0991701b96bccad290aa646d6b06e90bb1a88aabb015d608b5805b7f69f58c"
+  },
+  {
+   "path": "sub-085/eeg/sub-085_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "5c5610fa5ef3625ba74ba08bc00a7a99fbb5b5301e6fec69a93c32b99ac33cc7"
+  },
+  {
+   "path": "sub-085/eeg/sub-085_task-Rest_eeg.set",
+   "size": 305312,
+   "sha256": "88c50be390d94aef47d62003ed7a997118d646ae6ed6b086089ea9f3369bc9e7"
+  },
+  {
+   "path": "sub-085/eeg/sub-085_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-085/eeg/sub-085_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-086/eeg/sub-086_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-086/eeg/sub-086_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-086/eeg/sub-086_task-Rest_eeg.fdt",
+   "size": 19550160,
+   "sha256": "b8257dd258c69be86ec68b869619b4bdad3d600923ed7c1b9ec701faaa4aefcb"
+  },
+  {
+   "path": "sub-086/eeg/sub-086_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "510aba2c4eaffa31f2e526e2936b709b643fc4d75ce5302d86c2305a2fcacd6a"
+  },
+  {
+   "path": "sub-086/eeg/sub-086_task-Rest_eeg.set",
+   "size": 361232,
+   "sha256": "6a2eb124430caae671d8aef29b2309ff178535e5f67fecee4df391c577dd3177"
+  },
+  {
+   "path": "sub-086/eeg/sub-086_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-086/eeg/sub-086_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-087/eeg/sub-087_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-087/eeg/sub-087_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-087/eeg/sub-087_task-Rest_eeg.fdt",
+   "size": 15966720,
+   "sha256": "4c44a4b5e69cd0f8e8eecba25cbdf3c47e5f38f192e5ac311d598be201862015"
+  },
+  {
+   "path": "sub-087/eeg/sub-087_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "13d5b92140aae3986cb65e5fc38c1cc83415259ff9336daea55780d4f2d319d3"
+  },
+  {
+   "path": "sub-087/eeg/sub-087_task-Rest_eeg.set",
+   "size": 304352,
+   "sha256": "0c761d60f288fb58074373bb3c6413016d56d9564f0f48f8b74ab36a52a6e240"
+  },
+  {
+   "path": "sub-087/eeg/sub-087_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-087/eeg/sub-087_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-088/eeg/sub-088_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-088/eeg/sub-088_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-088/eeg/sub-088_task-Rest_eeg.fdt",
+   "size": 15286320,
+   "sha256": "2bf5125735d82a6e74dbe8d327f4a3a2a020d55d02aa1d780bffc805dbdf3974"
+  },
+  {
+   "path": "sub-088/eeg/sub-088_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "4fa9f7e81cfebea7568aa323af33a3a881ede14811e2dc0233c6c49c666a3efe"
+  },
+  {
+   "path": "sub-088/eeg/sub-088_task-Rest_eeg.set",
+   "size": 293552,
+   "sha256": "5b19fac9083d3540e6c99a6ca87986a30603299a6c3a27f02d929a3496af4f9c"
+  },
+  {
+   "path": "sub-088/eeg/sub-088_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-088/eeg/sub-088_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-089/eeg/sub-089_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-089/eeg/sub-089_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-089/eeg/sub-089_task-Rest_eeg.fdt",
+   "size": 20080640,
+   "sha256": "35eed97436889f1866f7c7a174aef8d1aa861b18582a1365f03e7166ffe28657"
+  },
+  {
+   "path": "sub-089/eeg/sub-089_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "2233c6268e0b36528571c6e4d0f4e0929f312105ba3d26cef339c24d30362191"
+  },
+  {
+   "path": "sub-089/eeg/sub-089_task-Rest_eeg.set",
+   "size": 365440,
+   "sha256": "9c67113392327ba606b4ff7871788b076a6a8ac6ee66005c47cf57b72bde6ec1"
+  },
+  {
+   "path": "sub-089/eeg/sub-089_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-089/eeg/sub-089_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-090/eeg/sub-090_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-090/eeg/sub-090_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-090/eeg/sub-090_task-Rest_eeg.fdt",
+   "size": 18152960,
+   "sha256": "2e6288aa5505f2bd92f9e6ac6a33697a4c40550134e9cc517e3c8e5eee0a99bd"
+  },
+  {
+   "path": "sub-090/eeg/sub-090_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "6498951be4226e6f6cf27ae0c6775eca241a5140bcef63b30802b23c1f52d770"
+  },
+  {
+   "path": "sub-090/eeg/sub-090_task-Rest_eeg.set",
+   "size": 335320,
+   "sha256": "3ebaad55f323fdbf5bc76a346a75538d96caefe8342ab7371b20ccb40a2d040f"
+  },
+  {
+   "path": "sub-090/eeg/sub-090_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-090/eeg/sub-090_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-091/eeg/sub-091_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-091/eeg/sub-091_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-091/eeg/sub-091_task-Rest_eeg.fdt",
+   "size": 15539200,
+   "sha256": "e783c679037d67bc8245c9b704f4efe85f10f10ded183f60fb35cf4c311e4069"
+  },
+  {
+   "path": "sub-091/eeg/sub-091_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "aa9d9eeadb35ef1b8a803bcdb3c74167bfac6f3b661ddfd4477a08f1087bc993"
+  },
+  {
+   "path": "sub-091/eeg/sub-091_task-Rest_eeg.set",
+   "size": 294480,
+   "sha256": "a8cc7a869f4cdc2118df699c9fa775e3b2592ec4bfd3b5e1c671a32d0894a937"
+  },
+  {
+   "path": "sub-091/eeg/sub-091_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-091/eeg/sub-091_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-092/eeg/sub-092_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-092/eeg/sub-092_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-092/eeg/sub-092_task-Rest_eeg.fdt",
+   "size": 15564800,
+   "sha256": "8197941ec2486a77320dc414217305d635be6f9e7764aeddc6127b7e49b25c1d"
+  },
+  {
+   "path": "sub-092/eeg/sub-092_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "5a4885fa693ccdc2500708bd0e51fef6099e541b0332939f7bdab3df8ef43f9c"
+  },
+  {
+   "path": "sub-092/eeg/sub-092_task-Rest_eeg.set",
+   "size": 294880,
+   "sha256": "3d5f7d28be8ccf72747e87d2358a82b5e1c202535715fb2607694f26685766cc"
+  },
+  {
+   "path": "sub-092/eeg/sub-092_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-092/eeg/sub-092_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-093/eeg/sub-093_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-093/eeg/sub-093_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-093/eeg/sub-093_task-Rest_eeg.fdt",
+   "size": 16926720,
+   "sha256": "c5728941a7ca191cd958036dee2b7e1f46f123e37f7a517fb17cf6fbdf4b8a61"
+  },
+  {
+   "path": "sub-093/eeg/sub-093_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "4bffd46601546e3b79a74f9498f6bb0d4c83035c7cba02cb27866a1a94141e53"
+  },
+  {
+   "path": "sub-093/eeg/sub-093_task-Rest_eeg.set",
+   "size": 316160,
+   "sha256": "05b59c8e92b5e61e122b0ef8a92c05749b948a03921d9e7b19772e82f713241b"
+  },
+  {
+   "path": "sub-093/eeg/sub-093_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-093/eeg/sub-093_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-094/eeg/sub-094_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-094/eeg/sub-094_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-094/eeg/sub-094_task-Rest_eeg.fdt",
+   "size": 18319360,
+   "sha256": "efd8d28909e841ad834a8712f9b9079b14c4cd89051a9c53fcc4686c089e8b1d"
+  },
+  {
+   "path": "sub-094/eeg/sub-094_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "c72197e2eaac780495c18effa0b297c9df1b968683f0e7faa1f6ad01d4859622"
+  },
+  {
+   "path": "sub-094/eeg/sub-094_task-Rest_eeg.set",
+   "size": 337920,
+   "sha256": "5333b8bf6ca67dc8d5e25738a6f21354ec6ba13ac674e8ef6c714bd7a25ebe4d"
+  },
+  {
+   "path": "sub-094/eeg/sub-094_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-094/eeg/sub-094_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-095/eeg/sub-095_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-095/eeg/sub-095_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-095/eeg/sub-095_task-Rest_eeg.fdt",
+   "size": 15787520,
+   "sha256": "6d21eeb7f9980865ea80cdd493709b5d2e34909203d092d976e1250f4f6d5478"
+  },
+  {
+   "path": "sub-095/eeg/sub-095_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "af4c107aeb5a41e70c180458e50bc7fb9b10afe38040e29b43daf02105fa1a6f"
+  },
+  {
+   "path": "sub-095/eeg/sub-095_task-Rest_eeg.set",
+   "size": 298360,
+   "sha256": "4356155cf04d0d1a0a03575b6554230e2547df2c6eb7625caf9d115d30efce7a"
+  },
+  {
+   "path": "sub-095/eeg/sub-095_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-095/eeg/sub-095_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-096/eeg/sub-096_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-096/eeg/sub-096_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-096/eeg/sub-096_task-Rest_eeg.fdt",
+   "size": 16706560,
+   "sha256": "43486c23b2bcfd1b3ed41051dc8985ee3fc8b40f879df0079a19ff1c475f8cf7"
+  },
+  {
+   "path": "sub-096/eeg/sub-096_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "61bf30e285ed6c1ff52d8961f9643c662788bfe9e20a4fa440a2cbf33a39a048"
+  },
+  {
+   "path": "sub-096/eeg/sub-096_task-Rest_eeg.set",
+   "size": 312720,
+   "sha256": "253fea759c27608caf765745fbbcc8903fafefd1ac634c20e6041b54eb2aa37c"
+  },
+  {
+   "path": "sub-096/eeg/sub-096_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-096/eeg/sub-096_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-097/eeg/sub-097_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-097/eeg/sub-097_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-097/eeg/sub-097_task-Rest_eeg.fdt",
+   "size": 20428800,
+   "sha256": "160e7a159cd2aa1e3eebf06fc7d72d556cbf5dbd4d455ff1bd350e3907846911"
+  },
+  {
+   "path": "sub-097/eeg/sub-097_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "2e21f7f168a30df2121891c3656d89a5a3a0d25e832eb2bc7b300d2c002f70cf"
+  },
+  {
+   "path": "sub-097/eeg/sub-097_task-Rest_eeg.set",
+   "size": 370880,
+   "sha256": "c7841d7b0d7cde1b56ce9e7494bd7daa4947a62ab75b3004011d1b12b90e98b5"
+  },
+  {
+   "path": "sub-097/eeg/sub-097_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-097/eeg/sub-097_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-098/eeg/sub-098_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-098/eeg/sub-098_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-098/eeg/sub-098_task-Rest_eeg.fdt",
+   "size": 15618560,
+   "sha256": "846897083036220ce4e1cd75dbb71bbf5aa1994f96e91b92ea5f84c212d03b96"
+  },
+  {
+   "path": "sub-098/eeg/sub-098_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "b04089c9ab08afd88abd4d8a8c6def9b5dc0ec57928aa236ca36fc473ff3058d"
+  },
+  {
+   "path": "sub-098/eeg/sub-098_task-Rest_eeg.set",
+   "size": 295720,
+   "sha256": "2d4296000572891da6df1553c905d42bb1760bfd2e8215d3ac8fe7892306f750"
+  },
+  {
+   "path": "sub-098/eeg/sub-098_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-098/eeg/sub-098_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-099/eeg/sub-099_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-099/eeg/sub-099_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-099/eeg/sub-099_task-Rest_eeg.fdt",
+   "size": 15644160,
+   "sha256": "e97335a71464ce6ba92e8ad90d1798425d91ed4c9f5a6510033d9a0b35e5627f"
+  },
+  {
+   "path": "sub-099/eeg/sub-099_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "5f2c8551797161a3c8440592f0ca7b1aba5a7fc2e73164f2e86f53c144793b6d"
+  },
+  {
+   "path": "sub-099/eeg/sub-099_task-Rest_eeg.set",
+   "size": 296120,
+   "sha256": "0d768519ec72986f2a0fbf7c104a68cb3604e87ea187f34908c401c219e785b1"
+  },
+  {
+   "path": "sub-099/eeg/sub-099_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-099/eeg/sub-099_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-100/eeg/sub-100_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-100/eeg/sub-100_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-100/eeg/sub-100_task-Rest_eeg.fdt",
+   "size": 17587080,
+   "sha256": "f9cb9cbcaa55785b4330bef061f80a7c59b347e1c534fe732f320422defce738"
+  },
+  {
+   "path": "sub-100/eeg/sub-100_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "dd42bee64636c27fbb35746faeabfd855aa92f0e5331d45e08f6e95b6dad8bdc"
+  },
+  {
+   "path": "sub-100/eeg/sub-100_task-Rest_eeg.set",
+   "size": 330072,
+   "sha256": "5c927b336f2a52085939b4a3511e8a60e3505ad57bf0fbd6ecfc4022706b474a"
+  },
+  {
+   "path": "sub-100/eeg/sub-100_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-100/eeg/sub-100_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-101/eeg/sub-101_task-Rest_channels.tsv",
+   "size": 745,
+   "sha256": "7483c59062d6288b84176e1654455a039b6c6515e283f1fb2541d51616845a85"
+  },
+  {
+   "path": "sub-101/eeg/sub-101_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-101/eeg/sub-101_task-Rest_eeg.fdt",
+   "size": 33881400,
+   "sha256": "6786ffd842285d869e2fc79fae253859078bdacb7a658f0fe063a6113cd82891"
+  },
+  {
+   "path": "sub-101/eeg/sub-101_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "9bc0eb098e096f26946dbbeef1f9c92a79ca76ad6c6577e5b6dd5051eecf3ff7"
+  },
+  {
+   "path": "sub-101/eeg/sub-101_task-Rest_eeg.set",
+   "size": 588744,
+   "sha256": "1020ced9432c9554568883e85fd1436ea64c91ece1881722aba8cc367c2bcaec"
+  },
+  {
+   "path": "sub-101/eeg/sub-101_task-Rest_electrodes.tsv",
+   "size": 1999,
+   "sha256": "1211ceb3e32c99fc2c631357b379c5b61c8a46e9cd90495950cb72f532bc7aba"
+  },
+  {
+   "path": "sub-101/eeg/sub-101_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-102/eeg/sub-102_task-Rest_channels.tsv",
+   "size": 745,
+   "sha256": "7483c59062d6288b84176e1654455a039b6c6515e283f1fb2541d51616845a85"
+  },
+  {
+   "path": "sub-102/eeg/sub-102_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-102/eeg/sub-102_task-Rest_eeg.fdt",
+   "size": 26568360,
+   "sha256": "17a7a8b0a7869f0680e9f407de3dff62ee5c8e702efe1ebcd8a6da511ee26e1e"
+  },
+  {
+   "path": "sub-102/eeg/sub-102_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "4d095a3166bfa4b6e23d859d824a74f487ed2589086d0c6acc21082feffa0843"
+  },
+  {
+   "path": "sub-102/eeg/sub-102_task-Rest_eeg.set",
+   "size": 472664,
+   "sha256": "2906c0b3685f1e01ecced4f0633e1f96ce01f55ce8622899c4d36641ffdcc2d5"
+  },
+  {
+   "path": "sub-102/eeg/sub-102_task-Rest_electrodes.tsv",
+   "size": 1999,
+   "sha256": "1211ceb3e32c99fc2c631357b379c5b61c8a46e9cd90495950cb72f532bc7aba"
+  },
+  {
+   "path": "sub-102/eeg/sub-102_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-103/eeg/sub-103_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-103/eeg/sub-103_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-103/eeg/sub-103_task-Rest_eeg.fdt",
+   "size": 29793960,
+   "sha256": "f02a8a0c3b14087e7adfd6f9dac11bcd7424507168b2ccec72c3d1921244b245"
+  },
+  {
+   "path": "sub-103/eeg/sub-103_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "11f58300cdd6c70cd3fbf1b348cd1154ac8ef148af7d6ac5b2fa579d78bf0913"
+  },
+  {
+   "path": "sub-103/eeg/sub-103_task-Rest_eeg.set",
+   "size": 523840,
+   "sha256": "34e01ad737f47ec0b245ddb839b7bd76ed1e398707e4283ff90c9a0c5cc68dcc"
+  },
+  {
+   "path": "sub-103/eeg/sub-103_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-103/eeg/sub-103_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-104/eeg/sub-104_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-104/eeg/sub-104_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-104/eeg/sub-104_task-Rest_eeg.fdt",
+   "size": 27450360,
+   "sha256": "3bf70ec9ff9ecaa5d85911653ce7b37ba3ddd3127e113e2a8f058d27164b12bf"
+  },
+  {
+   "path": "sub-104/eeg/sub-104_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "e8f4bc135b1781793285dcf2a8b50f34f23bea1dd0ab60583b83927c1ad2904b"
+  },
+  {
+   "path": "sub-104/eeg/sub-104_task-Rest_eeg.set",
+   "size": 486640,
+   "sha256": "36f05bc6591fc48cf13ee45da8c89ac03031ad924347934048588fb57f691cf5"
+  },
+  {
+   "path": "sub-104/eeg/sub-104_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-104/eeg/sub-104_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-105/eeg/sub-105_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-105/eeg/sub-105_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-105/eeg/sub-105_task-Rest_eeg.fdt",
+   "size": 29506680,
+   "sha256": "79010a2a6742ac9006561dcc364116c6a245b329368ea74140e378483076afc3"
+  },
+  {
+   "path": "sub-105/eeg/sub-105_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "e532560e84905691191ec43bd51476cd6b81663bdc6b814f8a9015ba295c9078"
+  },
+  {
+   "path": "sub-105/eeg/sub-105_task-Rest_eeg.set",
+   "size": 519280,
+   "sha256": "086ff2fd48481c5617e5068f050cdd2dd5ce8fcab58c6ef52a3975bbc439cd33"
+  },
+  {
+   "path": "sub-105/eeg/sub-105_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-105/eeg/sub-105_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-106/eeg/sub-106_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-106/eeg/sub-106_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-106/eeg/sub-106_task-Rest_eeg.fdt",
+   "size": 26827920,
+   "sha256": "7252e18eaee5abbaf988a1313a453c5591b5aabafe8d43f5c678d72352e77c3c"
+  },
+  {
+   "path": "sub-106/eeg/sub-106_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "e778c14a1d9faee03f0ed481ba17c8ce88634a1af87aee413d8fd3a5cd2d5736"
+  },
+  {
+   "path": "sub-106/eeg/sub-106_task-Rest_eeg.set",
+   "size": 476760,
+   "sha256": "c5130a6039d1a631829f72eb3c30d15dde60b483c01368d59d0c5e30a277786d"
+  },
+  {
+   "path": "sub-106/eeg/sub-106_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-106/eeg/sub-106_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-107/eeg/sub-107_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-107/eeg/sub-107_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-107/eeg/sub-107_task-Rest_eeg.fdt",
+   "size": 28423080,
+   "sha256": "02a45db5f2aeef2f0acaadff07755f7e987a4119a5ab85a0c38a2ac27cadaaca"
+  },
+  {
+   "path": "sub-107/eeg/sub-107_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "1e5d460181fcab81b00011e4b538cc948d687ba4c40ab7a91db0c9760ddb88b2"
+  },
+  {
+   "path": "sub-107/eeg/sub-107_task-Rest_eeg.set",
+   "size": 502080,
+   "sha256": "bf57a0c0f1ae87ff6f5c2370f17855821c2483e15b0f673b06d07aaaa4f64bd9"
+  },
+  {
+   "path": "sub-107/eeg/sub-107_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-107/eeg/sub-107_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-108/eeg/sub-108_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-108/eeg/sub-108_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-108/eeg/sub-108_task-Rest_eeg.fdt",
+   "size": 33100200,
+   "sha256": "af4ef973990387f41451fb31b59f2474265e5a647c9b2f6c7a2b642e1bbe9b8e"
+  },
+  {
+   "path": "sub-108/eeg/sub-108_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "c2b67e540beb23f44750dbe1591ee7a8c987d194276417638c296e122ecc6161"
+  },
+  {
+   "path": "sub-108/eeg/sub-108_task-Rest_eeg.set",
+   "size": 576320,
+   "sha256": "f0237c78fe1e548d6da1c25cf69aa25b0f137edcc0e0c6f3a0f42f9f2a444266"
+  },
+  {
+   "path": "sub-108/eeg/sub-108_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-108/eeg/sub-108_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-109/eeg/sub-109_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-109/eeg/sub-109_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-109/eeg/sub-109_task-Rest_eeg.fdt",
+   "size": 29776320,
+   "sha256": "64991584fa35a8c431faca383de6e29c4f1efa1e9f1a8e9882a52e7eab6dc174"
+  },
+  {
+   "path": "sub-109/eeg/sub-109_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "6a284f62d623d9abb85079ecfe5c67b37e4f1f84baa5229a890e122c4e01dc3d"
+  },
+  {
+   "path": "sub-109/eeg/sub-109_task-Rest_eeg.set",
+   "size": 523560,
+   "sha256": "f518c1a4bb98f09346c3bdc11bbd1d5d75b8234c776f31908463947ceb0481b6"
+  },
+  {
+   "path": "sub-109/eeg/sub-109_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-109/eeg/sub-109_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-110/eeg/sub-110_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-110/eeg/sub-110_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-110/eeg/sub-110_task-Rest_eeg.fdt",
+   "size": 27064800,
+   "sha256": "c8cb2873682bcae755b3d83c9d7c6ac24d974976a19da5c8c8c71bd44df6e2fa"
+  },
+  {
+   "path": "sub-110/eeg/sub-110_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "4fad2d80c2abba9d22161701393315c71b45bd6836d867b66baef00dc8e52b20"
+  },
+  {
+   "path": "sub-110/eeg/sub-110_task-Rest_eeg.set",
+   "size": 480520,
+   "sha256": "5b73aef4f6a67ef1a44abfeb51d86cdc1670cc4706375dde3513aa62b0a23820"
+  },
+  {
+   "path": "sub-110/eeg/sub-110_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-110/eeg/sub-110_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-111/eeg/sub-111_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-111/eeg/sub-111_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-111/eeg/sub-111_task-Rest_eeg.fdt",
+   "size": 41456520,
+   "sha256": "84b70501d28f2db9460b93f664daaac7fae02318275739b7c00ef2d4b0568092"
+  },
+  {
+   "path": "sub-111/eeg/sub-111_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "7836ec840d8a1b55e43bcf846519d60117f1ae1ae21cf789bf5cefa58d3fe13a"
+  },
+  {
+   "path": "sub-111/eeg/sub-111_task-Rest_eeg.set",
+   "size": 708960,
+   "sha256": "e117f09c9791240f10b141420d6004b27a5adb51bdebea6849c40cb8963d5b44"
+  },
+  {
+   "path": "sub-111/eeg/sub-111_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-111/eeg/sub-111_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-112/eeg/sub-112_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-112/eeg/sub-112_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-112/eeg/sub-112_task-Rest_eeg.fdt",
+   "size": 15356880,
+   "sha256": "b7b5743af01adcde057e363b28488419e12a841474b83fb51c04bb946c7c5e50"
+  },
+  {
+   "path": "sub-112/eeg/sub-112_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "275ea6c83967e08e15fa2fb023dfd33c6c2e7362a7c27419767ef9c209e0fb10"
+  },
+  {
+   "path": "sub-112/eeg/sub-112_task-Rest_eeg.set",
+   "size": 294680,
+   "sha256": "c05c088e2500368cca68346cf25650d756041ffa12ee8bcbed5f02739af31a63"
+  },
+  {
+   "path": "sub-112/eeg/sub-112_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-112/eeg/sub-112_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-113/eeg/sub-113_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-113/eeg/sub-113_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-113/eeg/sub-113_task-Rest_eeg.fdt",
+   "size": 15238440,
+   "sha256": "bbd5e45e7427e1564010ec06f9f74faf3aee91d4170288c091abfb36a814b9e4"
+  },
+  {
+   "path": "sub-113/eeg/sub-113_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "ad5fa2dce221ab8dd591fc33ea4915561a839a5d432793c943e138565d573415"
+  },
+  {
+   "path": "sub-113/eeg/sub-113_task-Rest_eeg.set",
+   "size": 292800,
+   "sha256": "cd356cb4c2065261692ce3bd3e4a5811142388792b608f8fcc8bd32febf1401c"
+  },
+  {
+   "path": "sub-113/eeg/sub-113_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-113/eeg/sub-113_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-114/eeg/sub-114_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-114/eeg/sub-114_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-114/eeg/sub-114_task-Rest_eeg.fdt",
+   "size": 15271200,
+   "sha256": "68ad4137be67d1a6671cae369302f8486a89ee81b262d6e4a7fd7418244e3ead"
+  },
+  {
+   "path": "sub-114/eeg/sub-114_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "a782b6eed3a5dc9c231697d033a4f067e7ed3356cfde236c8172ffeed0bab636"
+  },
+  {
+   "path": "sub-114/eeg/sub-114_task-Rest_eeg.set",
+   "size": 293320,
+   "sha256": "c6418bc5f9c84dfb065c951ae3158eb66f510507c08a5ebff898365f1c80187b"
+  },
+  {
+   "path": "sub-114/eeg/sub-114_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-114/eeg/sub-114_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-115/eeg/sub-115_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-115/eeg/sub-115_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-115/eeg/sub-115_task-Rest_eeg.fdt",
+   "size": 15356880,
+   "sha256": "d6c2ee8f9966591e10e2b609e606df9c8083e1b96e7633f166dba3a0660f6b9b"
+  },
+  {
+   "path": "sub-115/eeg/sub-115_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "275ea6c83967e08e15fa2fb023dfd33c6c2e7362a7c27419767ef9c209e0fb10"
+  },
+  {
+   "path": "sub-115/eeg/sub-115_task-Rest_eeg.set",
+   "size": 294680,
+   "sha256": "12b3e26c817297e385c2135719fd12d586dba245d7f35daeeaf2c55335ecaef9"
+  },
+  {
+   "path": "sub-115/eeg/sub-115_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-115/eeg/sub-115_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-116/eeg/sub-116_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-116/eeg/sub-116_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-116/eeg/sub-116_task-Rest_eeg.fdt",
+   "size": 15246000,
+   "sha256": "0b71931e8aa2391f0552b098668f597cd80031bf369e85058dbe6f03bdeb6fb6"
+  },
+  {
+   "path": "sub-116/eeg/sub-116_task-Rest_eeg.json",
+   "size": 536,
+   "sha256": "90d16c52fb1ecf070bf4fd6fbf5ffb1b9630ee74d44ef822e05e64b7018bf863"
+  },
+  {
+   "path": "sub-116/eeg/sub-116_task-Rest_eeg.set",
+   "size": 292920,
+   "sha256": "dc0877638528bf27793198a9bb3a4535b5a893da42bb70bc440466cf18f6e68f"
+  },
+  {
+   "path": "sub-116/eeg/sub-116_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-116/eeg/sub-116_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-117/eeg/sub-117_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-117/eeg/sub-117_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-117/eeg/sub-117_task-Rest_eeg.fdt",
+   "size": 22856400,
+   "sha256": "4f78d953bc230208d88cbedda57d79b33a5a00ba90ad8361d047fd20468615be"
+  },
+  {
+   "path": "sub-117/eeg/sub-117_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "1b9fbfea1c6a73ce510e2a5585b0ebdff1c984e67a9e1960da46987b3aead363"
+  },
+  {
+   "path": "sub-117/eeg/sub-117_task-Rest_eeg.set",
+   "size": 413720,
+   "sha256": "bba2958f148d0b7bd7996ad906733fc3d8928eab7d1e9af2e427cc3b1b3598ea"
+  },
+  {
+   "path": "sub-117/eeg/sub-117_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-117/eeg/sub-117_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-118/eeg/sub-118_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-118/eeg/sub-118_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-118/eeg/sub-118_task-Rest_eeg.fdt",
+   "size": 24267600,
+   "sha256": "0a7d88cb7da1232785095260bcd5e15f790b3745e13bf2021ed84660d597219f"
+  },
+  {
+   "path": "sub-118/eeg/sub-118_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "246c08f1f7a2eb5e91267feb7912de333a4597c6b794b596059d482d07e95a62"
+  },
+  {
+   "path": "sub-118/eeg/sub-118_task-Rest_eeg.set",
+   "size": 436120,
+   "sha256": "f0c092719f5732eac1943be2584fdefa70edf32fb8533f30a9ab1625ebf85e40"
+  },
+  {
+   "path": "sub-118/eeg/sub-118_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-118/eeg/sub-118_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-119/eeg/sub-119_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-119/eeg/sub-119_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-119/eeg/sub-119_task-Rest_eeg.fdt",
+   "size": 24192000,
+   "sha256": "887474e119be2adbf2746d765ec4931fcb376f10a8e7b3e7d5f19dd02863b56a"
+  },
+  {
+   "path": "sub-119/eeg/sub-119_task-Rest_eeg.json",
+   "size": 536,
+   "sha256": "b035ee189a169bd43aa89187a46384d4741c41da545e347ac64dc4ef5452e8fe"
+  },
+  {
+   "path": "sub-119/eeg/sub-119_task-Rest_eeg.set",
+   "size": 434920,
+   "sha256": "a61e795e58f04deb85d7b6d932e838b50b40b49ffe204ab3645b1fd0857b6256"
+  },
+  {
+   "path": "sub-119/eeg/sub-119_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-119/eeg/sub-119_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-120/eeg/sub-120_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-120/eeg/sub-120_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-120/eeg/sub-120_task-Rest_eeg.fdt",
+   "size": 22770720,
+   "sha256": "0d854db3dd25cbff295f1470b7316bcf981b74bbfbbfbabd1a01cd8361f324c0"
+  },
+  {
+   "path": "sub-120/eeg/sub-120_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "637a266fc59a18c1c3fbf97721ac53a9bd22b673d208bbd36435379ce9926209"
+  },
+  {
+   "path": "sub-120/eeg/sub-120_task-Rest_eeg.set",
+   "size": 412360,
+   "sha256": "1ca5665700303300a1c400ad096ede19dbd0632c587daed078b43b77d983e527"
+  },
+  {
+   "path": "sub-120/eeg/sub-120_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-120/eeg/sub-120_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-121/eeg/sub-121_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-121/eeg/sub-121_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-121/eeg/sub-121_task-Rest_eeg.fdt",
+   "size": 19000800,
+   "sha256": "a37c00252ccdc142a6f2f993decd3a3d2c84bdf4d7f1a56d3446636584136979"
+  },
+  {
+   "path": "sub-121/eeg/sub-121_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "4b5b20b86a745f3f4df2ae85aeec25a30d75dfea353ac5ae6f86674924766c0c"
+  },
+  {
+   "path": "sub-121/eeg/sub-121_task-Rest_eeg.set",
+   "size": 352520,
+   "sha256": "e345e6d14ba7602fcd454df6c53f70a6124cbcf881f7a905b5ee2b82c252a39f"
+  },
+  {
+   "path": "sub-121/eeg/sub-121_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-121/eeg/sub-121_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-122/eeg/sub-122_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-122/eeg/sub-122_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-122/eeg/sub-122_task-Rest_eeg.fdt",
+   "size": 18254880,
+   "sha256": "aac034afd05b792fa52eedee6d80cddee7e9e9330ca88040fc70f8929c40f9b2"
+  },
+  {
+   "path": "sub-122/eeg/sub-122_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "8102832903d6c9310dd2e49e5ff3c3c04e7be4307bb453223c9cb58166d6323d"
+  },
+  {
+   "path": "sub-122/eeg/sub-122_task-Rest_eeg.set",
+   "size": 340680,
+   "sha256": "83faaa9d2496fe5b99216887d6debc195ee7b2275ea2c8b0cc27df4e13a92224"
+  },
+  {
+   "path": "sub-122/eeg/sub-122_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-122/eeg/sub-122_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-123/eeg/sub-123_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-123/eeg/sub-123_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-123/eeg/sub-123_task-Rest_eeg.fdt",
+   "size": 20820240,
+   "sha256": "4eecdfeb6e8b256c9550b7063ebc1c09fe73e096c737aea6f3ff1519822cda9a"
+  },
+  {
+   "path": "sub-123/eeg/sub-123_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "ab0a97daac962fa4d0ac6072fe9ae663744f88c3958117efcc3c96c2523aa67b"
+  },
+  {
+   "path": "sub-123/eeg/sub-123_task-Rest_eeg.set",
+   "size": 381400,
+   "sha256": "dcdd7a4d3895501bfa59c15419a1323cf1fee36ba3ed3d041c035b95dac391fc"
+  },
+  {
+   "path": "sub-123/eeg/sub-123_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-123/eeg/sub-123_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-124/eeg/sub-124_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-124/eeg/sub-124_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-124/eeg/sub-124_task-Rest_eeg.fdt",
+   "size": 20802600,
+   "sha256": "9aa7b03a867613cd27225f8b15432275796b0c075c9bc313b14b34e9145d6505"
+  },
+  {
+   "path": "sub-124/eeg/sub-124_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "616599e51de7e480b0a26c571facd25e8cda5366dc8bfba0e01084ffb40df0ca"
+  },
+  {
+   "path": "sub-124/eeg/sub-124_task-Rest_eeg.set",
+   "size": 381120,
+   "sha256": "87afab2df40e8e5fc9e2704cfb786f66e82c858aa1e1de25e84b388e48963e08"
+  },
+  {
+   "path": "sub-124/eeg/sub-124_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-124/eeg/sub-124_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-125/eeg/sub-125_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-125/eeg/sub-125_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-125/eeg/sub-125_task-Rest_eeg.fdt",
+   "size": 19051200,
+   "sha256": "3ea904092ff207aea43c9d03bf5c4007d63a1f7e2226a9663db0a529b55d40bf"
+  },
+  {
+   "path": "sub-125/eeg/sub-125_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "baa1134c1c9648ca0e0fb41b1a73b13b333b4309b3ba660bcd4a3c09b6b66d19"
+  },
+  {
+   "path": "sub-125/eeg/sub-125_task-Rest_eeg.set",
+   "size": 353320,
+   "sha256": "2371f18044d865a222447e13820b0b6bd18c320ec4c302069c5beded2da99e50"
+  },
+  {
+   "path": "sub-125/eeg/sub-125_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-125/eeg/sub-125_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-126/eeg/sub-126_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-126/eeg/sub-126_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-126/eeg/sub-126_task-Rest_eeg.fdt",
+   "size": 20923560,
+   "sha256": "f4052a7f1dcc96c53a040d4f449aa498228b782262582d1011269a254ed82a5f"
+  },
+  {
+   "path": "sub-126/eeg/sub-126_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "0aa2b4b28cdf1782415c87effd8c72cce1e617ee80ccc96b5e77ea5b96ebdf30"
+  },
+  {
+   "path": "sub-126/eeg/sub-126_task-Rest_eeg.set",
+   "size": 383040,
+   "sha256": "2e6cae657bc6a09d083bc84935b428263c8a233fa1bb5bd514da67ab4612950d"
+  },
+  {
+   "path": "sub-126/eeg/sub-126_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-126/eeg/sub-126_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-127/eeg/sub-127_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-127/eeg/sub-127_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-127/eeg/sub-127_task-Rest_eeg.fdt",
+   "size": 20306160,
+   "sha256": "31aa1fcbc535942e0a72388e5e5b921b2dbb4c32cfb38c75f08ea4f60e0f63ea"
+  },
+  {
+   "path": "sub-127/eeg/sub-127_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "ce5a24a4096d671b71f56d7690477028e9f25df37bdf251e15407c07f7682888"
+  },
+  {
+   "path": "sub-127/eeg/sub-127_task-Rest_eeg.set",
+   "size": 373240,
+   "sha256": "5ca508c58bf2a113307ad43458c3eff2c8d02b2baed70304056a11b11ac33ef4"
+  },
+  {
+   "path": "sub-127/eeg/sub-127_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-127/eeg/sub-127_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-128/eeg/sub-128_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-128/eeg/sub-128_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-128/eeg/sub-128_task-Rest_eeg.fdt",
+   "size": 22125600,
+   "sha256": "7626ed02361070a39ad376112e18aa2598d89678c6efe17f71168dfb8dc8d655"
+  },
+  {
+   "path": "sub-128/eeg/sub-128_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "32255a1f2724186935c0f07c83f265f91ee02cb5ec6100aba076b9efb4ecc0da"
+  },
+  {
+   "path": "sub-128/eeg/sub-128_task-Rest_eeg.set",
+   "size": 402120,
+   "sha256": "2d76aae71c979cf42300b39bdb3c2ba40f09459e5cf78b01e8c61875391b3675"
+  },
+  {
+   "path": "sub-128/eeg/sub-128_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-128/eeg/sub-128_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-129/eeg/sub-129_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-129/eeg/sub-129_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-129/eeg/sub-129_task-Rest_eeg.fdt",
+   "size": 15372000,
+   "sha256": "75c0774006533dbdfd5f55d4081358312fc78b32d299b7c3db3208e172ea87e9"
+  },
+  {
+   "path": "sub-129/eeg/sub-129_task-Rest_eeg.json",
+   "size": 536,
+   "sha256": "eb21c882e7632fcf1b7e42b46d1edf04cc8713bf75a2ada594c57d1557f7a64d"
+  },
+  {
+   "path": "sub-129/eeg/sub-129_task-Rest_eeg.set",
+   "size": 294920,
+   "sha256": "d81f5b73da4acbbf615baecf14e6a880ffdf670628a387a0cc7f72287b21c6fa"
+  },
+  {
+   "path": "sub-129/eeg/sub-129_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-129/eeg/sub-129_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-130/eeg/sub-130_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-130/eeg/sub-130_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-130/eeg/sub-130_task-Rest_eeg.fdt",
+   "size": 22438080,
+   "sha256": "b2fb7d3bd1684cb043ac8e4537dae56b3dcf58cd5d15a9593d5328770af2e078"
+  },
+  {
+   "path": "sub-130/eeg/sub-130_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "91325f9cd92695e2fa50e22d4f5d455a4d5547e0087b91cf749b22eca82c6883"
+  },
+  {
+   "path": "sub-130/eeg/sub-130_task-Rest_eeg.set",
+   "size": 407080,
+   "sha256": "e273806144ce3651b7a24b178d754c5133bc43eeb5e6f725b6bd743a153793b2"
+  },
+  {
+   "path": "sub-130/eeg/sub-130_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-130/eeg/sub-130_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-131/eeg/sub-131_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-131/eeg/sub-131_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-131/eeg/sub-131_task-Rest_eeg.fdt",
+   "size": 23617440,
+   "sha256": "303da864d4e976291c0cd2750363a400212ac12940224922d62ee3d55f00924c"
+  },
+  {
+   "path": "sub-131/eeg/sub-131_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "94a3e883519130a271e1540f00200fb7138bb95042fe5c0e46972d4192f2da6b"
+  },
+  {
+   "path": "sub-131/eeg/sub-131_task-Rest_eeg.set",
+   "size": 425800,
+   "sha256": "fd5b35399b4ea4071a30f4341b46f96fc020f8aaf1633fbb2f2587062ec71e33"
+  },
+  {
+   "path": "sub-131/eeg/sub-131_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-131/eeg/sub-131_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-132/eeg/sub-132_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-132/eeg/sub-132_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-132/eeg/sub-132_task-Rest_eeg.fdt",
+   "size": 22274280,
+   "sha256": "4606c9cc9d24e64b5164466a47baecf689d694e5eb4dc79b42324713ddf4e9e4"
+  },
+  {
+   "path": "sub-132/eeg/sub-132_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "5e6f812ce9376ae3d8413e71b4e89c098e7effe3ca07e4981f33f90c6f8cc5a5"
+  },
+  {
+   "path": "sub-132/eeg/sub-132_task-Rest_eeg.set",
+   "size": 404480,
+   "sha256": "208cd6c8ed0723aa570a785162795dfe90246a34b6a96d7b61059a9e5ddb7213"
+  },
+  {
+   "path": "sub-132/eeg/sub-132_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-132/eeg/sub-132_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-133/eeg/sub-133_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-133/eeg/sub-133_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-133/eeg/sub-133_task-Rest_eeg.fdt",
+   "size": 18005400,
+   "sha256": "d1e002124123d78b0f35650cb8cdd27abae59518e95f700cf074c283a0a30781"
+  },
+  {
+   "path": "sub-133/eeg/sub-133_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "40ad8a1bae7422e1749117f3edf4eea74753ff0d6ff0cc7c434fa6ae74c16dd3"
+  },
+  {
+   "path": "sub-133/eeg/sub-133_task-Rest_eeg.set",
+   "size": 336720,
+   "sha256": "12d4ee1000c0fc5813df408c376ef22dbaf04e8b1e5ebbf964672d44ec08c74a"
+  },
+  {
+   "path": "sub-133/eeg/sub-133_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-133/eeg/sub-133_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-134/eeg/sub-134_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-134/eeg/sub-134_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-134/eeg/sub-134_task-Rest_eeg.fdt",
+   "size": 18282600,
+   "sha256": "e405a51faf7bc4bc6c43c3634e6df89b0b394083d6f0698e5905533254ee3b23"
+  },
+  {
+   "path": "sub-134/eeg/sub-134_task-Rest_eeg.json",
+   "size": 538,
+   "sha256": "1ed2ef931168bf0b90c197304924bd29ced450ad531cbd9e1202f9ae4432f057"
+  },
+  {
+   "path": "sub-134/eeg/sub-134_task-Rest_eeg.set",
+   "size": 341120,
+   "sha256": "06ac1cd82a684ad6e97cee1cc334ac3647cf09c6c131da3d5a37208b4497feab"
+  },
+  {
+   "path": "sub-134/eeg/sub-134_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-134/eeg/sub-134_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-135/eeg/sub-135_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-135/eeg/sub-135_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-135/eeg/sub-135_task-Rest_eeg.fdt",
+   "size": 16916760,
+   "sha256": "60c6ad1f099497c2bdd653041547d3e650551a00fbd28e32e93a1b04f379d0d6"
+  },
+  {
+   "path": "sub-135/eeg/sub-135_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "c7383d61cc182c594bcd6cc218c6e62385d4e97862ad5cc67454670e7c82506b"
+  },
+  {
+   "path": "sub-135/eeg/sub-135_task-Rest_eeg.set",
+   "size": 319440,
+   "sha256": "97efd9f435f29edabfe0c15bd838d3baf0bb5c6b3ef42afd8fea612c5b648d94"
+  },
+  {
+   "path": "sub-135/eeg/sub-135_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-135/eeg/sub-135_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-136/eeg/sub-136_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-136/eeg/sub-136_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-136/eeg/sub-136_task-Rest_eeg.fdt",
+   "size": 18360720,
+   "sha256": "a83e12d2ffc25abdedf8066a9cc4c545df1fc07712cffaa6e82bbc4c8f87eb7a"
+  },
+  {
+   "path": "sub-136/eeg/sub-136_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "931552e37e62e20598294587e05667395c5d41e834e2025c429b2ca6cd7fc8c9"
+  },
+  {
+   "path": "sub-136/eeg/sub-136_task-Rest_eeg.set",
+   "size": 342360,
+   "sha256": "973f3dad84740a3be6326ff8cf7bc7a44c731b7189a632701d3364d0283c203a"
+  },
+  {
+   "path": "sub-136/eeg/sub-136_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-136/eeg/sub-136_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-137/eeg/sub-137_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-137/eeg/sub-137_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-137/eeg/sub-137_task-Rest_eeg.fdt",
+   "size": 15865920,
+   "sha256": "e229518afc16efc065017f0349e66a780ec3113b6c1caa18e218df7e6755bc78"
+  },
+  {
+   "path": "sub-137/eeg/sub-137_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "fbeee5a489c4dc7750226cd5e15269e60c7d0a8c313c4e00fdfea37afeb3d091"
+  },
+  {
+   "path": "sub-137/eeg/sub-137_task-Rest_eeg.set",
+   "size": 302760,
+   "sha256": "17251e8532160da7cf6717529348a9d6941f757e64481777cf0ebd22fc085667"
+  },
+  {
+   "path": "sub-137/eeg/sub-137_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-137/eeg/sub-137_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-138/eeg/sub-138_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-138/eeg/sub-138_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-138/eeg/sub-138_task-Rest_eeg.fdt",
+   "size": 18375840,
+   "sha256": "5afcdbba09fa83691a70ba93355531eff95349fd32971af6ed2563f34931beb1"
+  },
+  {
+   "path": "sub-138/eeg/sub-138_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "c7d27b2bef2c0daa2c4d87bd897296c4194f0ec2ac40e5a529b955bde5327157"
+  },
+  {
+   "path": "sub-138/eeg/sub-138_task-Rest_eeg.set",
+   "size": 342600,
+   "sha256": "8e2d2b3cde8645f3fa626cbe153c25165e307a5c44d352bde3f20507f5e0880d"
+  },
+  {
+   "path": "sub-138/eeg/sub-138_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-138/eeg/sub-138_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-139/eeg/sub-139_task-Rest_channels.tsv",
+   "size": 742,
+   "sha256": "11eff06035ea91d813f736d4f06d215e26157e6205aae52642effa85609d98f2"
+  },
+  {
+   "path": "sub-139/eeg/sub-139_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-139/eeg/sub-139_task-Rest_eeg.fdt",
+   "size": 23194080,
+   "sha256": "e745b0d7a18dd22a7a55fda256bb56aa42a6c07550318b30f0cb1fad28721e45"
+  },
+  {
+   "path": "sub-139/eeg/sub-139_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "f761d5d8670896046b5cb20f816709dd4f3112132e2ec117573774124a888890"
+  },
+  {
+   "path": "sub-139/eeg/sub-139_task-Rest_eeg.set",
+   "size": 419080,
+   "sha256": "5eee6e5c22c4ef98d33e93c6e6e1ddb46594d632926a89b3c6ebc16fc3d35130"
+  },
+  {
+   "path": "sub-139/eeg/sub-139_task-Rest_electrodes.tsv",
+   "size": 2000,
+   "sha256": "c2832329468bd2364b1adbbb457d7b30a95db7c9348bfda19a112041dd5aba05"
+  },
+  {
+   "path": "sub-139/eeg/sub-139_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-140/eeg/sub-140_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-140/eeg/sub-140_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-140/eeg/sub-140_task-Rest_eeg.fdt",
+   "size": 15784960,
+   "sha256": "0d1c9a46628385795f81d6450c389804b7f6d8b40e41b7c7cbdb49d9402364fc"
+  },
+  {
+   "path": "sub-140/eeg/sub-140_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "a10ded346c21d428ba3f93adcd33f64bcf1e98fabcea3e7429cfe82a4bb1c490"
+  },
+  {
+   "path": "sub-140/eeg/sub-140_task-Rest_eeg.set",
+   "size": 298328,
+   "sha256": "82c57f8cec4839667fa7587dcc33e61b10e41d1e153ae7b75a8c50a7d86dd959"
+  },
+  {
+   "path": "sub-140/eeg/sub-140_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-140/eeg/sub-140_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-141/eeg/sub-141_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-141/eeg/sub-141_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-141/eeg/sub-141_task-Rest_eeg.fdt",
+   "size": 16000000,
+   "sha256": "39cb76887248ae0ff0eb42eef30c7cc444985571542491f72e471095a81e860d"
+  },
+  {
+   "path": "sub-141/eeg/sub-141_task-Rest_eeg.json",
+   "size": 536,
+   "sha256": "9d159753d15037bed0022e15aa68f876494409778310761726d18ff267ae21a0"
+  },
+  {
+   "path": "sub-141/eeg/sub-141_task-Rest_eeg.set",
+   "size": 301688,
+   "sha256": "2185744607624363adfcb8547606ae949e7afad87433d83d46130883a2d3cb48"
+  },
+  {
+   "path": "sub-141/eeg/sub-141_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-141/eeg/sub-141_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-142/eeg/sub-142_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-142/eeg/sub-142_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-142/eeg/sub-142_task-Rest_eeg.fdt",
+   "size": 15567360,
+   "sha256": "c188bd575cc7b4e665d4ff81f829940897ccf41ae2286645ed8ed5e10fbde9ba"
+  },
+  {
+   "path": "sub-142/eeg/sub-142_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "c64a8360dc244147fc20b958248a649f8b783d0eef5a4f0f6ddbb0e70dc7a042"
+  },
+  {
+   "path": "sub-142/eeg/sub-142_task-Rest_eeg.set",
+   "size": 294928,
+   "sha256": "7276b5af3e142281849e3faa390bd23e1379bc3310d2fa5f1a765645c402dace"
+  },
+  {
+   "path": "sub-142/eeg/sub-142_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-142/eeg/sub-142_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-143/eeg/sub-143_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-143/eeg/sub-143_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-143/eeg/sub-143_task-Rest_eeg.fdt",
+   "size": 15644160,
+   "sha256": "82a6b0b73eb10500f599c1869b1dc82d6aa0af1d7c20673c1989450fb55f1887"
+  },
+  {
+   "path": "sub-143/eeg/sub-143_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "5f2c8551797161a3c8440592f0ca7b1aba5a7fc2e73164f2e86f53c144793b6d"
+  },
+  {
+   "path": "sub-143/eeg/sub-143_task-Rest_eeg.set",
+   "size": 296128,
+   "sha256": "3b85255313a266727eabaab9333bfeb17e489ca62c8e80239c6f11a3e58c23fe"
+  },
+  {
+   "path": "sub-143/eeg/sub-143_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-143/eeg/sub-143_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-144/eeg/sub-144_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-144/eeg/sub-144_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-144/eeg/sub-144_task-Rest_eeg.fdt",
+   "size": 15470080,
+   "sha256": "2a38abdb665c0ea15abcf3307e999e5c15d7976e348e3d23160fbb8bf04904cc"
+  },
+  {
+   "path": "sub-144/eeg/sub-144_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "f8833b48708215f83d198627b506ee6b05be6b8d9e0868ee3d0192357c18c3c4"
+  },
+  {
+   "path": "sub-144/eeg/sub-144_task-Rest_eeg.set",
+   "size": 293408,
+   "sha256": "8c33dcda4e9accdf081acf99901ce34e84f482fa7d0faf5734976e3f0a5e2afd"
+  },
+  {
+   "path": "sub-144/eeg/sub-144_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-144/eeg/sub-144_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-145/eeg/sub-145_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-145/eeg/sub-145_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-145/eeg/sub-145_task-Rest_eeg.fdt",
+   "size": 23267840,
+   "sha256": "bc814a35d3fea4a4f536158c24172e89c865310091d34909a4501ad160a3ffee"
+  },
+  {
+   "path": "sub-145/eeg/sub-145_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "fe06b66cb1e6b8f8de0777d277514b3c1561f149ffbb4feab459bd8577aac491"
+  },
+  {
+   "path": "sub-145/eeg/sub-145_task-Rest_eeg.set",
+   "size": 415248,
+   "sha256": "78682eb436be36b46889a1a1029226f0dab5961ef56c0b6d9af08d1b47872e4f"
+  },
+  {
+   "path": "sub-145/eeg/sub-145_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-145/eeg/sub-145_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-146/eeg/sub-146_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-146/eeg/sub-146_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-146/eeg/sub-146_task-Rest_eeg.fdt",
+   "size": 18869760,
+   "sha256": "7f22b840dd112a514007c1af0c16201662b2df4ea5c5fcb0d3ea19c87ae63390"
+  },
+  {
+   "path": "sub-146/eeg/sub-146_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "945a2a7d214becb271a6521d92c0b81f477e366a1f79455581f5e9ed89e2c152"
+  },
+  {
+   "path": "sub-146/eeg/sub-146_task-Rest_eeg.set",
+   "size": 346528,
+   "sha256": "6fb2a978047fc2b481d5e21975a4db3e311d2cae3b23df207ff1eed929ca64f5"
+  },
+  {
+   "path": "sub-146/eeg/sub-146_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-146/eeg/sub-146_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-147/eeg/sub-147_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-147/eeg/sub-147_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-147/eeg/sub-147_task-Rest_eeg.fdt",
+   "size": 16040960,
+   "sha256": "89c830cc1b56c2ef16b4e7d9fe0bacc14257a5ff68d54911c0215ab0c953a689"
+  },
+  {
+   "path": "sub-147/eeg/sub-147_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "85f10d688d91a60dbe43423fe039d5392d78c6e0eec8ffd07412e98c4f501ab9"
+  },
+  {
+   "path": "sub-147/eeg/sub-147_task-Rest_eeg.set",
+   "size": 302328,
+   "sha256": "d35fe9057a9e973c258f0eefc9ce565c92362fda211c9010653c2b8da5571e20"
+  },
+  {
+   "path": "sub-147/eeg/sub-147_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-147/eeg/sub-147_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-148/eeg/sub-148_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-148/eeg/sub-148_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-148/eeg/sub-148_task-Rest_eeg.fdt",
+   "size": 20280320,
+   "sha256": "b5387a6fd34822778ab04fe5ba3ab958f69ebdb14bd610269642c406b05a9f81"
+  },
+  {
+   "path": "sub-148/eeg/sub-148_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "fc4c2d484486c2d7a6193346bf34753cc73ab9f610c1048167d9bbcf5da37e32"
+  },
+  {
+   "path": "sub-148/eeg/sub-148_task-Rest_eeg.set",
+   "size": 368568,
+   "sha256": "63b750a357656d8e33b67a24f192006b186848f9275aef4f88a6079167f09727"
+  },
+  {
+   "path": "sub-148/eeg/sub-148_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-148/eeg/sub-148_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "sub-149/eeg/sub-149_task-Rest_channels.tsv",
+   "size": 755,
+   "sha256": "b378217d974875c643da3f2f0cc70e3ae22445d16d806ef6045b120d5ca3ebb3"
+  },
+  {
+   "path": "sub-149/eeg/sub-149_task-Rest_coordsystem.json",
+   "size": 97,
+   "sha256": "38cbd743cd80f8243716dcfe326138c49c124855551fbed50f935724a5ee71d3"
+  },
+  {
+   "path": "sub-149/eeg/sub-149_task-Rest_eeg.fdt",
+   "size": 16437760,
+   "sha256": "6bebdddc9f7f57112a62151c29c1aec6b162ac8d7ae3334cb4a9faeab3a36765"
+  },
+  {
+   "path": "sub-149/eeg/sub-149_task-Rest_eeg.json",
+   "size": 539,
+   "sha256": "6ad5c20a140ff85e802cb36c160fbed4871f62c77cc476756bde0e7986c31ade"
+  },
+  {
+   "path": "sub-149/eeg/sub-149_task-Rest_eeg.set",
+   "size": 308528,
+   "sha256": "f0f757da13e644d0d5c666787cb885bce7a8b71287a6a1d427cad19ace40b857"
+  },
+  {
+   "path": "sub-149/eeg/sub-149_task-Rest_electrodes.tsv",
+   "size": 2017,
+   "sha256": "08b40084d3c4b33f407e38d88368f96e3b2b2086a15955ec31023ff9735b9ea8"
+  },
+  {
+   "path": "sub-149/eeg/sub-149_task-Rest_events.tsv",
+   "size": 56,
+   "sha256": "b0b98a02d625b19aa66d0eb099c1e73fd50dd542e5679a28e4a38754f6a8222b"
+  },
+  {
+   "path": "task-Rest_events.json",
+   "size": 2,
+   "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  }
+ ]
+}
