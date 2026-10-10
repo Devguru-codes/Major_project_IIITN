@@ -15,7 +15,6 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from .metrics import classification_metrics
 from .stats_pswe import holm
 
 
@@ -42,18 +41,20 @@ def load_runs(paths, tag: str | None = None) -> pd.DataFrame:
 
 def bootstrap_ci(cell: pd.DataFrame, n_boot: int = 2000, seed: int = 0) -> tuple[float, float]:
     """Resample subjects within each repeat (pooled over its 5 test folds); average macro-F1 over repeats."""
+    from sklearn.metrics import f1_score
+
     rng = np.random.default_rng(seed)
     per_rep = []
     for _, g in cell.groupby("seed"):
         y = np.concatenate([p["y"] for p in g["preds"]])
-        prob = np.concatenate([p["prob"] for p in g["preds"]])
-        per_rep.append((y, prob))
+        pred = np.concatenate([p["prob"] for p in g["preds"]]).argmax(1)
+        per_rep.append((y, pred))
     draws = np.empty(n_boot)
     for b in range(n_boot):
         vals = []
-        for y, prob in per_rep:
+        for y, pred in per_rep:
             i = rng.integers(0, len(y), len(y))
-            vals.append(classification_metrics(y[i], prob[i])["macro_f1"])
+            vals.append(f1_score(y[i], pred[i], labels=[0, 1, 2], average="macro", zero_division=0))
         draws[b] = np.mean(vals)
     return float(np.percentile(draws, 2.5)), float(np.percentile(draws, 97.5))
 
@@ -104,11 +105,18 @@ def pairwise(wide: pd.DataFrame, test_train_ratio: float) -> pd.DataFrame:
 
 
 def rm_anova(df: pd.DataFrame) -> pd.DataFrame:
-    import pingouin as pg
+    try:
+        import pingouin as pg
 
-    aov = pg.rm_anova(data=df, dv="macro_f1", within=["pipeline", "edge"], subject="unit", effsize="np2",
-                      correction=True)
-    return aov
+        return pg.rm_anova(data=df, dv="macro_f1", within=["pipeline", "edge"], subject="unit", effsize="np2",
+                           correction=True)
+    except Exception as exc:          # fallback without sphericity correction (reported as such)
+        from statsmodels.stats.anova import AnovaRM
+
+        print(f"[stats] pingouin rm_anova failed ({exc}); using statsmodels AnovaRM (no GG correction)")
+        t = AnovaRM(df, "macro_f1", "unit", within=["pipeline", "edge"]).fit().anova_table.reset_index()
+        t["np2"] = t["F Value"] * t["Num DF"] / (t["F Value"] * t["Num DF"] + t["Den DF"])
+        return t.rename(columns={"index": "Source", "Pr > F": "p-unc"})
 
 
 def critical_difference(wide: pd.DataFrame, alpha: float = 0.05) -> dict:

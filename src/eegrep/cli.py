@@ -132,6 +132,13 @@ def cmd_ablate(a, cfg):
     print(json.dumps({"runs_done": len(store.done)}))
 
 
+def cmd_report(a, cfg):
+    from .report import build_report
+
+    res = build_report(a.reports, a.cache, a.preproc or [], cfg, a.out, n_boot=a.n_boot)
+    print(json.dumps(res, indent=1, default=float))
+
+
 def cmd_select_cells(a, cfg):
     from .ablations import select_cells
 
@@ -254,6 +261,9 @@ def main(argv=None):
     s.add_argument("--n-perm", type=int, default=0); s.add_argument("--perm-start", type=int, default=0)
     s.add_argument("--out", default="results/ablations.jsonl"); s.add_argument("--max-hours", type=float, default=10.5)
     s.add_argument("--device", default="cpu"); s.set_defaults(fn=cmd_ablate)
+    s = sub.add_parser("report"); s.add_argument("--reports", default="reports"); s.add_argument("--cache", required=True)
+    s.add_argument("--preproc", nargs="*"); s.add_argument("--out", required=True)
+    s.add_argument("--n-boot", type=int, default=2000); s.set_defaults(fn=cmd_report)
     s = sub.add_parser("select-cells"); s.add_argument("--runs", nargs="+", required=True)
     s.add_argument("--top", type=int, default=2); s.set_defaults(fn=cmd_select_cells)
     s = sub.add_parser("folds"); s.add_argument("--participants", required=True)

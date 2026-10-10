@@ -89,7 +89,7 @@ def main():
         [f"sh(f'cd {{SRC}} && {{sys.executable}} -m pytest -q -p no:cacheprovider', log=f'{{WORK}}/pytest.txt')",
          "sh(f'{PY} smoke --workdir /tmp/eegrep-smoke', log=f'{WORK}/smoke.txt')\n"
          "shutil.copy('/tmp/eegrep-smoke/runs.jsonl', f'{WORK}/smoke_runs.jsonl')"],
-        extras="dev"))
+        extras="dev,stats"))
 
     for k in range(N_SHARDS):
         write_kernel(f"nb01-preprocess-s{k}", f"nb01 preprocess s{k}", notebook(
@@ -194,6 +194,21 @@ def main():
              f"--which {which} --n-perm {n_perm} --perm-start {start} --out {{WORK}}/ablations.jsonl --max-hours 10.5', "
              f"log=f'{{WORK}}/ablate.log')"],
             extras="dev"), kernel_sources=nb02 + grid_sources)
+
+    write_kernel("nb07-stats-figures", "nb07 stats figures", notebook(
+        "NB07 — statistics, tables and figures (CPU)",
+        "Builds every journal table (LaTeX + CSV) and figure (PDF + 300-dpi PNG) from the raw runs committed under "
+        "`reports/` plus the NB02 cache and NB01 preprocessed recordings. No hand-typed numbers.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_stats.py "
+         "tests/test_stats_ablation.py', log=f'{WORK}/pytest_stats.txt')",
+         find_cache + "\n"
+         "PRE = sorted(d for d in glob.glob('/kaggle/input/**/preproc', recursive=True) if glob.glob(f'{d}/sub-*.npz'))\n"
+         "print(PRE)",
+         "sh(f'{PY} report --reports {SRC}/reports --cache {CACHE} --preproc {\" \".join(PRE)} --out {WORK}/report', "
+         "log=f'{WORK}/report.log')\n"
+         "print(open(f'{WORK}/report/summary.json').read())"],
+        extras="dev,stats"),
+        kernel_sources=nb02 + [f"{OWNER}/eegrep-nb01-preprocess-s0"])
 
     write_kernel("nb03a-folds-demographics", "nb03a folds demographics", notebook(
         "NB03a — frozen folds + demographics confound check (CPU)",
