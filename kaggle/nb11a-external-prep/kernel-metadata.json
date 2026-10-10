@@ -1,0 +1,14 @@
+{
+  "id": "dev123123456/eegrep-nb11a-external-prep",
+  "title": "eegrep nb11a external prep",
+  "code_file": "nb11a_external_prep.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}

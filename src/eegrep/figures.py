@@ -213,7 +213,7 @@ def fig_cd(cd: dict, out_dir):
     save(fig, out_dir, "fig09_critical_difference")
 
 
-def fig_confusions(df: pd.DataFrame, class_names, out_dir):
+def fig_confusions(df: pd.DataFrame, class_names, out_dir, name: str = "fig10_confusion_matrices"):
     """Fig 10: row-normalised confusion matrices (summed over 25 runs) of the best cell per representation."""
     best = df.groupby(["pipeline", "edge"])["macro_f1"].mean().reset_index().sort_values("macro_f1", ascending=False)
     best = best.drop_duplicates("pipeline").sort_values("pipeline")
@@ -223,14 +223,15 @@ def fig_confusions(df: pd.DataFrame, class_names, out_dir):
         cm = np.sum([np.array(c) for c in df[(df.pipeline == b.pipeline) & (df.edge == b.edge)]["confusion"]], axis=0)
         cmn = cm / cm.sum(1, keepdims=True)
         a.imshow(cmn, cmap="Blues", vmin=0, vmax=1)
-        for i in range(3):
-            for j in range(3):
+        k = len(class_names)
+        for i in range(k):
+            for j in range(k):
                 a.text(j, i, f"{cmn[i, j]:.2f}", ha="center", va="center", fontsize=7,
                        color="white" if cmn[i, j] > 0.5 else "black")
-        a.set_xticks(range(3), class_names, fontsize=7); a.set_yticks(range(3), class_names, fontsize=7)
+        a.set_xticks(range(k), class_names, fontsize=7); a.set_yticks(range(k), class_names, fontsize=7)
         a.set_title(f"{b.pipeline}×{b.edge}\nF1={b.macro_f1:.2f}", fontsize=7)
     np.atleast_1d(ax)[0].set_ylabel("true"); fig.supxlabel("predicted", fontsize=8)
-    save(fig, out_dir, "fig10_confusion_matrices")
+    save(fig, out_dir, name)
 
 
 def fig_roc_pr(df: pd.DataFrame, cells: list[tuple[str, str]], class_names, out_dir):
@@ -312,6 +313,36 @@ def fig_confirmation(main_cells: pd.DataFrame, confirm_cells: pd.DataFrame, out_
     ax.set_xlabel("Macro-F1, seeds 0–4 (selection)"); ax.set_ylabel("Macro-F1, seeds 5–9 (confirmation)")
     ax.set_title(f"Spearman ρ = {rho:.2f} across 21 cells", fontsize=8)
     save(fig, out_dir, "figS6_confirmation")
+
+
+def fig_external(src_cells: pd.DataFrame, ext_cells: pd.DataFrame, pswe_subj: pd.DataFrame, class_names, out_dir):
+    """Fig 14: external validation on ds004584. (a) every cell's macro-F1 on ds004504 (AD/FTD/CN) vs ds004584
+    (PD/CN); (b) representation means on both datasets (slope chart); (c) fixed-threshold PSWE rate by group."""
+    a = src_cells.set_index(["pipeline", "edge"])["macro_f1_mean"]
+    b = ext_cells.set_index(["pipeline", "edge"])["macro_f1_mean"].reindex(a.index)
+    reps = sorted({p for p, _ in a.index})
+    fig, (ax, bx, cx) = plt.subplots(1, 3, figsize=(9.6, 3.2), width_ratios=[1.2, 1, 0.8], layout="constrained")
+    for (p, e), x in a.items():
+        ax.scatter(x, b[(p, e)], color=SEQ[reps.index(p) % len(SEQ)], s=20,
+                   marker={"spatial": "o", "functional": "s", "hybrid": "^"}.get(e, "o"))
+    ax.set_xlabel("ds004504 macro-F1 (3 classes)"); ax.set_ylabel("ds004584 macro-F1 (2 classes)")
+    ax.set_title(f"cells: Spearman ρ = {a.corr(b, method='spearman'):.2f}", fontsize=8)
+    ra, rb = a.groupby(level="pipeline").mean(), b.groupby(level="pipeline").mean()
+    for k, p in enumerate(reps):
+        bx.plot([0, 1], [ra[p], rb[p]], "-o", ms=4, color=SEQ[k % len(SEQ)])
+        bx.text(1.06, rb[p], p, fontsize=7, va="center", color=SEQ[k % len(SEQ)])
+        ax.scatter([], [], color=SEQ[k % len(SEQ)], label=p)
+    ax.legend(frameon=False, fontsize=6, ncol=2)
+    bx.set_xticks([0, 1], ["ds004504", "ds004584"]); bx.set_xlim(-0.2, 1.3); bx.set_ylabel("Representation mean macro-F1")
+    bx.set_title(f"representations: ρ = {ra.corr(rb, method='spearman'):.2f}", fontsize=8)
+    groups = [pswe_subj.loc[pswe_subj.label == c, "rate_per_min"].to_numpy() for c in range(len(class_names))]
+    cx.boxplot(groups, showfliers=False, widths=0.5)
+    rng = np.random.default_rng(0)
+    for k, g in enumerate(groups):
+        cx.scatter(k + 1 + rng.uniform(-0.12, 0.12, len(g)), g, s=6, color=SEQ[k % len(SEQ)], alpha=0.6)
+    cx.set_xticks(range(1, len(class_names) + 1), class_names); cx.set_ylabel("PSWE rate (events/min)")
+    cx.set_title("ds004584 fixed-threshold PSWE", fontsize=8)
+    save(fig, out_dir, "fig14_external")
 
 
 def fig_es_sensitivity(reps: pd.DataFrame, runs: dict, out_dir):

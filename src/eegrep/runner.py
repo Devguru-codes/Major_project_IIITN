@@ -76,7 +76,8 @@ def run_cell(cache: FeatureCache, folds: dict, cfg: dict, store: ResultStore, *,
                 idx = tuple(cache.window_indices(f[s]) for s in ("train", "val", "test"))
             n_ep = refit_epochs[(pipeline, edge, seed, k)] if refit_epochs is not None else None
             res = train_one(X, A, cache.subject, y, *idx, cfg, seed=seed * 100 + k, device=device,
-                            covariates=covariates, refit_epochs=n_ep)
+                            n_classes=len(cfg["dataset"]["class_names"]), covariates=covariates,
+                            refit_epochs=n_ep)
             store.append({"key": key, "tag": tag, "pipeline": pipeline, "edge": edge, "seed": seed, "fold": k,
                           "config_hash": chash, "overrides": overrides or {}, "git_sha": git_sha(),
                           "python": platform.python_version(), **res})

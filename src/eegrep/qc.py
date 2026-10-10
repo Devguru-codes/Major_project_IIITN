@@ -55,16 +55,25 @@ def qc_report(cache_dir: str | Path, preprocess_logs: list[str | Path], class_na
     return rep
 
 
-def gate_failures(rep: dict) -> list[str]:
+DEFAULT_GATES = {"n_subjects": 88, "n_windows": [6500, 7100], "duration_s": [300, 1300], "slowing_check": ["AD", "CN"]}
+
+
+def gate_failures(rep: dict, gates: dict | None = None) -> list[str]:
+    """gates: config dataset.qc (expected cohort size, window count, recording durations, slowing sanity check)."""
+    g = gates or DEFAULT_GATES
     fails = []
-    if rep["n_subjects"] != 88:
-        fails.append(f"expected 88 subjects, got {rep['n_subjects']}")
-    if not 6500 <= rep["n_windows"] <= 7100:
-        fails.append(f"window count {rep['n_windows']} outside 6500–7100 (expected ≈7,059)")
-    if "duration_s" in rep and not (300 <= rep["duration_s"]["min"] and rep["duration_s"]["max"] <= 1300):
-        fails.append(f"durations {rep['duration_s']} outside 307–1291 s")
+    if rep["n_subjects"] != g["n_subjects"]:
+        fails.append(f"expected {g['n_subjects']} subjects, got {rep['n_subjects']}")
+    lo, hi = g["n_windows"]
+    if not lo <= rep["n_windows"] <= hi:
+        fails.append(f"window count {rep['n_windows']} outside {lo}–{hi}")
+    lo, hi = g["duration_s"]
+    if "duration_s" in rep and not (lo <= rep["duration_s"]["min"] and rep["duration_s"]["max"] <= hi):
+        fails.append(f"durations {rep['duration_s']} outside {lo}–{hi} s")
     if not all(rep["finite"].values()):
         fails.append(f"non-finite features: {rep['finite']}")
-    if rep["theta_alpha_ratio"]["AD"] <= rep["theta_alpha_ratio"]["CN"]:
-        fails.append("sanity: AD theta/alpha not above CN (known EEG slowing)")
+    if g.get("slowing_check"):
+        patient, control = g["slowing_check"]
+        if rep["theta_alpha_ratio"][patient] <= rep["theta_alpha_ratio"][control]:
+            fails.append(f"sanity: {patient} theta/alpha not above {control} (known EEG slowing)")
     return fails

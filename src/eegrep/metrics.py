@@ -35,7 +35,8 @@ def classification_metrics(y: np.ndarray, prob: np.ndarray, n_classes: int = 3) 
     }
     present = np.unique(y)
     if len(present) == n_classes:
-        out["roc_auc"] = roc_auc_score(y, prob, multi_class="ovr", average="macro", labels=labels)
+        out["roc_auc"] = (roc_auc_score(y, prob[:, 1]) if n_classes == 2 else
+                          roc_auc_score(y, prob, multi_class="ovr", average="macro", labels=labels))
         out["pr_auc"] = float(np.mean([average_precision_score(onehot[:, c], prob[:, c]) for c in labels]))
     else:
         out["roc_auc"] = out["pr_auc"] = float("nan")

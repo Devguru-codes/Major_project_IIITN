@@ -46,6 +46,7 @@ def bootstrap_ci(cell: pd.DataFrame, n_boot: int = 2000, seed: int = 0) -> tuple
 
     rng = np.random.default_rng(seed)
     per_rep = []
+    labels = list(range(len(cell["preds"].iloc[0]["prob"][0])))       # number of classes
     for _, g in cell.groupby("seed"):
         y = np.concatenate([p["y"] for p in g["preds"]])
         pred = np.concatenate([p["prob"] for p in g["preds"]]).argmax(1)
@@ -55,7 +56,7 @@ def bootstrap_ci(cell: pd.DataFrame, n_boot: int = 2000, seed: int = 0) -> tuple
         vals = []
         for y, pred in per_rep:
             i = rng.integers(0, len(y), len(y))
-            vals.append(f1_score(y[i], pred[i], labels=[0, 1, 2], average="macro", zero_division=0))
+            vals.append(f1_score(y[i], pred[i], labels=labels, average="macro", zero_division=0))
         draws[b] = np.mean(vals)
     return float(np.percentile(draws, 2.5)), float(np.percentile(draws, 97.5))
 
@@ -67,7 +68,8 @@ def cell_table(df: pd.DataFrame, n_boot: int = 2000) -> pd.DataFrame:
     for (p, e), g in df.groupby(["pipeline", "edge"]):
         row = {"pipeline": p, "edge": e, "n_runs": len(g)}
         for m in metrics:
-            row[f"{m}_mean"], row[f"{m}_sd"] = g[m].mean(), g[m].std()
+            if m in g:                                                  # sens_2/spec_2 absent for 2 classes
+                row[f"{m}_mean"], row[f"{m}_sd"] = g[m].mean(), g[m].std()
         half = stats.t.ppf(0.975, len(g) - 1) * g["macro_f1"].std() / np.sqrt(len(g))
         row["macro_f1_t_ci"] = [row["macro_f1_mean"] - half, row["macro_f1_mean"] + half]
         row["macro_f1_boot_ci"] = list(bootstrap_ci(g, n_boot)) if n_boot else None
