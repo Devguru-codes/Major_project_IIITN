@@ -39,9 +39,12 @@ def test_recovers_representation_effect(rng):
     assert {"subject", "split", "model", "residual"} <= set(vc) and vc["subject"]["share"] > vc["split"]["share"]
 
 
-def test_null_effect_not_significant():
-    res = analyse_mixed(_simulate(np.random.default_rng(3), {"P1": 0.0, "P2": 0.0, "P3": 0.0}))
-    assert res["terms"].set_index("term").loc["representation", "p"] > 0.01
+def test_null_false_positive_rate_is_nominal():
+    """Calibration under the null: across 30 simulated datasets the representation test rejects at about 5%."""
+    p = [analyse_mixed(_simulate(np.random.default_rng(100 + i), {"P1": 0.0, "P2": 0.0, "P3": 0.0}))["terms"]
+         .set_index("term").loc["representation", "p"] for i in range(30)]
+    assert np.mean(np.array(p) < 0.05) <= 0.15
+    assert np.mean(p) > 0.3                                            # roughly uniform, not piled near zero
 
 
 def test_subject_long_reshapes_predictions():
