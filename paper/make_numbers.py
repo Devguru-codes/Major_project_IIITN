@@ -96,13 +96,85 @@ for _, r in abl.iterrows():
     put(k + "Delta", r.delta, "{:+.3f}")
     put(k + "Lo", r.delta_ci_lo, "{:+.3f}"); put(k + "Hi", r.delta_ci_hi, "{:+.3f}")
     put(k + "P", p_fmt(r.nb_p_holm))
-gvc = pd.read_csv(nb07 / "tables" / "gcn_vs_classical.csv")
-for _, r in gvc.iterrows():
-    put(f"gvc{r.representation}Delta", r.delta, "{:+.3f}")
-    put(f"gvc{r.representation}P", p_fmt(r.nb_p_holm))
-    put(f"gvc{r.representation}Classical", r.classical_f1)
 demo = pd.read_csv(REP / "nb03a_demographics.csv").groupby("model")["macro_f1"].agg(["mean", "std"])
 put("demoFOne", demo.loc["demographics_lr", "mean"]); put("chanceFOne", demo.loc["chance_stratified", "mean"])
+
+# early stopping: epoch of the best validation score in the main grid
+runs = pd.DataFrame([json.loads(line) for f in sorted((REP / "grid").glob("runs_s*.jsonl")) for line in open(f)])
+runs = runs[runs.tag == "main"]
+put("bestEpochMedian", runs["best_epoch"].median(), "{:.0f}")
+put("bestEpochLeThree", 100 * (runs["best_epoch"] <= 3).mean(), "{:.0f}")
+for p, v in runs.groupby("pipeline")["best_epoch"].median().items():
+    put(f"bestEpoch{p}", v, "{:.0f}")
+
+# ---- must-fix re-runs: confirmation folds (seeds 5-9) and matched-training comparisons ----
+conf = summ["confirmation"]
+ct = nb07 / "tables" / "confirm"
+ccells = pd.read_csv(ct / "grid_cells.csv").set_index(["pipeline", "edge"])
+sel = ccells.loc[(best.pipeline, best.edge)]
+put("confFOne", conf["selected_on_confirm_f1"]); put("confFOneSd", sel.macro_f1_sd)
+put("confFOneCiLo", conf["selected_on_confirm_boot_ci"][0]); put("confFOneCiHi", conf["selected_on_confirm_boot_ci"][1])
+put("confBalAcc", sel.balanced_acc_mean); put("confAuc", sel.roc_auc_mean); put("confKappa", sel.kappa_mean)
+cb = ccells.index[0]
+put("confBestCell", f"{cb[0]}\\,$\\times$\\,{cb[1]}"); put("confBestFOne", ccells.iloc[0].macro_f1_mean)
+put("confRankRho", conf["rank_spearman_main_vs_confirm"], "{:.2f}")
+cpw = pd.read_csv(ct / "grid_pairwise_representation.csv")
+put("cPairsWilcoxonSig", int((cpw["wilcoxon_p_holm"] < 0.05).sum()), "{:d}")
+put("cPairsNbSig", int((cpw["nb_p_holm"] < 0.05).sum()), "{:d}")
+ccd = json.loads((ct / "grid_cd.json").read_text())
+put("cFriedmanP", p_fmt(ccd["friedman_p"])); put("cCdValue", ccd["cd"], "{:.2f}")
+for k, v in conf["confirm_marginal_representation"].items():
+    put(f"crep{k}", v)
+for k, v in conf["confirm_marginal_edge"].items():
+    put(f"cedge{k}", v)
+for row in conf["confirm_anova"]:
+    src = {"pipeline": "Rep", "edge": "Edge"}.get(row["Source"], "Inter")
+    put(f"canova{src}F", row["F"], "{:.2f}"); put(f"canova{src}P", p_fmt(row["p-GG-corr"]))
+    put(f"canova{src}Eta", row["np2"], "{:.2f}")
+for cell, r in conf["confirm_permutation"].items():
+    c = cell.replace("x", "")
+    put(f"cperm{c}P", p_fmt(r["p"]).lstrip("=<")); put(f"cperm{c}NullMean", r["null_mean"])
+    put(f"cperm{c}NullMax", r["null_max"]); put(f"cperm{c}Obs", r["observed_seed0_macro_f1"])
+    put(f"cperm{c}N", r["n_perm"], "{:d}")
+cleak = pd.read_csv(ct / "leakage.csv")
+for cell, g in cleak.groupby("cell"):
+    g = g.set_index("protocol")
+    c = cell.replace("x", "")
+    put(f"cleak{c}CorrectSubj", g.loc["subject-level (correct)", "subject_macro_f1"])
+    put(f"cleak{c}LeakySubj", g.loc["window-level (leaky)", "subject_macro_f1"])
+    put(f"cleak{c}LeakyWin", g.loc["window-level (leaky)", "window_macro_f1"])
+cabl = pd.read_csv(ct / "ablations.csv")
+for _, r in cabl.iterrows():
+    k = f"cabl{r.cell.replace('x', '')}{r.ablation}"
+    put(k + "Delta", r.delta, "{:+.3f}")
+    put(k + "Lo", r.delta_ci_lo, "{:+.3f}"); put(k + "Hi", r.delta_ci_hi, "{:+.3f}")
+    put(k + "P", p_fmt(r.nb_p_holm)); put(k + "WilP", p_fmt(r.wilcoxon_p_holm))
+put("cablNSigNb", int((cabl.nb_p_holm < 0.05).sum()), "{:d}")
+put("cablNSigWil", int((cabl.wilcoxon_p_holm < 0.05).sum()), "{:d}")
+fair = pd.read_csv(ct / "fair_comparisons.csv")
+for _, r in fair.iterrows():
+    k = f"fair{'Tr' if r.training_subjects == 'train only' else 'Tv'}{r.representation}"
+    put(k + "Delta", r.delta, "{:+.3f}"); put(k + "P", p_fmt(r.nb_p_holm)); put(k + "WilP", p_fmt(r.wilcoxon_p_holm))
+    put(k + "Gcn", r.gcn_f1); put(k + "Classical", r.classical_f1)
+for regime, tag in (("train only", "Tr"), ("train + val", "Tv")):
+    f = fair[fair.training_subjects == regime]
+    put(f"fair{tag}NSig", int((f.nb_p_holm < 0.05).sum()), "{:d}")
+    put(f"fair{tag}NSigWil", int((f.wilcoxon_p_holm < 0.05).sum()), "{:d}")
+    put(f"fair{tag}DeltaMin", f.delta.min(), "{:+.3f}"); put(f"fair{tag}DeltaMax", f.delta.max(), "{:+.3f}")
+refit = pd.DataFrame([json.loads(line) for f in sorted((REP / "confirm").glob("refit_runs_s*.jsonl")) for line in open(f)])
+refit["macro_f1"] = refit["subject"].map(lambda s: s["macro_f1"])
+rcell = refit.groupby(["pipeline", "edge"])["macro_f1"].mean()
+put("refitBestFOne", rcell.loc[(best.pipeline, best.edge)])
+put("refitMeanGain", (rcell - cells.set_index(["pipeline", "edge"])["macro_f1_mean"]).mean(), "{:+.3f}")
+ctrain = pd.read_csv(REP / "confirm" / "classical_train.csv")
+ctv = pd.read_csv(REP / "nb03c_classical.csv")
+put("classicalTrBest", ctrain.groupby(["pipeline", "model"])["macro_f1"].mean().max())
+put("classicalTvBest", ctv.groupby(["pipeline", "model"])["macro_f1"].mean().max())
+crun = pd.concat([pd.read_json(f, lines=True) for f in sorted((REP / "confirm").glob("*.jsonl"))])
+put("nConfirmRuns", len(crun), "{:,}"); put("cpuHoursConfirm", crun["seconds"].sum() / 3600, "{:.1f}")
+put("nConfirmGridRuns", int((crun.tag == "confirm").sum()), "{:,}")
+put("nRefitRuns", int((crun.tag == "refit").sum()), "{:,}")
+put("nConfirmAblRuns", int((~crun.tag.isin(["confirm", "refit"])).sum()), "{:,}")
 
 # ---- PSWE (RQ6) and the exploratory relative analysis ----
 r6 = json.loads((REP / "rq6" / "rq6_pswe_stats.json").read_text())
@@ -150,46 +222,84 @@ def ci(s):
 
 rows = []
 for _, r in cells.sort_values(["pipeline", "edge"]).iterrows():
+    c = ccells.loc[(r.pipeline, r.edge)]
     rows.append(f"{REPN[r.pipeline]} & {r.edge} & {r.macro_f1_mean:.3f} $\\pm$ {r.macro_f1_sd:.3f} & "
                 f"{ci(r.macro_f1_boot_ci)} & {r.balanced_acc_mean:.3f} & {r.roc_auc_mean:.3f} & "
-                f"{r.kappa_mean:.3f} & {r.brier_mean:.3f} \\\\")
+                f"{r.kappa_mean:.3f} & {r.brier_mean:.3f} & {c.macro_f1_mean:.3f} $\\pm$ {c.macro_f1_sd:.3f} \\\\")
 (TAB / "cells.tex").write_text("\n".join(rows), encoding="utf-8")
 
-base = pd.read_csv(nb07 / "tables" / "baselines.csv")
-mname = {"lr": "Logistic regression", "rf": "Random forest", "svm_rbf": "RBF-SVM",
-         "demographics_lr": "Logistic regression (age + sex)", "chance_stratified": "Stratified chance"}
+# Table 4: every model under both training regimes (train only / train + val), same 25 test splits
+mname = {"lr": "Logistic regression", "rf": "Random forest", "svm_rbf": "RBF-SVM"}
+
+
+def ms(v):
+    return f"{v.mean():.3f} $\\pm$ {v.std():.3f}"
+
+
 rows = []
-for rep_, g in base.groupby("representation", sort=True):
-    for _, r in g.sort_values("macro_f1", ascending=False).iterrows():
-        label = REPN.get(rep_, "Demographics only")
-        rows.append(f"{label} & {mname.get(r.model, r.model)} & {r.macro_f1:.3f} $\\pm$ {r.sd:.3f} \\\\")
+for p in sorted(REPN):
+    g = runs[runs.pipeline == p]
+    g = g.assign(macro_f1=g["subject"].map(lambda s: s["macro_f1"]))
+    e_tr = g.groupby("edge")["macro_f1"].mean().idxmax()
+    r = refit[refit.pipeline == p]
+    e_tv = r.groupby("edge")["macro_f1"].mean().idxmax()
+    rows.append(f"{REPN[p]} & GCN ({e_tr} / {e_tv}) & {ms(g[g.edge == e_tr].macro_f1)} & "
+                f"{ms(r[r.edge == e_tv].macro_f1)} \\\\")
+    for m in ("lr", "svm_rbf", "rf"):
+        a = ctrain[(ctrain.pipeline == p) & (ctrain.model == m)]["macro_f1"]
+        b = ctv[(ctv.pipeline == p) & (ctv.model == m)]["macro_f1"]
+        if len(a) or len(b):
+            rows.append(f" & {mname[m]} & {ms(a) if len(a) else '--'} & {ms(b) if len(b) else '--'} \\\\")
     rows.append("\\addlinespace")
-(TAB / "baselines.tex").write_text("\n".join(rows[:-1]), encoding="utf-8")
+d = pd.read_csv(REP / "nb03a_demographics.csv")
+rows.append(f"Age + sex & Logistic regression & -- & {ms(d[d.model == 'demographics_lr'].macro_f1)} \\\\")
+rows.append(f" & Stratified chance & -- & {ms(d[d.model == 'chance_stratified'].macro_f1)} \\\\")
+(TAB / "baselines.tex").write_text("\n".join(rows), encoding="utf-8")
 
 aname = {"A1_no_graph": "No graph (identity)", "A2_random_graph": "Random graph (degree-preserving)",
          "A3_k3": "$k=3$", "A3_k6": "$k=6$", "A3_full": "Fully connected", "A4_binary": "Binarised edges",
          "A5_depth1": "Depth 1", "A5_depth3": "Depth 3", "A6_gat": "GAT instead of GCN",
          "A9_unweighted": "No subject-equal weighting", "A12_residualized": "Age/sex regressed out",
          "RQ7_plus_P7": "+ P7 PSWE features", "RQ7_pswe_edge": "PSWE co-occurrence edges"}
-rows = []
-for name_, g in abl.groupby("ablation"):
-    g = g.set_index("cell")
-    cols = []
-    for cell in ("P3xspatial", "P3xhybrid"):
-        r = g.loc[cell]
-        cols.append(f"{r.delta:+.3f} [{r.delta_ci_lo:+.3f}, {r.delta_ci_hi:+.3f}] & {r.nb_p_holm:.2f}")
-    rows.append(f"{aname[name_]} & {' & '.join(cols)} \\\\")
-(TAB / "ablations.tex").write_text("\n".join(rows), encoding="utf-8")
+def abl_rows(table):
+    out = []
+    for name_, g in table.groupby("ablation"):
+        g = g.set_index("cell")
+        cols = []
+        for cell in ("P3xspatial", "P3xhybrid"):
+            r = g.loc[cell]
+            cols.append(f"{r.delta:+.3f} [{r.delta_ci_lo:+.3f}, {r.delta_ci_hi:+.3f}] & {r.nb_p_holm:.2f}")
+        out.append(f"{aname[name_]} & {' & '.join(cols)} \\\\")
+    return "\n".join(out)
+
+
+(TAB / "ablations.tex").write_text(abl_rows(cabl), encoding="utf-8")          # confirmation folds (primary)
+(TAB / "ablations_main.tex").write_text(abl_rows(abl), encoding="utf-8")      # selection folds (supplementary)
+
+
+def p_txt(p):
+    return "$<$0.001" if p < 0.001 else f"{p:.3f}"
+
 
 aov = pd.read_csv(nb07 / "tables" / "grid_anova.csv")
+caov = pd.read_csv(ct / "grid_anova.csv").set_index("Source")
 src = {"pipeline": "Representation", "edge": "Graph construction", "pipeline * edge": "Interaction"}
 rows = []
 for _, r in aov.iterrows():
-    pgg = r["p-GG-corr"]
-    p_txt = "$<$0.001" if pgg < 0.001 else f"{pgg:.3f}"
+    c = caov.loc[r.Source]
     rows.append(f"{src[r.Source]} & {int(r.ddof1)}, {int(r.ddof2)} & {r.F:.2f} & {r['eps-GG']:.2f} & "
-                f"{p_txt} & {r.np2:.2f} \\\\")
+                f"{p_txt(r['p-GG-corr'])} & {r.np2:.2f} & {c.F:.2f} & {c['eps-GG']:.2f} & "
+                f"{p_txt(c['p-GG-corr'])} & {c.np2:.2f} \\\\")
 (TAB / "anova.tex").write_text("\n".join(rows), encoding="utf-8")
+
+frows = []
+for regime, g in fair.groupby("training_subjects", sort=False):
+    for _, r in g.iterrows():
+        frows.append(f"{regime} & {REPN[r.representation]} & GCN ({r.gcn}) & {mname.get(r.classical, r.classical)} & "
+                     f"{r.gcn_f1:.3f} & {r.classical_f1:.3f} & {r.delta:+.3f} & {r.wilcoxon_p_holm:.2f} & "
+                     f"{r.nb_p_holm:.2f} \\\\")
+    frows.append("\\addlinespace")
+(TAB / "fair.tex").write_text("\n".join(frows[:-1]), encoding="utf-8")
 
 OUT.parent.mkdir(parents=True, exist_ok=True)
 OUT.write_text("% generated by paper/make_numbers.py — do not edit\n" +

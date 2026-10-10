@@ -3,11 +3,13 @@
 \subsection{Principal findings}
 Holding the model, data and evaluation protocol fixed, we found four things. First, the node-feature
 representation strongly affects three-class AD/FTD/control classification (partial
-$\eta^2=\anovaRepEta$), with wavelet, spectral and fused features leading. Second, how the graph is
-built matters little (partial $\eta^2=\anovaEdgeEta$), the best representation does not depend on it,
-and the GCN performs no better than a random forest or SVM on the same features. Third, splitting
-windows instead of subjects inflates subject-level macro-F1 from about 0.59 to about 0.99 on the
-identical pipeline, reproducing the top of the published range. Fourth, the
+$\eta^2=\anovaRepEta$, and \canovaRepEta{} on independent confirmation folds), with wavelet,
+spectral and fused features leading. Second, how the graph is built matters little: a small effect on
+the selection folds (partial $\eta^2=\anovaEdgeEta$) vanished on the confirmation folds, the best
+representation does not depend on the graph, and the GCN is not significantly better than a random
+forest or SVM trained on the same features and the same subjects. Third, splitting windows instead
+of subjects inflates subject-level macro-F1 from about 0.6 to about 0.98 on the identical pipeline,
+reproducing the top of the published range. Fourth, the
 blood--brain-barrier-associated PSWE marker is more frequent in AD and FTD than in controls, but this
 excess is explained by continuous background slowing; defined relative to each person's background,
 transient slowing events are, if anything, less frequent in dementia.
@@ -17,10 +19,13 @@ The size and consistency of the representation effect, against a small and non-i
 effect, indicate that the information a GNN can use on this benchmark lives mostly in the node
 features. Several observations point the same way. Spatial graphs --- which are identical for every
 subject and therefore carry no diagnostic information of their own --- did at least as well as
-functional and hybrid graphs. A degree-preserving random graph cost about as much as removing the
-graph altogether, which suggests that message passing helps, where it helps at all, by smoothing
-features over neighbouring electrodes rather than by exploiting a particular connectivity pattern.
-And non-graph classifiers on flattened features matched the GCN cell for cell. These results agree
+functional and hybrid graphs, and on the confirmation folds the three graph types were
+indistinguishable. Neither removing the graph nor replacing it with a degree-preserving random graph
+changed performance significantly; any benefit of message passing is small, and we cannot
+attribute it to a particular connectivity pattern rather than to smoothing over neighbouring
+electrodes. And non-graph classifiers on flattened features, trained on the same subjects, were
+statistically indistinguishable from the GCN for every representation, although the GCN on wavelet
+features was numerically best in both training regimes. These results agree
 with the independent conclusion of the 2026 scoping review that apparent representational gains on
 this dataset do not survive leakage-free evaluation \cite{R1}, and they temper the case for
 graph-based modelling made in recent work \cite{R2,R8,F7}: on 19-electrode scalp EEG from 88
@@ -65,8 +70,9 @@ several times larger than any graph or architecture change we tested. Figures in
 splitting protocol, and studies that report window-level metrics or allow a subject's windows into
 both training and test sets cannot be compared with subject-level results. We name no individual
 study: the point is that the protocol, not the model, determines most of the reported number, as
-argued independently in \cite{R1,F8}. The permutation test confirms that the honest result is
-nonetheless real.
+argued independently in \cite{R1,F8}. The permutation test and the independent confirmation folds
+show that the honest result is nonetheless real and is not an artefact of choosing the best of 21
+configurations.
 
 \subsection{Limitations}
 The cohort is small: test folds contain 17--18 subjects, and under the conservative Nadeau--Bengio
@@ -75,9 +81,14 @@ significance. We report both corrected and uncorrected tests and give effect siz
 differences between leading representations should not be over-interpreted. All data come from one
 site, device and protocol, and FTD is the smallest class ($n=23$). The planned external validation on
 an independent cohort (ds004584) and two planned ablations (window length and ICA on/off) were not
-run for this draft. Hyperparameters were fixed a priori and not tuned; early stopping on a
-validation set of about 14 subjects stopped training early, which may disadvantage higher-capacity
-configurations such as raw windows (P5, about 84k parameters). Calibration was poor. Graphs are
+run for this draft. The confirmation folds re-sample the same 88 subjects, so they remove the
+selection bias of choosing among configurations but are not an external replication. Hyperparameters
+were fixed a priori and not tuned. Early stopping on a validation set of about 14 subjects selected
+a median of \bestEpochMedian{} epochs (\bestEpochLeThree{}\% of runs stopped at epoch 3 or earlier;
+median \bestEpochPOne{} for P1 and \bestEpochPThree{} for P3), so many models are lightly trained; this
+may disadvantage higher-capacity configurations such as raw windows (P5, about 84k parameters), and
+refitting on training plus validation subjects for the selected epoch count changed macro-F1 by only
+\refitMeanGain{} on average. Calibration was poor. Graphs are
 defined on electrodes rather than cortical sources. The demographic floor (\demoFOne) shows residual
 age and sex information, which residualisation reduced but did not remove. For PSWEs, the MPF
 frequency range was not reported in the source and was set by us, we detected events per channel
