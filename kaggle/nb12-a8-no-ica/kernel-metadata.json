@@ -1,0 +1,14 @@
+{
+  "id": "dev123123456/eegrep-nb12-a8-no-ica",
+  "title": "eegrep nb12 a8 no ica",
+  "code_file": "nb12_a8_no_ica.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}

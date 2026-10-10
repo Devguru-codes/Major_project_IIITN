@@ -1,0 +1,4 @@
+# Ablation A8: no ICA/ICLabel artefact removal; every other preprocessing step unchanged.
+base: default.yaml
+preprocess:
+  ica_method: none

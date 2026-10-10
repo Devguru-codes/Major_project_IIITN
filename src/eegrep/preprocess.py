@@ -35,8 +35,6 @@ def prepare_channels(raw, ds: dict):
 
 def preprocess_recording(set_path: str | Path, cfg: dict) -> tuple[np.ndarray, float, dict]:
     import mne
-    from mne.preprocessing import ICA
-    from mne_icalabel import label_components
 
     pc, ds = cfg["preprocess"], cfg["dataset"]
     raw = prepare_channels(mne.io.read_raw_eeglab(set_path, preload=True, verbose="error"), ds)
@@ -45,9 +43,23 @@ def preprocess_recording(set_path: str | Path, cfg: dict) -> tuple[np.ndarray, f
     raw.filter(pc["l_freq"], pc["h_freq"], verbose="error")
     raw.notch_filter(pc["notch"], verbose="error")
     raw.set_eeg_reference(pc["reference"], verbose="error")
+    ica_log = remove_artifact_components(raw, pc, sfreq_in)
+
+    raw.resample(pc["sfreq"], verbose="error")
+    data = (raw.get_data() * 1e6).astype(np.float32)     # volts -> µV
+    log = {"sfreq_in": sfreq_in, "duration_s": duration, **ica_log}
+    return data, float(pc["sfreq"]), log
+
+
+def remove_artifact_components(raw, pc: dict, sfreq_in: float) -> dict:
+    """ICA + ICLabel in place. preprocess.ica_method = "none" skips it entirely (ablation A8)."""
+    if pc["ica_method"] in (None, "none"):
+        return {"n_components": 0, "excluded": [], "excluded_labels": [], "ic_labels": [], "ic_proba": []}
+    from mne.preprocessing import ICA
+    from mne_icalabel import label_components
 
     ica_raw = raw.copy().filter(pc["ica_hp"], None, verbose="error")
-    n_comp = len(ds["channels"]) - 1                     # average reference removes one rank
+    n_comp = len(raw.ch_names) - 1                       # average reference removes one rank
     ica = ICA(n_components=n_comp, method="infomax", fit_params={"extended": True},
               random_state=ICA_RANDOM_STATE, max_iter="auto")
     ica.fit(ica_raw, decim=max(1, int(sfreq_in // 125)), verbose="error")
@@ -56,13 +68,8 @@ def preprocess_recording(set_path: str | Path, cfg: dict) -> tuple[np.ndarray, f
     drop = [i for i, (lab, p) in enumerate(zip(labels, proba))
             if lab in pc["iclabel_drop"] and p >= pc["iclabel_threshold"]]
     ica.apply(raw, exclude=drop, verbose="error")
-
-    raw.resample(pc["sfreq"], verbose="error")
-    data = (raw.get_data() * 1e6).astype(np.float32)     # volts -> µV
-    log = {"sfreq_in": sfreq_in, "duration_s": duration, "n_components": n_comp,
-           "excluded": drop, "excluded_labels": [labels[i] for i in drop],
-           "ic_labels": list(labels), "ic_proba": [round(float(p), 3) for p in proba]}
-    return data, float(pc["sfreq"]), log
+    return {"n_components": n_comp, "excluded": drop, "excluded_labels": [labels[i] for i in drop],
+            "ic_labels": list(labels), "ic_proba": [round(float(p), 3) for p in proba]}
 
 
 def preprocess_dataset(bids_root: str | Path, subjects: list[str], cfg: dict, out_dir: str | Path,

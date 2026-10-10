@@ -1,0 +1,4 @@
+# Ablation A7: 5 s windows (main: 10 s). Same preprocessed recordings; only the windowing changes.
+base: default.yaml
+preprocess:
+  window_s: 5.0

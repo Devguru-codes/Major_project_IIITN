@@ -331,6 +331,57 @@ def main():
              find_cache + "\n" + ext + f"assert os.path.exists(f'{ext_folds}'), 'commit the NB11a folds first'"] + jobs,
             extras="dev"), kernel_sources=[f"{OWNER}/eegrep-nb11a-external-prep"])
 
+    # ---- ablations A7 (window length) and A8 (ICA off): new caches, confirmation folds, both reference cells ----
+    confirm_folds = "{SRC}/splits/folds_ds004504_confirm.json"
+
+    def train_cells(name, cache, out):
+        return "\n".join(
+            f"sh(f'{{C}} grid --cache {cache} --folds {confirm_folds} --pipelines P3 --edges {e} "
+            f"--tag {name}@P3x{e} --out {{WORK}}/{out} --max-hours 5', log=f'{{WORK}}/{name}_{e}.log')"
+            for e in ("spatial", "hybrid"))
+
+    abl_test = ("sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_external.py "
+                "tests/test_model_train.py', log=f'{WORK}/pytest_abl.txt')")
+    for name, conf in (("A7_window5", "ablation_a7_window5"), ("A7_window20", "ablation_a7_window20")):
+        slug = name.lower().replace("_", "-")
+        write_kernel(f"nb12-{slug}", f"nb12 {name.lower()}", notebook(
+            f"NB12 — ablation {name}: re-windowed feature cache + reference cells on the confirmation folds (CPU)",
+            "Re-windows the NB01 preprocessed recordings (only `preprocess.window_s` changes), rebuilds every "
+            "feature and graph, then trains P3 x spatial and P3 x hybrid on the 25 confirmation splits, paired with "
+            "their confirmation-grid runs.",
+            [abl_test,
+             "import glob\n"
+             "PRE = sorted(d for d in glob.glob('/kaggle/input/**/preproc', recursive=True) if glob.glob(f'{d}/sub-*.npz'))\n"
+             "PART = sorted(glob.glob('/kaggle/input/**/participants.tsv', recursive=True))[0]\n"
+             f"C = f'{{PY}} --config configs/{conf}.yaml'\n"
+             "print(PRE, PART); assert len(PRE) == 3",
+             "for k, d in enumerate(PRE):\n"
+             f"    sh(f'{{C}} cache --preproc {{d}} --participants {{PART}} --out /tmp/cache_s{{k}}', log=f'{{WORK}}/cache_s{{k}}.log')\n"
+             "sh(f'{C} merge-caches --inputs /tmp/cache_s0 /tmp/cache_s1 /tmp/cache_s2 --out /tmp/cache')\n"
+             f"sh(f'{{C}} qc --cache /tmp/cache --out {{WORK}}/qc_{name}.json --no-fail')",
+             train_cells(name, "/tmp/cache", "ablations_confirm.jsonl")],
+            extras="preprocess,dev"),
+            kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)])
+
+    write_kernel("nb12-a8-no-ica", "nb12 a8 no ica", notebook(
+        "NB12 — ablation A8: preprocessing without ICA + reference cells on the confirmation folds (CPU)",
+        "Re-downloads ds004504, runs the fixed preamble with ICA/ICLabel skipped (`preprocess.ica_method: none`), "
+        "rebuilds the cache, trains P3 x spatial and P3 x hybrid on the 25 confirmation splits, and repeats the "
+        "fixed-threshold PSWE statistics (eye movements are slow and could masquerade as slow-wave events).",
+        [abl_test,
+         "C = f'{PY} --config configs/ablation_a8_no_ica.yaml'\n"
+         "sh(f'{C} download --dest /tmp/ds004504', log=f'{WORK}/download.log')\n"
+         "shutil.copy('/tmp/ds004504/participants.tsv', f'{WORK}/participants.tsv')\n"
+         "sh(f'{C} preprocess --bids /tmp/ds004504 --out /tmp/preproc --n-jobs 4', log=f'{WORK}/preprocess.log')\n"
+         "shutil.copy('/tmp/preproc/preprocess_log.jsonl', f'{WORK}/preprocess_log.jsonl')",
+         "sh(f'{C} cache --preproc /tmp/preproc --participants {WORK}/participants.tsv --out /tmp/cache', "
+         "log=f'{WORK}/cache.log')\n"
+         "sh(f'{C} qc --cache /tmp/cache --logs /tmp/preproc/preprocess_log.jsonl --out {WORK}/qc_A8_no_ica.json --no-fail')\n"
+         "sh(f'{C} pswe-stats --cache /tmp/cache --participants {WORK}/participants.tsv --out {WORK}/rq6_no_ica', "
+         "log=f'{WORK}/pswe_stats.txt')",
+         train_cells("A8_no_ica", "/tmp/cache", "ablations_confirm.jsonl")],
+        extras="preprocess,dev,stats"))
+
     write_kernel("nb03a-folds-demographics", "nb03a folds demographics", notebook(
         "NB03a — frozen folds + demographics confound check (CPU)",
         "Writes the frozen subject-level fold assignment (5 repeats x 5 folds) and runs the "
