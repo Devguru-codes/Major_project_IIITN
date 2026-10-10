@@ -114,6 +114,16 @@ are pairwise disjoint and that every subject is tested exactly once per repeat, 
 code repository before any training run. All conditions use the same 25 splits, so every comparison
 is paired. The full factorial comprises $7\times3$ cells $\times$ 25 splits $=525$ training runs.
 
+\paragraph{Confirmation folds.} Choosing the best cell, the cells to ablate and the cell to
+permute on the same splits that then estimate their performance biases those estimates upwards
+(the winner's curse). We therefore generated a second, independent fold assignment with the same
+procedure (seeds 5--9; again 25 splits) and committed it to the repository after the main grid had
+been analysed but before any run used it. The whole grid was re-run on these folds
+(\nConfirmGridRuns{} runs). The cell ranked first on seeds 0--4 is reported with its score on seeds
+5--9 as a selection-free estimate, and all ablations, the leakage experiment and the permutation
+test reported in the main text use the confirmation folds. Their selection-fold counterparts are
+given in the Supplementary material.
+
 The primary metric is subject-level macro-averaged F1. We also report balanced accuracy, one-vs-rest
 macro ROC-AUC, PR-AUC, per-class sensitivity and specificity, Cohen's $\kappa$, the Brier score,
 expected calibration error and confusion matrices. Plain accuracy is reported but never used for
@@ -126,8 +136,17 @@ trained on the flattened node features of each representation with the same fold
 subject aggregation as the GCN (a non-graph twin of every representation). The MMSE is never used as
 an input: control participants all score 30, so it is a proxy for the label.
 
+The GCN learns its weights from the training subjects only and uses the validation subjects only to
+choose when to stop, whereas the classical models have no stopping rule. To compare models trained
+on the same subjects, we evaluate both under two regimes on the same 25 test splits:
+(i)~\emph{train only}, with the classical models fitted on the training subjects and the GCN as in the
+main grid; and (ii)~\emph{train + val}, with the classical models fitted on training and validation
+subjects and the GCN refitted on the same subjects for the number of epochs selected by early
+stopping in the corresponding main-grid run (\nRefitRuns{} refits, no validation monitoring).
+
 \paragraph{Ablations.} Run on the two best cells of the main grid, chosen automatically from the
-grid results, with the same 25 splits: no graph (identity adjacency, i.e.\ a per-node MLP);
+seed 0--4 results and evaluated on the 25 confirmation splits, each paired with the same cell's
+confirmation-grid run: no graph (identity adjacency, i.e.\ a per-node MLP);
 degree-preserving random graphs; $k\in\{3,6\}$ and a fully connected graph; binarised edges; depth
 1 and 3; GAT instead of GCN; no subject-equal weighting; demographic residualisation (age and sex
 regressed out of every feature, coefficients fitted on training windows); adding P7 (PSWE) features
@@ -137,9 +156,12 @@ time) as the edge type.
 \paragraph{Leakage.} The best cells were re-run with \emph{window-level} stratified splitting ---
 windows assigned to folds at random, ignoring subject identity --- with everything else unchanged.
 
-\paragraph{Permutation test.} For the best cell, subject labels were permuted 200 times (all windows
-of a subject keep one label) and the first repeat's five folds re-run each time; the $p$-value is
-$(1+\#\{\text{null}\ge\text{observed}\})/(1+200)$.
+\paragraph{Permutation test.} For the best cell, subject labels were permuted (all windows of a
+subject keep one label) and the first repeat's five folds re-run for each permutation; the
+$p$-value is $(1+\#\{\text{null}\ge\text{observed}\})/(1+N)$. The primary test uses
+\cpermPThreespatialN{} permutations on the first confirmation repeat (seed 5); the original
+\permPThreespatialN{} permutations on the first selection repeat (seed 0) are reported for
+completeness.
 
 \subsection{PSWE detection}\label{sec:pswe}
 Following Milikovsky et al.\ \cite{B1}, with parameters as reported in \cite{B3}, we computed the
@@ -164,11 +186,14 @@ construction, and their interaction, were tested with a balanced two-way repeate
 macro-F1, reporting partial $\eta^2$ and Greenhouse--Geisser-corrected $p$-values. Because
 cross-validation scores share training data and are therefore not independent, every pairwise
 comparison is reported with both the Wilcoxon signed-rank test and the Nadeau--Bengio corrected
-resampled $t$-test \cite{B7} (test/train ratio $17.6/70.4$), with Holm correction \cite{holm} within
+resampled $t$-test \cite{B7}, with Holm correction \cite{holm} within
 each family, Cohen's $d$ and the matched-pairs rank-biserial correlation. All 21 cells were also
 compared with a Friedman test and a Nemenyi critical-difference analysis \cite{demsar}. Cell-level
 95\% confidence intervals come from a subject-level bootstrap (2,000 resamples of subjects within each
-repeat) and from a $t$-interval over the 25 splits.
+repeat) and from a $t$-interval over the 25 splits. The Nadeau--Bengio correction uses the ratio of
+test to training subjects of the models being compared: $17.6/56.3$ for models fitted on the training
+subjects only (the main grid and the ablations) and $17.6/70.4$ when validation subjects are added
+(the train + val regime).
 
 For PSWEs, group differences were tested with Kruskal--Wallis and Dunn post-hoc tests (Holm-corrected,
 with rank-biserial effect sizes), and with negative-binomial regression of event counts using
@@ -180,4 +205,5 @@ custom code that is tested against reference implementations.
 
 \subsection{Compute}
 All experiments ran on free Kaggle CPU sessions (4 vCPUs); no GPU was used. The 525-run main grid
-took 2.4 CPU-hours. Every run is logged with its configuration hash, code version and seed.
+took \cpuHoursGrid{} CPU-hours, and the \nConfirmRuns{} further runs (confirmation grid, ablations and permutations on the
+confirmation folds, and the train + val refits) took \cpuHoursConfirm{} CPU-hours. Every run is logged with its configuration hash, code version and seed.

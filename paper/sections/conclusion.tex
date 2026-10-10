@@ -5,9 +5,10 @@ from how the signal is represented, how the brain graph is built, or the model. 
 representations crossed with three graph constructions over 25 paired subject-level splits, the
 answer is mostly the representation: wavelet and spectral node features lead, graph construction
 matters little, and the GCN does not outperform non-graph classifiers on the same features. The best
-honest three-class macro-F1 was \bestFOne{}, clearly above chance ($p=\permPThreespatialP$) but far
-below published figures --- a gap that window-level splitting alone closes on our own pipeline,
-inflating subject-level macro-F1 to \leakPThreespatialLeakySubj{}. A blood--brain-barrier-associated
+configuration, chosen on one set of splits and re-evaluated on an independent set, reached an honest
+three-class macro-F1 of \confFOne{}, clearly above chance ($p=\cpermPThreespatialP$) but far below
+published figures --- a gap that window-level splitting alone closes on our own pipeline, inflating
+subject-level macro-F1 to \cleakPThreespatialLeakySubj{}. A blood--brain-barrier-associated
 EEG marker, the paroxysmal slow-wave event, was elevated in AD and FTD under its original definition
 but was explained by background slowing, and defining it relative to each person's background
 reversed the effect. We release the code, seeds, frozen folds and every raw run so that each number

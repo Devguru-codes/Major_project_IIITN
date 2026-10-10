@@ -356,3 +356,45 @@ This analysis is **post hoc**. It was added after the RQ6 result, but its defini
 - The raised fixed-threshold PSWE burden in AD and FTD reflects *sustained* background slowing, not excess *paroxysmal* events. Defined relative to each person's background, transient slowing events are fewer in dementia.
 - **Caveat:** there is a floor effect. Subjects whose background MPF is low have less room for an absolute drop in Hz, which is why the Hz-drop variants lose significance after adjusting for background MPF.
 - Framing: an EEG proxy of BBB dysfunction on scalp resting EEG needs a background-relative definition, and in this cohort it does not support excess paroxysmal slowing.
+
+### Must-fix re-runs after internal review (2026-10-10, Kaggle NB09 s0–s4 + NB07 v4; git `cd0d3cd`)
+These fix three flaws found in the internal 5-reviewer critique.
+
+**Flaw 1: winner's curse.** The best cell, the ablation cells and the permutation cell were all chosen and evaluated on the same seeds 0–4.
+- Fix: an independent fold assignment (seeds 5–9) was committed in `82a984c` before any run used it.
+- Re-ran on these folds: the full grid (525 runs), all ablations including A10 (700 runs), and 100 permutations.
+
+**Flaw 2: unmatched training data.** Classical baselines were fitted on train+val, while the GCN learned from train only.
+- Fix: classical models were refitted on train only (450 rows).
+- The GCN was refitted on train+val for its early-stopped epoch count (525 runs).
+- The two regimes are compared separately (`fair_comparisons`).
+
+**Flaw 3: wrong Nadeau–Bengio ratio.** It is now 17.6/56.3 for train-only models and 17.6/70.4 for train+val models.
+
+**Results:**
+
+*Selected cell and ranking*
+- P3×spatial scores **0.596 [0.554–0.643]** on the confirmation folds, against 0.586 on the selection folds, and ranks 1st of 21 again.
+- The cell ranking is stable between fold sets: Spearman ρ = 0.86.
+
+*ANOVA on the confirmation folds*
+- The representation effect replicates: F = 13.57, partial η² = 0.36.
+- **The graph-construction effect does not replicate** (F = 0.03, p = 0.96); the interaction is ns.
+
+*Ablations on the confirmation folds*
+- 0 of 26 are significant, with either Holm-corrected Wilcoxon or Nadeau–Bengio.
+- Every point estimate is ≤ 0, apart from depth 3 on hybrid (+0.001).
+
+*Leakage and permutation*
+- Leakage: 0.596 → 0.983 (subject level) and 0.839 (window level).
+- Permutation: p = 0.010 (100 permutations; the minimum attainable).
+
+*GCN vs classical*
+- No significant difference in either regime. Deltas: −0.044…+0.050 (train only) and −0.049…+0.033 (train+val).
+- GCN P3 is numerically best in both regimes (0.586 / 0.613).
+
+*Early stopping*
+- Median best epoch is 9; 23% of runs stop at epoch ≤ 3. This is reported as a limitation.
+- Refitting on train+val changes the mean by only +0.005.
+
+**Paper:** Results, Abstract, Discussion and Conclusion now lead with the confirmation-fold estimates. New: Table S1 (fair comparisons), Table S2 (selection-fold ablations), Fig. S2 (selection vs confirmation).
