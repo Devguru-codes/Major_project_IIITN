@@ -9,7 +9,7 @@ by every cell's model, and the outcome is the probability that model assigns to 
 
 Crossed random intercepts absorb subject difficulty, the shared train/test partition, and the quality of each
 trained network (the subjects scored by one model share it; this is the error term for cell comparisons).
-Fixed-effect terms are tested with Wald chi-square tests; marginal means average over graph types (or
+Fixed-effect terms are tested with Wald tests (F with containment denominator df; chi-square also reported); marginal means average over graph types (or
 representations) and the observed class mix; pairwise representation contrasts are Holm-corrected.
 """
 from __future__ import annotations
@@ -70,14 +70,22 @@ def analyse_mixed(long: pd.DataFrame, outcome: str = "p_true") -> dict:
     fit = fit_mixed(long, outcome)
     k = fit.k_fe
     beta, cov = fit.fe_params.to_numpy(), fit.cov_params().iloc[:k, :k].to_numpy()
-    # Wald chi-square per term (sum-to-zero coding: main effects are averaged over the other factor)
+    # Wald tests per term (sum-to-zero coding: main effects are averaged over the other factor), reported as
+    # chi-square and as F with containment denominator df: representation, graph and their interaction vary at
+    # the trained-model level (cell x split), true class between subjects.
     names = list(fit.fe_params.index)
+    n_cells = long.groupby(["pipeline", "edge"]).ngroups
+    n_splits, n_subj = long.unit.nunique(), long.subject.nunique()
+    den = {"representation": (n_cells - 1) * (n_splits - 1), "graph": (n_cells - 1) * (n_splits - 1),
+           "interaction": (n_cells - 1) * (n_splits - 1), "true class": n_subj - long.true_class.nunique()}
     terms = []
     for term, label in TERMS.items():
-        idx = [i for i, n in enumerate(names) if n.startswith(term) and (":" in n) == (":" in term)]
+        idx = [i for i, n in enumerate(names) if ":".join(part.split("[")[0] for part in n.split(":")) == term]
         b, v = beta[idx], cov[np.ix_(idx, idx)]
         chi2 = float(b @ np.linalg.solve(v, b))
-        terms.append({"term": label, "df": len(idx), "chi2": chi2, "p": float(stats.chi2.sf(chi2, len(idx)))})
+        f = chi2 / len(idx)
+        terms.append({"term": label, "df": len(idx), "chi2": chi2, "p_chi2": float(stats.chi2.sf(chi2, len(idx))),
+                      "F": f, "den_df": den[label], "p": float(stats.f.sf(f, len(idx), den[label]))})
     # marginal means over the full grid x observed class mix
     classes = long.groupby("subject")["true_class"].first().value_counts(normalize=True).sort_index()
     pipes, edges = sorted(long.pipeline.unique()), sorted(long.edge.unique())

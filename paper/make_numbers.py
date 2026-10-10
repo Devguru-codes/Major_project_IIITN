@@ -305,6 +305,36 @@ if (ext_dir / "external_summary.json").exists():
                     f"{int(ext_rep.rank(ascending=False)[p])} \\\\")
     EXT_ROWS = "\n".join(rows)
 
+# ---- subject-level mixed model (NB13; primary inference) ----
+MIX_ROWS = None
+mix = REP / "mixed"
+if (mix / "selection_summary.json").exists():
+    sets = [(s, t) for s, t in (("selection", "Sel"), ("confirmation", "Conf"), ("external", "Ext"))
+            if (mix / f"{s}_summary.json").exists()]
+    summ_mix = {s: json.loads((mix / f"{s}_summary.json").read_text()) for s, _ in sets}
+    for s, t in sets:
+        m = summ_mix[s]
+        put(f"mix{t}NRows", m["n_rows"], "{:,}"); put(f"mix{t}NModels", m["n_models"], "{:,}")
+        put(f"mix{t}NPairsSig", m["n_pairs_sig_holm"], "{:d}")
+        for r in m["terms"]:
+            k = {"representation": "Rep", "graph": "Edge", "interaction": "Inter", "true class": "Class"}[r["term"]]
+            put(f"mix{t}{k}Chi", r["chi2"], "{:.1f}"); put(f"mix{t}{k}Df", r["df"], "{:d}"); put(f"mix{t}{k}P", p_fmt(r["p"]))
+            put(f"mix{t}{k}F", r["F"], "{:.2f}"); put(f"mix{t}{k}DenDf", r["den_df"], "{:d}")
+        for comp, v in m["variance_components"].items():
+            put(f"mix{t}Share{comp.capitalize()}", 100 * v["share"], "{:.0f}")
+        mg = pd.read_csv(mix / f"{s}_marginal.csv")
+        for _, r in mg.iterrows():
+            put(f"mix{t}M{r.level}", r["mean"])
+    rows = []
+    for term, label in (("representation", "Representation"), ("graph", "Graph construction"),
+                        ("interaction", "Interaction")):
+        cols = []
+        for s, _ in sets:
+            r = next(x for x in summ_mix[s]["terms"] if x["term"] == term)
+            cols.append(f"{r['F']:.2f} ({r['df']}, {r['den_df']}) & {p_txt_(r['p'])}")
+        rows.append(f"{label} & {' & '.join(cols)} \\\\")
+    MIX_ROWS = "\n".join(rows)
+
 # ---- A8 without ICA: fixed-threshold PSWE statistics ----
 a8 = REP / "a7_a8" / "rq6_no_ica" / "rq6_pswe_stats.json"
 if a8.exists():
@@ -413,6 +443,8 @@ for regime, g in fair.groupby("training_subjects", sort=False):
                      f"{r.nb_p_holm:.2f} \\\\")
     frows.append("\\addlinespace")
 (TAB / "fair.tex").write_text("\n".join(frows[:-1]), encoding="utf-8")
+if MIX_ROWS is not None:
+    (TAB / "mixed.tex").write_text(MIX_ROWS, encoding="utf-8")
 if EXT_ROWS is not None:
     (TAB / "external.tex").write_text(EXT_ROWS, encoding="utf-8")
 if ES_ROWS is not None:
