@@ -245,6 +245,76 @@ if es_dir.exists():
 else:
     ES_ROWS = ES_REP_ROWS = None
 
+# ---- external validation on ds004584 (NB11 -> NB07) ----
+ext_dir = nb07 / "tables" / "external"
+EXT_ROWS = None
+if (ext_dir / "external_summary.json").exists():
+    ex = json.loads((ext_dir / "external_summary.json").read_text())
+    tr = ex["transfer"]
+    for lvl, tag in (("cells", "Cells"), ("representations", "Reps")):
+        put(f"ext{tag}Rho", tr[lvl]["spearman_rho"], "{:.2f}"); put(f"ext{tag}RhoP", p_fmt(tr[lvl]["spearman_p"]))
+        put(f"ext{tag}Tau", tr[lvl]["kendall_tau"], "{:.2f}")
+    s = ex["selected"]
+    put("extSelFOne", s["macro_f1"]); put("extSelFOneSd", s["macro_f1_sd"]); put("extSelRank", s["rank"], "{:d}")
+    put("extSelCiLo", s["boot_ci"][0]); put("extSelCiHi", s["boot_ci"][1])
+    put("extSelBalAcc", s["balanced_acc"]); put("extSelAuc", s["roc_auc"]); put("extSelKappa", s["kappa"])
+    put("extBestCell", ex["best_cell"]["cell"].replace("x", "\\,$\\times$\\,")); put("extBestFOne", ex["best_cell"]["macro_f1"])
+    put("extDemoFOne", ex["demographics_f1"]); put("extChanceFOne", ex["chance_f1"])
+    for row in ex["anova"]:
+        src = {"pipeline": "Rep", "edge": "Edge"}.get(row["Source"], "Inter")
+        put(f"extAnova{src}F", row["F"], "{:.2f}"); put(f"extAnova{src}P", p_fmt(row["p-GG-corr"]))
+        put(f"extAnova{src}Eta", row["np2"], "{:.2f}")
+    for k, v in ex["marginal_representation"].items():
+        put(f"extRep{k}", v)
+    for k, v in ex["marginal_edge"].items():
+        put(f"extEdge{k}", v)
+    for r in ex["leakage"]:
+        if r["protocol"].startswith("window"):
+            put("extLeakySubj", r["subject_macro_f1"]); put("extLeakyWin", r["window_macro_f1"])
+    for cell, r in ex["permutation"].items():
+        put("extPermP", p_fmt(r["p"]).lstrip("=<")); put("extPermN", r["n_perm"], "{:d}")
+        put("extPermObs", r["observed_seed0_macro_f1"]); put("extPermNullMax", r["null_max"])
+    g = pd.DataFrame(ex["gcn_vs_classical_train"])
+    put("extGvcNSig", int((g.wilcoxon_p_holm < 0.05).sum()), "{:d}")
+    put("extGvcDeltaMin", g.delta.min(), "{:+.3f}"); put("extGvcDeltaMax", g.delta.max(), "{:+.3f}")
+    eq = json.loads((REP / "external" / "qc_report.json").read_text())
+    put("extNWindows", eq["n_windows"], "{:,}"); put("extIcaExcluded", eq["ica_excluded"]["mean"], "{:.1f}")
+    for gname in ("PD", "CN"):
+        put(f"extThetaAlpha{gname}", eq["theta_alpha_ratio"][gname], "{:.2f}")
+    e6 = json.loads((REP / "external" / "rq6" / "rq6_pswe_stats.json").read_text())
+    PD = "C(group, Treatment('CN'))[T.PD]"
+    for gname in ("PD", "CN"):
+        put(f"extPsweRate{gname}", e6["descriptives"]["rate_per_min"][gname]["median"], "{:.2f}")
+    for m, tag in (("nb_glm_adjusted", "Adj"), ("nb_glm_adjusted_slowing", "AdjSlow")):
+        put(f"extPswe{tag}RR", e6[m]["rate_ratio"][PD], "{:.2f}"); put(f"extPswe{tag}P", p_fmt(e6[m]["p"][PD]))
+        put(f"extPswe{tag}Lo", e6[m]["ci95"][PD][0], "{:.2f}"); put(f"extPswe{tag}Hi", e6[m]["ci95"][PD][1], "{:.2f}")
+    put("extPsweSlowRho", e6["pswe_vs_slowing_spearman"]["rho"], "{:.2f}")
+    put("extPsweMocaRho", e6["pswe_vs_mmse_patients"]["rho"], "{:.2f}"); put("extPsweMocaP", p_fmt(e6["pswe_vs_mmse_patients"]["p"]))
+    er = json.loads((REP / "external" / "rq6_relative" / "rq6_relative_pswe_stats.json").read_text())
+    put("extRelDropTwoRR", er["drop2"]["nb_glm_adjusted"]["rate_ratio"][PD], "{:.2f}")
+    put("extRelDropTwoP", p_fmt(er["drop2"]["nb_glm_adjusted"]["p"][PD]))
+    rel_p = [er[v]["nb_glm_adjusted"]["p"][PD] for v in er if isinstance(er[v], dict) and "nb_glm_adjusted" in er[v]]
+    put("extRelMinP", p_fmt(min(rel_p)))
+    ecells = pd.read_csv(ext_dir / "grid_cells.csv").set_index(["pipeline", "edge"])
+    src_rep = cells.groupby("pipeline")["macro_f1_mean"].mean()
+    ext_rep = ecells.groupby("pipeline")["macro_f1_mean"].mean()
+    rows = []
+    for p in sorted(REPN_ := {"P1": "P1 spectral", "P2": "P2 connectivity", "P3": "P3 wavelet", "P4": "P4 time domain",
+                              "P5": "P5 raw", "P6": "P6 fused", "P7": "P7 PSWE"}):
+        rows.append(f"{REPN_[p]} & {src_rep[p]:.3f} & {int(src_rep.rank(ascending=False)[p])} & {ext_rep[p]:.3f} & "
+                    f"{int(ext_rep.rank(ascending=False)[p])} \\\\")
+    EXT_ROWS = "\n".join(rows)
+
+# ---- A8 without ICA: fixed-threshold PSWE statistics ----
+a8 = REP / "a7_a8" / "rq6_no_ica" / "rq6_pswe_stats.json"
+if a8.exists():
+    r8 = json.loads(a8.read_text())
+    for grp, key in (("AD", AD), ("FTD", FTD)):
+        put(f"noIcaPswe{grp}RR", r8["nb_glm_adjusted"]["rate_ratio"][key], "{:.2f}")
+        put(f"noIcaPswe{grp}P", p_fmt(r8["nb_glm_adjusted"]["p"][key]))
+        put(f"noIcaPsweSlow{grp}RR", r8["nb_glm_adjusted_slowing"]["rate_ratio"][key], "{:.2f}")
+    put("noIcaPsweSlowRho", r8["pswe_vs_slowing_spearman"]["rho"], "{:.2f}")
+
 qc = json.loads((REP / "nb02_qc_report.json").read_text())
 put("nWindows", qc["n_windows"], "{:,}"); put("icaExcludedMean", qc["ica_excluded"]["mean"], "{:.1f}")
 for g in ("AD", "FTD", "CN"):
@@ -343,6 +413,8 @@ for regime, g in fair.groupby("training_subjects", sort=False):
                      f"{r.nb_p_holm:.2f} \\\\")
     frows.append("\\addlinespace")
 (TAB / "fair.tex").write_text("\n".join(frows[:-1]), encoding="utf-8")
+if EXT_ROWS is not None:
+    (TAB / "external.tex").write_text(EXT_ROWS, encoding="utf-8")
 if ES_ROWS is not None:
     (TAB / "es.tex").write_text(ES_ROWS, encoding="utf-8")
     (TAB / "es_rep.tex").write_text(ES_REP_ROWS, encoding="utf-8")

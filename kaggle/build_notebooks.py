@@ -382,6 +382,27 @@ def main():
          train_cells("A8_no_ica", "/tmp/cache", "ablations_confirm.jsonl")],
         extras="preprocess,dev,stats"))
 
+    # ---- primary inference: subject-level linear mixed model (crossed subject / split / model intercepts) ----
+    write_kernel("nb13-mixed-model", "nb13 mixed model", notebook(
+        "NB13 — subject-level mixed-effects analysis of the factorial (CPU)",
+        "Fits p_true ~ representation x graph + true class + (1|subject) + (1|split) + (1|cell x split) on the "
+        "committed runs of the selection folds, the confirmation folds and the external cohort (ds004584).",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_mixed.py', "
+         "log=f'{WORK}/pytest_mixed.txt')",
+         "sh(f'{PY} mixed --runs {SRC}/reports/grid/runs_s0.jsonl {SRC}/reports/grid/runs_s1.jsonl "
+         "{SRC}/reports/grid/runs_s2.jsonl --tag main --out {WORK}/mixed --prefix selection', log=f'{WORK}/mixed_selection.log')",
+         "sh(f'{PY} mixed --runs {SRC}/reports/confirm/confirm_runs_s0.jsonl {SRC}/reports/confirm/confirm_runs_s1.jsonl "
+         "--tag confirm --out {WORK}/mixed --prefix confirmation', log=f'{WORK}/mixed_confirmation.log')",
+         "sh(f'{PY} mixed --runs {SRC}/reports/external/ext_runs_s0.jsonl {SRC}/reports/external/ext_runs_s1.jsonl "
+         "--tag main --out {WORK}/mixed --prefix external', log=f'{WORK}/mixed_external.log')",
+         "import pandas as pd\n"
+         "sys.path.insert(0, f'{SRC}/src')\n"
+         "from eegrep import figures as F\n"
+         "F.fig_mixed({'selection (seeds 0-4)': pd.read_csv(f'{WORK}/mixed/selection_marginal.csv'),\n"
+         "             'confirmation (seeds 5-9)': pd.read_csv(f'{WORK}/mixed/confirmation_marginal.csv')},\n"
+         "            f'{WORK}/mixed/figures')"],
+        extras="dev,stats"))
+
     write_kernel("nb03a-folds-demographics", "nb03a folds demographics", notebook(
         "NB03a — frozen folds + demographics confound check (CPU)",
         "Writes the frozen subject-level fold assignment (5 repeats x 5 folds) and runs the "

@@ -144,6 +144,18 @@ def cmd_report(a, cfg):
     print(json.dumps(res, indent=1, default=float))
 
 
+def cmd_mixed(a, cfg):
+    """Subject-level linear mixed model on one set of runs (primary inference on the factorial)."""
+    from .stats_grid import load_runs
+    from .stats_mixed import analyse_mixed, subject_long, write_mixed
+
+    long = subject_long(load_runs(a.runs, tag=a.tag))
+    res = analyse_mixed(long, a.outcome)
+    s = write_mixed(res, a.out, a.prefix)
+    print(json.dumps({k: s[k] for k in ("n_rows", "converged", "seconds", "terms", "n_pairs_sig_holm")},
+                     indent=1, default=float))
+
+
 def cmd_select_cells(a, cfg):
     from .ablations import select_cells
 
@@ -279,6 +291,9 @@ def main(argv=None):
     s = sub.add_parser("report"); s.add_argument("--reports", default="reports"); s.add_argument("--cache", required=True)
     s.add_argument("--preproc", nargs="*"); s.add_argument("--out", required=True)
     s.add_argument("--n-boot", type=int, default=2000); s.set_defaults(fn=cmd_report)
+    s = sub.add_parser("mixed"); s.add_argument("--runs", nargs="+", required=True); s.add_argument("--tag", default="main")
+    s.add_argument("--outcome", default="p_true", choices=["p_true", "correct"])
+    s.add_argument("--out", required=True); s.add_argument("--prefix", required=True); s.set_defaults(fn=cmd_mixed)
     s = sub.add_parser("select-cells"); s.add_argument("--runs", nargs="+", required=True)
     s.add_argument("--top", type=int, default=2); s.set_defaults(fn=cmd_select_cells)
     s = sub.add_parser("folds"); s.add_argument("--participants", required=True)

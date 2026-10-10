@@ -315,6 +315,23 @@ def fig_confirmation(main_cells: pd.DataFrame, confirm_cells: pd.DataFrame, out_
     save(fig, out_dir, "figS6_confirmation")
 
 
+def fig_mixed(margins: dict, out_dir):
+    """Fig 15: model-based marginal mean probability on the true class (95% CI) per representation and per graph
+    type, from the subject-level mixed model, for each fold set / dataset."""
+    sets = list(margins)
+    fig, axes = plt.subplots(1, 2, figsize=(7.6, 3.0), width_ratios=[2.3, 1], layout="constrained")
+    for ax, factor in zip(axes, ("pipeline", "edge")):
+        levels = sorted(margins[sets[0]].query("factor == @factor")["level"])
+        for k, name in enumerate(sets):
+            m = margins[name].query("factor == @factor").set_index("level").reindex(levels)
+            x = np.arange(len(levels)) + (k - (len(sets) - 1) / 2) * 0.22
+            ax.errorbar(x, m["mean"], yerr=[m["mean"] - m["ci_lo"], m["ci_hi"] - m["mean"]], fmt="o", ms=4,
+                        capsize=2, color=SEQ[k % len(SEQ)], label=name)
+        ax.set_xticks(range(len(levels)), levels, fontsize=7)
+    axes[0].set_ylabel("Mean probability on the true class"); axes[0].legend(frameon=False, fontsize=7)
+    save(fig, out_dir, "fig15_mixed_model")
+
+
 def fig_external(src_cells: pd.DataFrame, ext_cells: pd.DataFrame, pswe_subj: pd.DataFrame, class_names, out_dir):
     """Fig 14: external validation on ds004584. (a) every cell's macro-F1 on ds004504 (AD/FTD/CN) vs ds004584
     (PD/CN); (b) representation means on both datasets (slope chart); (c) fixed-threshold PSWE rate by group."""
