@@ -28,7 +28,7 @@ def _simulate(rng, rep_effect, n_subj=30, reps=("P1", "P2", "P3"), edges=("hybri
 def test_recovers_representation_effect(rng):
     res = analyse_mixed(_simulate(rng, {"P1": 0.0, "P2": -0.08, "P3": 0.06}))
     t = res["terms"].set_index("term")
-    assert t.loc["representation", "p"] < 1e-6 and t.loc["representation", "df"] == 2
+    assert t.loc["representation", "p"] < 1e-3 and t.loc["representation", "p_chi2"] < 1e-6 and t.loc["representation", "df"] == 2
     assert t.loc["graph", "df"] == 1 and t.loc["interaction", "df"] == 2
     m = res["marginal"].query("factor == 'pipeline'").set_index("level")["mean"]
     assert m["P3"] > m["P1"] > m["P2"]
