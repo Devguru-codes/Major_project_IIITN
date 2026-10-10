@@ -16,15 +16,24 @@ import numpy as np
 import pandas as pd
 
 
-def median_power_frequency(x: np.ndarray, sfreq: float, win_s: float, step_s: float,
-                           fmin: float, fmax: float) -> tuple[np.ndarray, np.ndarray]:
-    """x: (C, T) -> mpf (C, S), segment start times (S,)."""
+def _segments(x: np.ndarray, sfreq: float, win_s: float, step_s: float) -> tuple[np.ndarray, np.ndarray]:
     win, step = int(round(win_s * sfreq)), int(round(step_s * sfreq))
-    n_seg = 1 + (x.shape[-1] - win) // step
-    starts = np.arange(n_seg) * step
-    segs = np.stack([x[:, s:s + win] for s in starts], axis=1)          # (C, S, win)
-    spec = np.abs(np.fft.rfft(segs * np.hanning(win), axis=-1)) ** 2
-    freqs = np.fft.rfftfreq(win, 1.0 / sfreq)
+    starts = np.arange(1 + (x.shape[-1] - win) // step) * step
+    return np.stack([x[:, s:s + win] for s in starts], axis=1), starts      # (C, S, win), (S,)
+
+
+def median_power_frequency(x: np.ndarray, sfreq: float, win_s: float, step_s: float,
+                           fmin: float, fmax: float, nfft_s: float | None = None) -> tuple[np.ndarray, np.ndarray]:
+    """x: (C, T) -> mpf (C, S), segment start times (S,).
+
+    nfft_s: zero-pad each Hann-windowed segment to this length before the FFT. The spectral resolution stays
+    1/win_s, but the median is read off a finer grid (1/nfft_s Hz), so MPF is not quantised to 0.5 Hz steps
+    right at the 6 Hz threshold (robustness analysis, config pswe_robust)."""
+    segs, starts = _segments(x, sfreq, win_s, step_s)
+    win = segs.shape[-1]
+    n = max(win, int(round(nfft_s * sfreq))) if nfft_s else win
+    spec = np.abs(np.fft.rfft(segs * np.hanning(win), n=n, axis=-1)) ** 2
+    freqs = np.fft.rfftfreq(n, 1.0 / sfreq)
     band = (freqs >= fmin) & (freqs <= fmax)
     cum = np.cumsum(spec[..., band], axis=-1)
     half = cum[..., -1:] / 2.0
@@ -32,8 +41,16 @@ def median_power_frequency(x: np.ndarray, sfreq: float, win_s: float, step_s: fl
     return mpf.astype(np.float32), starts / sfreq
 
 
+def artifact_segments(x: np.ndarray, sfreq: float, win_s: float, step_s: float, max_ptp_uv: float,
+                      min_std_uv: float) -> np.ndarray:
+    """(C, S) True where a channel's segment is implausible EEG: peak-to-peak above max_ptp_uv (movement,
+    electrode pops, residual eye artefact) or flat (SD below min_std_uv). x is in µV."""
+    segs, _ = _segments(x, sfreq, win_s, step_s)
+    return (np.ptp(segs, axis=-1) > max_ptp_uv) | (segs.std(axis=-1) < min_std_uv)
+
+
 def runs_below(mpf_1d: np.ndarray, threshold: float, min_len: int) -> list[tuple[int, int]]:
-    """[start, stop) index runs where mpf < threshold for at least min_len samples."""
+    """[start, stop) index runs where mpf < threshold for at least min_len samples (NaN = rejected, breaks a run)."""
     below = np.concatenate([[False], mpf_1d < threshold, [False]])
     edges = np.flatnonzero(np.diff(below.astype(np.int8)))
     return [(s, e) for s, e in zip(edges[::2], edges[1::2]) if e - s >= min_len]

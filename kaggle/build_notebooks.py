@@ -403,6 +403,31 @@ def main():
          "            f'{WORK}/mixed/figures')"],
         extras="dev,stats"))
 
+    # ---- PSWE robustness: zero-padded MPF grid and artefact rejection (both cohorts) ----
+    write_kernel("nb14-pswe-robust", "nb14 pswe robust", notebook(
+        "NB14 — fixed-threshold PSWE robustness: zero-padded MPF and artefact rejection (CPU)",
+        "Re-detects PSWEs from the preprocessed recordings of ds004504 (NB01) and ds004584 (NB11a) under the "
+        "pre-specified `pswe_robust` variants and repeats the RQ6 statistics. The `original` variant must reproduce "
+        "the main event counts exactly.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_pswe.py', "
+         "log=f'{WORK}/pytest_pswe.txt')",
+         "import glob\n"
+         "pre = [d for d in glob.glob('/kaggle/input/**/preproc', recursive=True) if glob.glob(f'{d}/sub-*.npz')]\n"
+         "caches = [d for d in glob.glob('/kaggle/input/**/cache', recursive=True) if os.path.exists(f'{d}/index.npz')]\n"
+         "parts = glob.glob('/kaggle/input/**/participants.tsv', recursive=True)\n"
+         "print(pre, caches, parts, sep='\\n')\n"
+         "PRE04 = sorted(d for d in pre if 'nb01' in d); PRE84 = [d for d in pre if 'nb11a' in d]\n"
+         "CACHE04 = [d for d in caches if 'nb02' in d][0]; CACHE84 = [d for d in caches if 'nb11a' in d][0]\n"
+         "PART04 = [p for p in parts if 'nb02' in p][0]; PART84 = [p for p in parts if 'nb11a' in p][0]\n"
+         "assert len(PRE04) == 3 and len(PRE84) == 1",
+         "sh(f'{PY} pswe-robust --preproc {\" \".join(PRE04)} --cache {CACHE04} --participants {PART04} "
+         "--out {WORK}/robust_ds004504', log=f'{WORK}/robust_ds004504.log')",
+         "sh(f'{PY} --config configs/ds004584.yaml pswe-robust --preproc {PRE84[0]} --cache {CACHE84} "
+         "--participants {PART84} --out {WORK}/robust_ds004584', log=f'{WORK}/robust_ds004584.log')"],
+        extras="dev,stats"),
+        kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)]
+        + [f"{OWNER}/eegrep-nb02-merge-qc", f"{OWNER}/eegrep-nb11a-external-prep"])
+
     write_kernel("nb03a-folds-demographics", "nb03a folds demographics", notebook(
         "NB03a — frozen folds + demographics confound check (CPU)",
         "Writes the frozen subject-level fold assignment (5 repeats x 5 folds) and runs the "

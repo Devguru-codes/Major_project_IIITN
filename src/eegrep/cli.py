@@ -97,6 +97,17 @@ def cmd_pswe_relative(a, cfg):
                      indent=1))
 
 
+def cmd_pswe_robust(a, cfg):
+    from .data.participants import load_participants
+    from .stats_pswe import write_robust
+
+    df = load_participants(a.participants, cfg["dataset"]["group_to_label"], cfg["dataset"]["participant_columns"])
+    res = write_robust(a.preproc, a.cache, df, cfg, a.out)
+    print(json.dumps({v: {k: res[v][k] for k in ("identical_counts_to_main", "rate_vs_main_spearman",
+                                                "rejected_fraction_by_group", "nb_glm_adjusted")}
+                      for v in cfg["pswe_robust"]["variants"]}, indent=1))
+
+
 def cmd_classical(a, cfg):
     import pandas as pd
 
@@ -277,6 +288,9 @@ def main(argv=None):
     s = sub.add_parser("pswe-relative"); s.add_argument("--preproc", nargs="+", required=True)
     s.add_argument("--cache", required=True); s.add_argument("--participants", required=True)
     s.add_argument("--out", required=True); s.set_defaults(fn=cmd_pswe_relative)
+    s = sub.add_parser("pswe-robust"); s.add_argument("--preproc", nargs="+", required=True)
+    s.add_argument("--cache", required=True); s.add_argument("--participants", required=True)
+    s.add_argument("--out", required=True); s.set_defaults(fn=cmd_pswe_robust)
     s = sub.add_parser("classical");s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
     s.add_argument("--pipelines", default="P1,P2,P3,P4,P6,P7"); s.add_argument("--out", required=True)
     s.add_argument("--fit-on", choices=["train", "trainval"], default="trainval")

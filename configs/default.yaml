@@ -64,6 +64,17 @@ pswe_relative:                 # EXPLORATORY / POST HOC — defined after the RQ
     mad2: {mad_k: 2.0}         # MPF < median − 2·(1.4826·MAD)
     mad3: {mad_k: 3.0}
 
+pswe_robust:                   # ROBUSTNESS (added after internal review, fixed before any real-data run): does the
+  primary: pad_reject          # fixed-threshold PSWE result depend on the 0.5 Hz MPF grid or on artefacts?
+  nfft_s: 8.0                  # zero-padded FFT length: MPF read off a 0.125 Hz grid (window stays 2 s Hann)
+  max_ptp_uv: 200.0            # a channel's 2-s segment is rejected if peak-to-peak > 200 µV ...
+  min_std_uv: 0.5              # ... or if it is flat (SD < 0.5 µV); rejected seconds break events and leave exposure
+  variants:
+    original: {pad: false, reject: false}   # must reproduce the main analysis exactly
+    pad: {pad: true, reject: false}
+    reject: {pad: false, reject: true}
+    pad_reject: {pad: true, reject: true}
+
 graph:
   edge: hybrid                 # spatial | functional | hybrid | pswe | identity | random
   functional_band: alpha
