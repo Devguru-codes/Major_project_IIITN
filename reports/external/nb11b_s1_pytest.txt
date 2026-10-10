@@ -1,0 +1,18 @@
+...........................                                              [100%]
+=============================== warnings summary ===============================
+tests/test_external.py::test_reference_channel_restored_flat_and_ordered
+  /tmp/eegrep-src/src/eegrep/preprocess.py:32: FutureWarning: Montage name 'standard_1020' is deprecated and will be removed in MNE 1.14. Use 'colin27_1020' instead.
+    raw.set_montage("standard_1020")
+
+tests/test_external.py::test_binary_cell_trains_two_class_model
+  /tmp/eegrep-src/src/eegrep/graphs.py:16: FutureWarning: Montage name 'standard_1020' is deprecated and will be removed in MNE 1.14. Use 'colin27_1020' instead.
+    pos = mne.channels.make_standard_montage("standard_1020").get_positions()["ch_pos"]
+
+tests/test_model_train.py::test_classical_fit_on_train_only_uses_fewer_windows
+tests/test_model_train.py::test_classical_fit_on_train_only_uses_fewer_windows
+tests/test_model_train.py::test_classical_fit_on_train_only_uses_fewer_windows
+  /usr/local/lib/python3.13/dist-packages/sklearn/linear_model/_logistic.py:451: DeprecationWarning: scipy.optimize: The `disp` and `iprint` options of the L-BFGS-B solver are deprecated and will be removed in SciPy 1.18.0.
+    opt_res = optimize.minimize(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
