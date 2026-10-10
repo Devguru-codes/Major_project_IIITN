@@ -102,3 +102,27 @@ def test_qc_gates_follow_config(ext_cfg):
            "finite": {"P1": True}, "theta_alpha_ratio": {"PD": 0.5, "CN": 0.6}}
     assert gate_failures(rep, ext_cfg["dataset"]["qc"]) == []
     assert gate_failures({**rep, "n_subjects": 88}, ext_cfg["dataset"]["qc"])
+
+
+@pytest.mark.parametrize("name, key, value", [("ablation_a7_window5", "window_s", 5.0),
+                                               ("ablation_a7_window20", "window_s", 20.0),
+                                               ("ablation_a8_no_ica", "ica_method", "none")])
+def test_a7_a8_overlays_change_one_key(cfg, name, key, value):
+    abl = load_config(REPO_ROOT / "configs" / f"{name}.yaml")
+    assert abl["preprocess"][key] == value
+    assert {k: v for k, v in abl["preprocess"].items() if k != key} == \
+           {k: v for k, v in cfg["preprocess"].items() if k != key}
+    assert {s: abl[s] for s in abl if s != "preprocess"} == {s: cfg[s] for s in cfg if s != "preprocess"}
+    assert config_hash(abl) != config_hash(cfg)
+
+
+def test_no_ica_leaves_data_untouched(cfg):
+    import mne
+
+    from eegrep.preprocess import remove_artifact_components
+
+    rng = np.random.default_rng(0)
+    raw = mne.io.RawArray(rng.normal(0, 1e-5, (19, 2000)), mne.create_info(19, 128.0, "eeg"), verbose="error")
+    before = raw.get_data().copy()
+    log = remove_artifact_components(raw, {**cfg["preprocess"], "ica_method": "none"}, 128.0)
+    assert log["n_components"] == 0 and log["excluded"] == [] and np.array_equal(raw.get_data(), before)

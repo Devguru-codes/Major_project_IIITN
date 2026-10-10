@@ -90,7 +90,7 @@ def build_report(reports: str | Path, cache_dir: str | Path, preproc_dirs: list[
         confirm = load_runs(cfiles, tag="confirm").assign(tag="main")      # analyse like a main grid
         cgrid = analyse_grid(confirm, n_boot=n_boot)
         write_analysis(cgrid, tabs / "confirm")
-        cabl = load_runs(sorted(glob.glob(str(conf_dir / "ablations_confirm_s*.jsonl"))) +
+        cabl = load_runs(sorted(glob.glob(str(conf_dir / "ablations_confirm_*.jsonl"))) +
                          sorted(glob.glob(str(conf_dir / "perm_confirm_s*.jsonl"))))
         conf_res = {"ablations": ablation_table(confirm, cabl), "leakage": leakage_table(confirm, cabl)}
         refit = load_runs(sorted(glob.glob(str(conf_dir / "refit_runs_s*.jsonl"))), tag="refit")
