@@ -1,0 +1,183 @@
+{
+ "primary": "drop2",
+ "nb_glm_adjusted": {
+  "rate_ratio": {
+   "Intercept": 19.327180062638877,
+   "C(group, Treatment('CN'))[T.PD]": 0.8020907292232728,
+   "age": 0.9805107725176883,
+   "sex_male": 1.1404978212255554,
+   "alpha": 3.461312426601026
+  },
+  "p": {
+   "Intercept": 0.0003113623816863144,
+   "C(group, Treatment('CN'))[T.PD]": 0.27972539770808946,
+   "age": 0.08357578047018867,
+   "sex_male": 0.5062817763565224,
+   "alpha": 1.8447343296307878e-15
+  },
+  "ci95": {
+   "Intercept": [
+    3.8639631325955457,
+    96.6727363474473
+   ],
+   "C(group, Treatment('CN'))[T.PD]": [
+    0.5377255202466549,
+    1.1964273847572213
+   ],
+   "age": [
+    0.95889318969403,
+    1.0026157087735748
+   ],
+   "sex_male": [
+    0.7739761942849896,
+    1.680588227163598
+   ],
+   "alpha": [
+    2.5487139655363253,
+    4.70067801901089
+   ]
+  }
+ },
+ "nb_glm_adjusted_slowing": {
+  "rate_ratio": {
+   "Intercept": 9.741062543804038,
+   "C(group, Treatment('CN'))[T.PD]": 0.7234920432700636,
+   "age": 0.980524250723126,
+   "sex_male": 1.1369508897524487,
+   "rel_delta_theta": 3.8504769239808208,
+   "alpha": 3.330727974631801
+  },
+  "p": {
+   "Intercept": 0.010507316695979825,
+   "C(group, Treatment('CN'))[T.PD]": 0.11769220604567518,
+   "age": 0.08517538201857995,
+   "sex_male": 0.5107333574666536,
+   "rel_delta_theta": 0.033664876347184645,
+   "alpha": 2.938079671096641e-15
+  },
+  "ci95": {
+   "Intercept": [
+    1.7034341327990645,
+    55.704120080288945
+   ],
+   "C(group, Treatment('CN'))[T.PD]": [
+    0.4823251888013564,
+    1.0852444550447653
+   ],
+   "age": [
+    0.9588109906838147,
+    1.002729229845881
+   ],
+   "sex_male": [
+    0.7755841786344324,
+    1.666688621710748
+   ],
+   "rel_delta_theta": [
+    1.1097755988788671,
+    13.359613021845776
+   ],
+   "alpha": [
+    2.4705423423438275,
+    4.49041032442703
+   ]
+  }
+ },
+ "nb_glm_adjusted_background_mpf": {
+  "rate_ratio": {
+   "Intercept": 9.818850698796492,
+   "C(group, Treatment('CN'))[T.PD]": 0.9310481476421444,
+   "age": 0.9809183820700442,
+   "sex_male": 1.1165975677397713,
+   "background_mpf": 1.0598678343258394,
+   "alpha": 3.2914781070082513
+  },
+  "p": {
+   "Intercept": 0.007688688965781623,
+   "C(group, Treatment('CN'))[T.PD]": 0.7320917506727709,
+   "age": 0.08658913526473695,
+   "sex_male": 0.5703505519299422,
+   "background_mpf": 0.022434192013420635,
+   "alpha": 4.022454403205933e-15
+  },
+  "ci95": {
+   "Intercept": [
+    1.8305214374846444,
+    52.66795956114831
+   ],
+   "C(group, Treatment('CN'))[T.PD]": [
+    0.6184915827273886,
+    1.4015561042969737
+   ],
+   "age": [
+    0.9595402641468695,
+    1.0027727946762184
+   ],
+   "sex_male": [
+    0.762934263119267,
+    1.634203873849963
+   ],
+   "background_mpf": [
+    1.0082596958249515,
+    1.1141175541282073
+   ],
+   "alpha": [
+    2.44500582075578,
+    4.431003000870467
+   ]
+  }
+ },
+ "pswe_vs_slowing_spearman": {
+  "rho": 0.16407250880317176,
+  "p": 0.04555812641160244
+ },
+ "pswe_vs_slowing_partial_rank": {
+  "r": 0.1498047777508143,
+  "p": 0.0682270474928861
+ },
+ "pswe_vs_mmse_patients": {
+  "rho": -0.013378526630934631,
+  "p": 0.8948979579071679,
+  "n": 100
+ },
+ "pswe_vs_background_mpf_spearman": {
+  "rho": 0.20240898967023405,
+  "p": 0.013301668046667775
+ }
+}
+
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: divide by zero encountered in log
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: invalid value encountered in multiply
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: divide by zero encountered in log
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: invalid value encountered in multiply
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: divide by zero encountered in log
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: invalid value encountered in multiply
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: divide by zero encountered in log
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: invalid value encountered in multiply
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: divide by zero encountered in log
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: invalid value encountered in multiply
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: divide by zero encountered in log
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: invalid value encountered in multiply
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: divide by zero encountered in log
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: invalid value encountered in multiply
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: divide by zero encountered in log
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: invalid value encountered in multiply
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: divide by zero encountered in log
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
+/usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:3709: RuntimeWarning: invalid value encountered in multiply
+  llf = coeff + size * np.log(prob) + endog * np.log(1 - prob)
