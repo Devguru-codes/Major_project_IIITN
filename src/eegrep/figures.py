@@ -124,17 +124,19 @@ def fig_pswe_burden(subj: pd.DataFrame, topo: pd.DataFrame, cfg, out_dir):
     order = ["AD", "FTD", "CN"]
     g = subj["label"].map(dict(enumerate(cfg["dataset"]["class_names"])))
     info = _info(cfg)
-    fig = plt.figure(figsize=(10, 3))
-    gs = fig.add_gridspec(1, 6, width_ratios=[1.6, 1, 1, 1, 0.1, 1.6])
+    fig = plt.figure(figsize=(11, 3.2), layout="constrained")
+    gs = fig.add_gridspec(1, 5, width_ratios=[1.5, 1, 1, 1, 1.6])
     ax0 = fig.add_subplot(gs[0])
     _groupwise(ax0, {k: subj.loc[g == k, "rate_per_min"].values for k in order}, "PSWE rate (events/min)")
     names = [cfg["dataset"]["channel_rename"].get(c, c) for c in cfg["dataset"]["channels"]]
     tp = topo.rename(index=cfg["dataset"]["channel_rename"]).reindex(names)
     vlim = (0, float(np.nanmax(tp[order].values)))
+    topo_axes = []
     for i, k in enumerate(order):
         a = fig.add_subplot(gs[1 + i]); im = _topo(a, tp[k].values, info, vlim, cmap="magma"); a.set_title(k)
-    fig.colorbar(im, cax=fig.add_subplot(gs[4]), label="median rate")
-    ax5 = fig.add_subplot(gs[5])
+        topo_axes.append(a)
+    fig.colorbar(im, ax=topo_axes, orientation="horizontal", shrink=0.6, label="median PSWE rate (events/min)")
+    ax5 = fig.add_subplot(gs[4])
     pat = subj[g != "CN"]
     for k in ("AD", "FTD"):
         s = pat[g[g != "CN"] == k]
@@ -166,7 +168,7 @@ def fig_interaction(cells: pd.DataFrame, out_dir):
     """Fig 8: 7×3 heatmap of mean macro-F1 + interaction line plot."""
     piv = cells.pivot(index="pipeline", columns="edge", values="macro_f1_mean")
     piv = piv[[c for c in ["spatial", "functional", "hybrid"] if c in piv.columns]]
-    fig, ax = plt.subplots(1, 2, figsize=(8, 3.4), width_ratios=[1, 1.3])
+    fig, ax = plt.subplots(1, 2, figsize=(9, 3.6), width_ratios=[1, 1.3], layout="constrained")
     im = ax[0].imshow(piv.values, cmap="viridis", aspect="auto")
     ax[0].set_xticks(range(piv.shape[1]), piv.columns); ax[0].set_yticks(range(piv.shape[0]), piv.index)
     for i in range(piv.shape[0]):
@@ -184,24 +186,30 @@ def fig_cd(cd: dict, out_dir):
     """Fig 9: critical-difference diagram (average rank, lower = better; bars join cells within CD)."""
     ranks = pd.Series(cd["avg_rank"]).sort_values()
     k = len(ranks)
-    fig, ax = plt.subplots(figsize=(9, 0.6 + 0.22 * k))
-    ax.set_xlim(1, k); ax.set_ylim(0, k + 1); ax.invert_xaxis(); ax.get_yaxis().set_visible(False)
-    ax.spines["left"].set_visible(False)
-    for i, (name, r) in enumerate(ranks.items()):
-        y = k - i
-        ax.plot([r, r], [y, k + 0.5], color="grey", lw=0.5); ax.text(r, y, f" {name} ({r:.1f})", fontsize=6, va="center")
-    groups, start = [], 0
     vals = ranks.values
+    groups = []                                  # maximal runs of cells within one CD of each other
     for i in range(k):
         j = i
         while j + 1 < k and vals[j + 1] - vals[i] <= cd["cd"]:
             j += 1
         if j > i and (not groups or j > groups[-1][1]):
             groups.append((i, j))
+    lo, hi = vals.min() - 0.5, max(vals.max() + 0.5, vals.min() + cd["cd"] + 1)
+    fig, ax = plt.subplots(figsize=(8, 1.2 + 0.2 * (k + len(groups))), layout="constrained")
+    ax.set_xlim(hi, lo); ax.set_ylim(-len(groups) - 0.5, k + 1.5)
+    ax.get_yaxis().set_visible(False)
+    ax.spines["left"].set_visible(False)
+    for i, (name, r) in enumerate(ranks.items()):
+        y = k - i
+        ax.plot([r, r], [y, k + 0.6], color="grey", lw=0.5)
+        ax.text(r, y, f" {name.replace('×', ' × ')} ({r:.1f})", fontsize=6.5, va="center")
     for n, (i, j) in enumerate(groups):
-        ax.plot([vals[i], vals[j]], [0.4 + 0.25 * n] * 2, color="black", lw=2)
-    ax.plot([1, 1 + cd["cd"]], [k + 0.8] * 2, color=SEQ[5], lw=2); ax.text(1, k + 0.8, f"  CD = {cd['cd']:.2f}", fontsize=7)
-    ax.set_xlabel(f"Average rank (Friedman p = {cd['friedman_p']:.2g})")
+        ax.plot([vals[i], vals[j]], [-0.6 - n] * 2, color="black", lw=2.5, solid_capstyle="butt")
+    x0 = lo + 0.2
+    ax.plot([x0, x0 + cd["cd"]], [k + 1.1] * 2, color=SEQ[5], lw=2)
+    ax.text(x0 + cd["cd"], k + 1.1, f"  CD = {cd['cd']:.2f}", fontsize=7, va="center", ha="right")
+    ax.set_xlabel(f"Average rank across 25 splits (lower = better; Friedman p = {cd['friedman_p']:.2g}); "
+                  "black bars join cells not separated by Nemenyi", fontsize=8)
     save(fig, out_dir, "fig09_critical_difference")
 
 
