@@ -73,7 +73,9 @@ def permutation_test(main: pd.DataFrame, abl: pd.DataFrame) -> dict:
         _, p, e = split_tag(tag)
         per = g.groupby("seed")["macro_f1"].agg(["mean", "size"])
         null = per.loc[per["size"] == per["size"].max(), "mean"].to_numpy()
-        ref = main[(main.pipeline == p) & (main.edge == e) & (main.seed == 0)]["macro_f1"].mean()
+        # permutations re-use the first repeat's folds of whichever fold file they ran on (seed 0 or 5)
+        cell = main[(main.pipeline == p) & (main.edge == e)]
+        ref = cell[cell.seed == cell.seed.min()]["macro_f1"].mean()
         out[f"{p}x{e}"] = {"n_perm": int(len(null)), "observed_seed0_macro_f1": float(ref),
                            "null_mean": float(null.mean()), "null_sd": float(null.std(ddof=1)),
                            "null_max": float(null.max()), "p": float((1 + (null >= ref).sum()) / (1 + len(null))),
@@ -118,6 +120,18 @@ def gcn_vs_classical(main: pd.DataFrame, classical: pd.DataFrame, test_train_rat
     out["wilcoxon_p_holm"] = holm(out["wilcoxon_p"].tolist())
     out["nb_p_holm"] = holm(out["nb_p"].tolist())
     return out
+
+
+def fair_comparisons(main: pd.DataFrame, refit: pd.DataFrame, classical_train: pd.DataFrame,
+                     classical_trainval: pd.DataFrame) -> pd.DataFrame:
+    """GCN vs non-graph twins with matched training subjects:
+    (a) both trained on the train split only (GCN early-stopped on val; classical never sees val);
+    (b) both trained on train + val (GCN refit for its early-stopped epoch count)."""
+    from .stats_grid import RATIO_TRAINVAL
+
+    a = gcn_vs_classical(main, classical_train, RATIO_TRAIN).assign(training_subjects="train only")
+    b = gcn_vs_classical(refit, classical_trainval, RATIO_TRAINVAL).assign(training_subjects="train + val")
+    return pd.concat([a, b], ignore_index=True)
 
 
 def write_all(main, abl, classical, demographics, out_dir) -> dict:

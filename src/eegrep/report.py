@@ -81,6 +81,52 @@ def build_report(reports: str | Path, cache_dir: str | Path, preproc_dirs: list[
     step("figS3 seed variance", lambda: F.fig_seed_variance(main, figs))
     step("figS5 permutation", lambda: F.fig_permutation(abl_res["permutation"], figs))
 
+    # ---- must-fix re-runs (present once reports/confirm/ is committed) ----
+    conf_dir = rep / "confirm"
+    if conf_dir.exists():
+        from .stats_ablation import ablation_table, fair_comparisons, leakage_table, permutation_test
+
+        cfiles = sorted(glob.glob(str(conf_dir / "confirm_runs_s*.jsonl")))
+        confirm = load_runs(cfiles, tag="confirm").assign(tag="main")      # analyse like a main grid
+        cgrid = analyse_grid(confirm, n_boot=n_boot)
+        write_analysis(cgrid, tabs / "confirm")
+        cabl = load_runs(sorted(glob.glob(str(conf_dir / "ablations_confirm_s*.jsonl"))) +
+                         sorted(glob.glob(str(conf_dir / "perm_confirm_s*.jsonl"))))
+        conf_res = {"ablations": ablation_table(confirm, cabl), "leakage": leakage_table(confirm, cabl)}
+        refit = load_runs(sorted(glob.glob(str(conf_dir / "refit_runs_s*.jsonl"))), tag="refit")
+        ctrain = pd.read_csv(conf_dir / "classical_train.csv")
+        conf_res["fair_comparisons"] = fair_comparisons(main, refit, ctrain, classical)
+        for k, v in conf_res.items():
+            v.to_csv(tabs / "confirm" / f"{k}.csv", index=False)
+        conf_res["permutation"] = permutation_test(confirm, cabl)
+        (tabs / "confirm" / "permutation.json").write_text(json.dumps(conf_res["permutation"], indent=1))
+        # selection-free estimate: the cell chosen on seeds 0-4, evaluated on seeds 5-9
+        chosen = grid["cells"].iloc[0]
+        sel = cgrid["cells"].set_index(["pipeline", "edge"]).loc[(chosen.pipeline, chosen.edge)]
+        step("fig13 ablation forest (confirmation)",
+             lambda: F.fig_forest(conf_res["ablations"], figs, name="fig13_ablation_forest"))
+        step("fig12 leakage (confirmation)", lambda: F.fig_leakage(conf_res["leakage"], figs))
+        step("figS5 permutation (confirmation)", lambda: F.fig_permutation(conf_res["permutation"], figs))
+        step("figS6 main vs confirmation ranking",
+             lambda: F.fig_confirmation(grid["cells"], cgrid["cells"], figs))
+        confirmation_summary = {
+            "selected_cell": f"{chosen.pipeline}x{chosen.edge}",
+            "selected_on_main_f1": float(chosen.macro_f1_mean),
+            "selected_on_confirm_f1": float(sel.macro_f1_mean),
+            "selected_on_confirm_boot_ci": sel.macro_f1_boot_ci,
+            "confirm_best_cell": f"{cgrid['cells'].iloc[0].pipeline}x{cgrid['cells'].iloc[0].edge}",
+            "confirm_anova": cgrid["anova"].to_dict("records"),
+            "confirm_marginal_representation": cgrid["marginal_representation"]["mean"].round(4).to_dict(),
+            "confirm_marginal_edge": cgrid["marginal_edge"]["mean"].round(4).to_dict(),
+            "rank_spearman_main_vs_confirm": float(
+                grid["cells"].set_index(["pipeline", "edge"])["macro_f1_mean"].corr(
+                    cgrid["cells"].set_index(["pipeline", "edge"])["macro_f1_mean"], method="spearman")),
+            "confirm_permutation": {k: {kk: vv for kk, vv in v.items() if kk != "null"}
+                                    for k, v in conf_res["permutation"].items()},
+        }
+    else:
+        confirmation_summary = None
+
     best = grid["cells"].iloc[0]
     summary = {
         "n_main_runs": int(len(main)), "n_ablation_runs": int(len(abl)),
@@ -92,6 +138,7 @@ def build_report(reports: str | Path, cache_dir: str | Path, preproc_dirs: list[
         "leakage": abl_res["leakage"].round(4).to_dict("records"),
         "permutation": {k: {kk: vv for kk, vv in v.items() if kk != "null"} for k, v in abl_res["permutation"].items()},
         "cpu_hours_main_grid": float(main["seconds"].sum() / 3600),
+        "confirmation": confirmation_summary,
         "report_errors": errors,
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=1, default=float))
