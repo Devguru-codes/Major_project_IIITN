@@ -262,3 +262,55 @@ def fig_seed_variance(df: pd.DataFrame, out_dir):
         ax.scatter([i] * len(v), v["macro_f1"], c=[SEQ[s % len(SEQ)] for s in v["seed"]], s=14)
     ax.set_xticks(range(len(order)), order, rotation=90, fontsize=7); ax.set_ylabel("macro-F1 (repeat mean)")
     save(fig, out_dir, "figS3_seed_variance")
+
+
+# ---------- ablation figures ----------
+
+def fig_leakage(leak: pd.DataFrame, out_dir):
+    """Fig 12: identical pipeline/model/data, only the split protocol differs."""
+    cells = list(leak["cell"].unique())
+    fig, ax = plt.subplots(1, len(cells), figsize=(3.4 * len(cells), 3), sharey=True, squeeze=False)
+    for a, cell in zip(ax[0], cells):
+        g = leak[leak.cell == cell].set_index("protocol")
+        x = np.arange(2)
+        for j, (col, lab) in enumerate((("subject_macro_f1", "subject-level metric"),
+                                        ("window_macro_f1", "window-level metric"))):
+            a.bar(x + (j - 0.5) * 0.38, g[col].values, 0.38, yerr=g[f"{col}_sd"].values, capsize=3,
+                  color=SEQ[4] if j == 0 else SEQ[1], label=lab)
+        a.set_xticks(x, [p.replace(" (", "\n(") for p in g.index], fontsize=7)
+        a.set_title(cell.replace("x", " × "), fontsize=8)
+        a.axhline(1 / 3, ls=":", color="grey")
+        a.set_ylim(0, 1.05)
+    ax[0, 0].set_ylabel("Macro-F1"); ax[0, 0].legend(frameon=False, fontsize=7, loc="upper left")
+    save(fig, out_dir, "fig12_leakage")
+
+
+def fig_forest(abl: pd.DataFrame, out_dir):
+    """Fig 13: Δ macro-F1 (ablated − reference) with 95% CI, per ablation and cell; * = Holm NB-corrected p < .05."""
+    cells = list(abl["cell"].unique())
+    names = sorted(abl["ablation"].unique())
+    fig, ax = plt.subplots(figsize=(6, 0.32 * len(names) + 1))
+    for k, cell in enumerate(cells):
+        g = abl[abl.cell == cell].set_index("ablation").reindex(names)
+        y = np.arange(len(names)) + (k - (len(cells) - 1) / 2) * 0.25
+        ax.errorbar(g["delta"], y, xerr=[g["delta"] - g["delta_ci_lo"], g["delta_ci_hi"] - g["delta"]],
+                    fmt="o", ms=4, capsize=2, color=SEQ[[4, 5][k % 2]], label=cell.replace("x", " × "))
+        for yi, (_, r) in zip(y, g.iterrows()):
+            if r["nb_p_holm"] < 0.05:
+                ax.text(r["delta_ci_hi"] + 0.004, yi, "*", va="center", fontsize=9)
+    ax.axvline(0, color="black", lw=0.8)
+    ax.set_yticks(range(len(names)), names, fontsize=7)
+    ax.set_xlabel("Δ macro-F1 vs reference cell (paired, 25 splits)")
+    ax.legend(frameon=False, fontsize=7)
+    save(fig, out_dir, "fig13_ablation_forest")
+
+
+def fig_permutation(perm: dict, out_dir):
+    """Fig S5: label-permutation null distribution vs observed macro-F1."""
+    fig, ax = plt.subplots(1, len(perm), figsize=(4 * len(perm), 2.8), squeeze=False)
+    for a, (cell, r) in zip(ax[0], perm.items()):
+        a.hist(r["null"], bins=25, color="lightgrey", edgecolor="grey")
+        a.axvline(r["observed_seed0_macro_f1"], color=SEQ[5], lw=2)
+        a.set_title(f"{cell.replace('x', ' × ')}: p = {r['p']:.3f} (n = {r['n_perm']})", fontsize=8)
+        a.set_xlabel("Macro-F1 (5-fold mean)")
+    save(fig, out_dir, "figS5_permutation_null")
