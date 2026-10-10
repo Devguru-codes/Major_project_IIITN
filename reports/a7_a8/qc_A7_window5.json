@@ -1,0 +1,43 @@
+{
+ "n_subjects": 88,
+ "class_counts": {
+  "AD": 36,
+  "FTD": 23,
+  "CN": 29
+ },
+ "n_windows": 14074,
+ "windows_per_subject": {
+  "min": 61,
+  "max": 258,
+  "mean": 159.9318181818182
+ },
+ "finite": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true
+ },
+ "theta_alpha_ratio": {
+  "AD": 1.6091604232788086,
+  "FTD": 0.6804707050323486,
+  "CN": 0.3096078634262085
+ },
+ "theta_alpha_AD_gt_CN_p": 1.1109693164182383e-07,
+ "pswe_rate_per_min_median": {
+  "AD": 1.3417356070722743,
+  "FTD": 0.40872863473761883,
+  "CN": 0.2184466019417476
+ },
+ "pswe_time_fraction_median": {
+  "AD": 0.1592839206965907,
+  "FTD": 0.04875799311362517,
+  "CN": 0.027176586325627104
+ },
+ "pswe_rate_kruskal_p": 0.04133707342657269,
+ "gate_failures": [
+  "window count 14074 outside 6500\u20137100"
+ ]
+}
