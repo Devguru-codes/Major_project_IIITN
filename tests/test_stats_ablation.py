@@ -62,3 +62,21 @@ def test_rm_anova_matches_statsmodels(rng):
     for src, ref_src in (("pipeline", "pipeline"), ("edge", "edge"), ("pipeline * edge", "pipeline:edge")):
         assert ours.loc[src, "F"] == pytest.approx(ref.loc[ref_src, "F Value"], rel=1e-6)
         assert ours.loc[src, "p-unc"] == pytest.approx(ref.loc[ref_src, "Pr > F"], rel=1e-5)
+
+
+def test_permutation_uses_first_repeat_of_confirmation_folds(rng):
+    confirm = _runs(rng, "main", "P3", "spatial", 0.58, seeds=range(5, 10))
+    null = pd.concat([_runs(rng, "perm@P3xspatial", "P3", "spatial", 0.33, seeds=[11_000 + i]) for i in range(20)])
+    r = permutation_test(confirm, null)["P3xspatial"]
+    expected = confirm[confirm.seed == 5]["macro_f1"].mean()
+    assert r["observed_seed0_macro_f1"] == pytest.approx(expected)
+
+
+def test_fair_comparisons_have_both_training_regimes(rng):
+    from eegrep.stats_ablation import fair_comparisons
+
+    main = pd.concat([_runs(rng, "main", "P1", e, 0.55) for e in ("spatial", "hybrid")])
+    refit = pd.concat([_runs(rng, "refit", "P1", e, 0.57) for e in ("spatial", "hybrid")])
+    cls = pd.concat([_runs(rng, "x", "P1", "-", 0.56).assign(model=m) for m in ("lr", "rf")])
+    out = fair_comparisons(main, refit, cls, cls)
+    assert set(out["training_subjects"]) == {"train only", "train + val"} and len(out) == 2

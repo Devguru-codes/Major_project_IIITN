@@ -293,7 +293,28 @@ def fig_leakage(leak: pd.DataFrame, out_dir):
     save(fig, out_dir, "fig12_leakage")
 
 
-def fig_forest(abl: pd.DataFrame, out_dir):
+def fig_confirmation(main_cells: pd.DataFrame, confirm_cells: pd.DataFrame, out_dir):
+    """Fig S6: every cell's macro-F1 on the original splits (seeds 0–4) vs the independent confirmation
+    splits (seeds 5–9). Points below the identity line lost performance on fresh splits (selection bias)."""
+    m = main_cells.set_index(["pipeline", "edge"])["macro_f1_mean"]
+    c = confirm_cells.set_index(["pipeline", "edge"])["macro_f1_mean"].reindex(m.index)
+    rho = m.corr(c, method="spearman")
+    fig, ax = plt.subplots(figsize=(4.6, 4.2), layout="constrained")
+    lo, hi = min(m.min(), c.min()) - 0.02, max(m.max(), c.max()) + 0.02
+    ax.plot([lo, hi], [lo, hi], ls=":", color="grey")
+    reps = sorted({p for p, _ in m.index})
+    for (p, e), x in m.items():
+        ax.scatter(x, c[(p, e)], color=SEQ[reps.index(p) % len(SEQ)], s=22,
+                   marker={"spatial": "o", "functional": "s", "hybrid": "^"}.get(e, "o"))
+    for k, p in enumerate(reps):
+        ax.scatter([], [], color=SEQ[k % len(SEQ)], label=p)
+    ax.legend(frameon=False, fontsize=7, ncol=2, title="o spatial  □ functional  △ hybrid", title_fontsize=6)
+    ax.set_xlabel("Macro-F1, seeds 0–4 (selection)"); ax.set_ylabel("Macro-F1, seeds 5–9 (confirmation)")
+    ax.set_title(f"Spearman ρ = {rho:.2f} across 21 cells", fontsize=8)
+    save(fig, out_dir, "figS6_confirmation")
+
+
+def fig_forest(abl: pd.DataFrame, out_dir, name: str = "fig13_ablation_forest"):
     """Fig 13: Δ macro-F1 (ablated − reference) with 95% CI, per ablation and cell; * = Holm NB-corrected p < .05."""
     cells = list(abl["cell"].unique())
     names = sorted(abl["ablation"].unique())
@@ -310,7 +331,7 @@ def fig_forest(abl: pd.DataFrame, out_dir):
     ax.set_yticks(range(len(names)), names, fontsize=7)
     ax.set_xlabel("Δ macro-F1 vs reference cell (paired, 25 splits)")
     ax.legend(frameon=False, fontsize=7)
-    save(fig, out_dir, "fig13_ablation_forest")
+    save(fig, out_dir, name)
 
 
 def fig_permutation(perm: dict, out_dir):
