@@ -1,0 +1,269 @@
+\section{Results}\label{sec:results}
+
+\subsection{Data quality and the confound floor}\label{sec:res-qc}
+The fixed preprocessing produced \nWindows{} windows from all 88 subjects (Figure~\ref{fig:cohort});
+ICA removed on average \icaExcludedMean{} components per recording. The expected EEG slowing in
+dementia was present before any model was trained: the median theta/alpha power ratio was
+\thetaAlphaAD{} in AD, \thetaAlphaFTD{} in FTD and \thetaAlphaCN{} in controls, with the posterior alpha
+of controls replaced by diffuse delta and theta in AD (Figure~\ref{fig:topo}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\linewidth]{fig02_cohort}
+\caption{Cohort: age, sex and recording length by group.}
+\label{fig:cohort}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\linewidth]{fig03_band_topomaps}
+\caption{Group-mean relative band power per electrode (rows: groups; columns: bands; colour scales
+shared within each band).}
+\label{fig:topo}
+\end{figure}
+
+A logistic regression on age and sex alone reached a macro-F1 of \demoFOne{}, against \chanceFOne{}
+for a stratified random classifier. Demographics therefore carry some group information, consistent
+with the sex imbalance between groups (Table~\ref{tab:demographics}). We use \demoFOne{}, not 1/3, as
+the floor that EEG-based models must clear.
+
+\subsection{Representation matters; graph construction barely does}\label{sec:res-grid}
+Across the 21 cells (\nMainRuns{} runs; Table~\ref{tab:cells}), the best configuration was
+\bestCell{}, with subject-level macro-F1 \bestFOne{}~$\pm$~\bestFOneSd{} (subject-bootstrap 95\% CI
+\bestFOneCiLo{}--\bestFOneCiHi{}), balanced accuracy \bestBalAcc{}, macro ROC-AUC \bestAuc{} and
+Cohen's $\kappa$ \bestKappa{}.
+
+Representation had a large effect (Table~\ref{tab:anova}; $F(\anovaRepDfOne,\anovaRepDfTwo)=\anovaRepF$,
+Greenhouse--Geisser $p\anovaRepP$, partial $\eta^2=\anovaRepEta$). Averaged over graph types, the
+wavelet (P3, \repPThree), spectral (P1, \repPOne) and fused (P6, \repPSix) representations formed a
+leading group; raw windows (P5, \repPFive) were intermediate; and connectivity strength (P2,
+\repPTwo), PSWE features (P7, \repPSeven) and time-domain statistics (P4, \repPFour) trailed
+(Figure~\ref{fig:rep}). Graph construction had a small effect ($F(\anovaEdgeDfOne,\anovaEdgeDfTwo)
+=\anovaEdgeF$, $p\anovaEdgeP$, partial $\eta^2=\anovaEdgeEta$): marginal macro-F1 was \edgespatial{}
+for spatial, \edgefunctional{} for functional and \edgehybrid{} for hybrid graphs
+(Figure~\ref{fig:edge}). The representation~$\times$~graph interaction was not significant
+($F(\anovaInterDfOne,\anovaInterDfTwo)=\anovaInterF$, $p\anovaInterP$, partial
+$\eta^2=\anovaInterEta$; Figure~\ref{fig:interaction}). A Friedman test across all cells was
+significant ($p\friedmanP$), but the Nemenyi critical difference (\cdValue{} ranks) left the top
+cells statistically indistinguishable from one another (Figure~\ref{fig:cd}).
+
+Pairwise comparisons depend on how the dependence between cross-validation splits is handled. With
+Holm-corrected Wilcoxon tests, \nPairsWilcoxonSig{} of the \nPairs{} representation pairs differed;
+with the more conservative Nadeau--Bengio corrected $t$-test, \nPairsNbSig{} did. For example,
+P3 exceeded P4 by \pThreeFourDiff{} macro-F1 (Cohen's $d=\pThreeFourD$; Wilcoxon--Holm
+$p\pThreeFourWilP$; Nadeau--Bengio--Holm $p\pThreeFourNbP$). We regard the omnibus effect and the
+consistent ordering as robust, and individual pairwise differences as suggestive.
+
+\begin{table}[t]
+\centering\scriptsize
+\caption{Subject-level performance of every cell (mean $\pm$ SD over 25 test splits).
+CI: subject-bootstrap 95\% interval of macro-F1. BA: balanced accuracy; AUC: one-vs-rest macro ROC-AUC.}
+\label{tab:cells}
+\begin{tabular}{llcccccc}
+\toprule
+Representation & Graph & Macro-F1 & 95\% CI & BA & AUC & $\kappa$ & Brier \\
+\midrule
+\inputtab{generated/tab/cells.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering\small
+\caption{Two-way repeated-measures ANOVA on subject-level macro-F1 (units: 25 test splits).
+$\varepsilon$: Greenhouse--Geisser; $p$: GG-corrected.}
+\label{tab:anova}
+\begin{tabular}{lccccc}
+\toprule
+Effect & df & $F$ & $\varepsilon$ & $p$ & partial $\eta^2$ \\
+\midrule
+\inputtab{generated/tab/anova.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.62\linewidth]{fig06_representation}\hfill
+\includegraphics[width=0.33\linewidth]{fig07_edge}
+\caption{Subject-level macro-F1 by representation (left, averaged over graph types) and by graph
+construction (right, averaged over representations). Points are the 25 test splits; black markers,
+mean $\pm$ 95\% CI; dotted line, 1/3.}
+\label{fig:rep}\label{fig:edge}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig08_interaction}
+\caption{Mean macro-F1 of every representation~$\times$~graph cell (left) and the same values as an
+interaction plot (right). Lines are close to parallel: the best representation does not depend on
+how the graph is built.}
+\label{fig:interaction}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig09_critical_difference}
+\caption{Critical-difference diagram over the 21 cells. Cells joined by a black bar are not separated
+by the Nemenyi test.}
+\label{fig:cd}
+\end{figure}
+
+\subsection{What the models get right and wrong}\label{sec:res-errors}
+For \bestCell{}, sensitivity was \bestSensCN{} for controls, \bestSensAD{} for AD and only
+\bestSensFTD{} for FTD (specificities \bestSpecCN{}, \bestSpecAD{} and \bestSpecFTD{}). Across
+representations, controls were recognised best and FTD --- the smallest group --- worst; FTD
+recordings were most often misclassified as AD, except with PSWE features, where they were more
+often taken for controls (Figure~\ref{fig:confusion}). The ROC and precision--recall
+curves show the same ordering (Figure~\ref{fig:roc}). The models were poorly calibrated (expected
+calibration error \bestEce{}), so their probabilities should not be read as clinical risks.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig10_confusion_matrices}
+\caption{Row-normalised confusion matrices summed over the 25 test splits, for the best graph type
+of each representation.}
+\label{fig:confusion}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig11_roc_pr}
+\caption{One-vs-rest ROC (top) and precision--recall (bottom) curves for the three best cells; mean
+$\pm$ SD across the five repeats.}
+\label{fig:roc}
+\end{figure}
+
+\subsection{Graph models do not beat their non-graph twins}\label{sec:res-baselines}
+Classical classifiers trained on the same features, folds and weighting reached the same ceiling as
+the GCN (Table~\ref{tab:baselines}). The best non-graph model on spectral features (a random forest)
+scored \gvcPOneClassical{}, and on wavelet features \gvcPThreeClassical{}. The paired difference
+between each representation's best GCN cell and its best non-graph twin ranged from \gvcPSevenDelta{}
+(P7) to \gvcPTwoDelta{} (P2), and none was significant after correction (for P3:
+\gvcPThreeDelta{}, $p\gvcPThreeP$). The spectral, wavelet, fused and raw representations cleared the
+demographic floor of \demoFOne{}; the connectivity (P2), time-domain (P4) and PSWE (P7)
+representations scored within about 0.05 of it.
+
+\begin{table}[t]
+\centering\small
+\caption{Best GCN cell of each representation against its non-graph twins (same folds, weighting
+and subject aggregation) and the demographic floor. Macro-F1, mean $\pm$ SD over 25 splits.}
+\label{tab:baselines}
+\begin{tabular}{llc}
+\toprule
+Representation & Model & Macro-F1 \\
+\midrule
+\inputtab{generated/tab/baselines.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Ablations}\label{sec:res-ablations}
+Table~\ref{tab:ablations} and Figure~\ref{fig:forest} report each ablation as a paired difference
+from its reference cell. No ablation reached significance under the Nadeau--Bengio test with Holm
+correction. Removing the graph altogether (identity adjacency) lowered macro-F1 by
+\ablPThreespatialAOnenographDelta{} [\ablPThreespatialAOnenographLo{}, \ablPThreespatialAOnenographHi{}]
+for the spatial cell and by \ablPThreehybridAOnenographDelta{} for the hybrid cell. A
+degree-preserving random graph cost about the same (\ablPThreespatialATworandomgraphDelta{} and
+\ablPThreehybridATworandomgraphDelta{}). Neither difference is significant, but the pattern is
+consistent with any benefit of message passing coming from smoothing over neighbours rather than
+from a specific electrode topology. A fully connected graph was the only
+structural change whose $t$-interval excluded zero for the spatial cell
+(\ablPThreespatialAThreefullDelta{} [\ablPThreespatialAThreefullLo{}, \ablPThreespatialAThreefullHi{}]),
+consistent with over-smoothing. Sparsity ($k=3$ or 6), binarised edges, depth, GAT attention and
+loss weighting all changed macro-F1 by less than 0.03. Regressing age and sex out of every feature
+cost \ablPThreespatialAOneTworesidualizedDelta{} [\ablPThreespatialAOneTworesidualizedLo{},
+\ablPThreespatialAOneTworesidualizedHi{}], leaving performance well above the demographic floor.
+
+\begin{table}[t]
+\centering\scriptsize
+\caption{Ablations: paired $\Delta$ macro-F1 (ablated minus reference) with 95\% $t$-interval over the
+25 splits, and Nadeau--Bengio $p$ with Holm correction within each cell.}
+\label{tab:ablations}
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{P3 $\times$ spatial} & \multicolumn{2}{c}{P3 $\times$ hybrid} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Ablation & $\Delta$ [95\% CI] & $p_\mathrm{Holm}$ & $\Delta$ [95\% CI] & $p_\mathrm{Holm}$ \\
+\midrule
+\inputtab{generated/tab/ablations.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.75\linewidth]{fig13_ablation_forest}
+\caption{Ablations as paired differences from the two reference cells (mean and 95\% CI over 25
+splits). An asterisk would mark Nadeau--Bengio--Holm $p<0.05$; none qualifies.}
+\label{fig:forest}
+\end{figure}
+
+\subsection{Leakage inflates results to the published range}\label{sec:res-leak}
+Re-running the two best cells with window-level splitting --- identical data, features, graph,
+model and hyperparameters --- raised subject-level macro-F1 from \leakPThreespatialCorrectSubj{} to
+\leakPThreespatialLeakySubj{} (spatial) and from \leakPThreehybridCorrectSubj{} to
+\leakPThreehybridLeakySubj{} (hybrid). Window-level macro-F1, the metric most often reported, rose to
+\leakPThreespatialLeakyWin{} and \leakPThreehybridLeakyWin{} (Figure~\ref{fig:leak}). The leaky
+protocol thus reproduces the 95--99\% figures reported on this benchmark with a model that, evaluated
+correctly, scores below 0.6.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\linewidth]{fig12_leakage}
+\caption{The same pipeline evaluated with subject-level (correct) and window-level (leaky)
+splitting. Bars: mean $\pm$ SD over 25 splits; dotted line, 1/3.}
+\label{fig:leak}
+\end{figure}
+
+\subsection{The best cell is above chance}\label{sec:res-perm}
+Under 200 label permutations, the null macro-F1 of \bestCell{} averaged \permPThreespatialNullMean{}
+(maximum \permPThreespatialNullMax{}), against an observed \permPThreespatialObs{} on the same
+splits ($p=\permPThreespatialP$, the smallest value attainable with 200 permutations;
+Figure~\ref{fig:perm}).
+
+\subsection{PSWE: a BBB-associated marker that tracks slowing}\label{sec:res-pswe}
+Fixed-threshold PSWEs were most frequent in AD (median \psweRateAD{} events/min), intermediate in FTD
+(\psweRateFTD{}) and least frequent in controls (\psweRateCN{}; Kruskal--Wallis $p\psweKwP$;
+Figures~\ref{fig:pswe-example} and~\ref{fig:pswe}). In negative-binomial models adjusted for age and
+sex, the PSWE rate ratio relative to controls was \psweAdjADRR{} (95\% CI \psweAdjADLo{}--\psweAdjADHi{},
+$p\psweAdjADP$) in AD and \psweAdjFTDRR{} (\psweAdjFTDLo{}--\psweAdjFTDHi{}, $p\psweAdjFTDP$) in FTD.
+
+The PSWE rate was, however, almost collinear with background slowing (Spearman $\rho=\psweSlowRho$
+with relative delta+theta power; age- and sex-adjusted partial $\rho=\psweSlowPartial$). Once slowing
+was added to the model, the AD rate ratio reversed to \psweAdjSlowADRR{} (\psweAdjSlowADLo{}--\psweAdjSlowADHi{},
+$p\psweAdjSlowADP$), and FTD fell to \psweAdjSlowFTDRR{} ($p\psweAdjSlowFTDP$). The PSWE rate was not
+significantly associated with MMSE within patients ($\rho=\psweMmseRho$, $p\psweMmseP$). In the
+classifier, PSWE features alone (P7) performed near the demographic floor (\repPSeven{}), and adding
+them to the best representation, or using PSWE co-occurrence as the graph, did not help
+(Section~\ref{sec:res-ablations}).
+
+\paragraph{Background-relative PSWEs (exploratory).} Defining PSWEs relative to each channel's own
+background reversed the group pattern. With the primary definition (a drop of at least \SI{2}{\hertz}
+below the channel median), AD showed \emph{fewer} transient slowing events than controls (rate ratio
+\reldropTwoAdjADRR{}, \reldropTwoAdjADLo{}--\reldropTwoAdjADHi{}, $p\reldropTwoAdjADP$), FTD a
+non-significant reduction (\reldropTwoAdjFTDRR{}), and the event rate was only weakly related to
+slowing ($\rho=\reldropTwoSlowRho$) and not to MMSE ($\rho=\reldropTwoMmseRho$). After additional
+adjustment for background MPF the AD effect was no longer significant (\reldropTwoAdjBgADRR{},
+$p\reldropTwoAdjBgADP$). The MAD-scaled variants gave the same direction more strongly and survived
+that adjustment (for 2~MAD: AD \relmadTwoAdjBgADRR{}, $p\relmadTwoAdjBgADP$; FTD \relmadTwoAdjBgFTDRR{},
+$p\relmadTwoAdjBgFTDP$). Every variant pointed the same way: relative to their own background,
+patients with dementia had fewer, not more, transient slowing events.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig04_pswe_example}
+\caption{Fixed-threshold PSWE detection in the AD recording with the highest PSWE rate among the
+example shard (first 120\,s, channel with most events). Top: EEG; bottom: median power frequency
+with the \SI{6}{\hertz} threshold; shaded, detected PSWEs. Because this subject's background is
+already slow, most of the recording is flagged --- the pattern behind the collinearity with slowing.}
+\label{fig:pswe-example}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig05_pswe_burden}
+\caption{Fixed-threshold PSWE rate per subject by group (left), median per-channel rate as scalp maps
+(middle), and rate against MMSE in patients (right; analysis only).}
+\label{fig:pswe}
+\end{figure}

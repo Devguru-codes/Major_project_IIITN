@@ -1,4 +1,6 @@
 \section{Materials and methods}\label{sec:methods}
+Figure~\ref{fig:pipeline} summarises the design.
+\input{sections/pipeline_figure}
 
 \subsection{Dataset}
 We used OpenNeuro ds004504 \cite{F1,ds004504}: resting-state, eyes-closed scalp EEG from 88
@@ -47,9 +49,9 @@ Each window is a graph whose 19 nodes are the electrodes. Seven representations 
 features $X\in\mathbb{R}^{19\times F}$:
 \begin{description}
   \item[P1, spectral ($F=7$).] Relative power in five bands (delta 0.5--4, theta 4--8, alpha 8--13,
-        beta 13--30, gamma \SIrange{30}{45}{\hertz}) from Welch's method \cite{welch}
+        beta 13--30, gamma 30--45~Hz) from Welch's method \cite{welch}
         (\SI{2}{\second} Hann segments, 50\% overlap), normalised spectral entropy, and peak
-        frequency within \SIrange{4}{15}{\hertz}.
+        frequency within 4--15~Hz.
   \item[P2, connectivity ($F=5$).] Node strength of the weighted phase-lag index (wPLI)
         \cite{wpli,F11} in each band: the mean wPLI between a channel and the other 18.
   \item[P3, wavelet ($F=20$).] Five-level Daubechies-4 discrete wavelet transform \cite{pywavelets};

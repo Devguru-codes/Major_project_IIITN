@@ -1,0 +1,36 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\scriptsize, node distance=5mm and 5mm,
+  box/.style={draw, rounded corners=2pt, align=center, inner sep=3pt, minimum height=9mm},
+  fixed/.style={box, fill=gray!12},
+  vary/.style={box, fill=blue!8, draw=blue!50!black},
+  bbb/.style={box, fill=orange!12, draw=orange!60!black},
+  arr/.style={-{Latex[length=2mm]}, thick}]
+% row 1: shared preamble
+\node[fixed] (raw) {Raw EEG\\88 subjects, 19 ch, 500\,Hz};
+\node[fixed, right=8mm of raw] (pre) {Fixed preamble: 0.5--45\,Hz, 50\,Hz notch,\\avg ref, ICA + ICLabel, 128\,Hz};
+\node[fixed, right=8mm of pre] (win) {10\,s windows\\(7{,}013)};
+% row 2: the two varied factors, the PSWE branch and the fixed model
+\node[bbb, below=11mm of raw] (pswe) {PSWE detector\\(BBB-associated)\\MPF $<6$\,Hz $\ge5$\,s};
+\node[vary, right=6mm of pswe] (A) {\textbf{Factor A}: 7 node-feature sets\\P1 spectral, P2 wPLI, P3 DWT,\\P4 time, P5 raw, P6 fused, P7 PSWE};
+\node[vary, right=6mm of A] (B) {\textbf{Factor B}: 3 graphs\\spatial, functional,\\hybrid};
+\node[fixed, right=6mm of B] (gcn) {\textbf{Fixed} 2-layer GCN\\same hyperparameters};
+% row 3: evaluation
+\node[fixed, below=8mm of gcn.south east, anchor=north east] (cv) {Frozen subject-level 5$\times$5 CV (25 paired splits)\\subject = mean window logit $\to$ macro-F1};
+\draw[arr] (raw) -- (pre);
+\draw[arr] (pre) -- (win);
+\draw[arr] (pre.south) -- ++(0,-4mm) -| (pswe.north);
+\draw[arr] (win.south) -- ++(0,-4mm) -| (A.north);
+\draw[arr] (win.south) -- ++(0,-4mm) -| (B.north);
+\draw[arr, dashed] (pswe) -- (A);
+\draw[arr] (A) -- (B);
+\draw[arr] (B) -- (gcn);
+\draw[arr] (gcn.south) -- (gcn.south |- cv.north);
+\end{tikzpicture}
+\caption{Study design. Grey components are held fixed; only the node features (Factor A) and the
+graph construction (Factor B) vary, in a fully crossed $7\times3$ design evaluated on the same 25
+frozen subject-level splits. The PSWE detector (orange) supplies the blood--brain-barrier-associated
+marker, used as P7 node features and, in an ablation, as a co-occurrence graph.}
+\label{fig:pipeline}
+\end{figure}

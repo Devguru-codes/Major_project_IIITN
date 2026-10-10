@@ -1,0 +1,93 @@
+\section{Discussion}\label{sec:discussion}
+
+\subsection{Principal findings}
+Holding the model, data and evaluation protocol fixed, we found four things. First, the node-feature
+representation strongly affects three-class AD/FTD/control classification (partial
+$\eta^2=\anovaRepEta$), with wavelet, spectral and fused features leading. Second, how the graph is
+built matters little (partial $\eta^2=\anovaEdgeEta$), the best representation does not depend on it,
+and the GCN performs no better than a random forest or SVM on the same features. Third, splitting
+windows instead of subjects inflates subject-level macro-F1 from about 0.59 to about 0.99 on the
+identical pipeline, reproducing the top of the published range. Fourth, the
+blood--brain-barrier-associated PSWE marker is more frequent in AD and FTD than in controls, but this
+excess is explained by continuous background slowing; defined relative to each person's background,
+transient slowing events are, if anything, less frequent in dementia.
+
+\subsection{Representation matters more than topology}
+The size and consistency of the representation effect, against a small and non-interacting graph
+effect, indicate that the information a GNN can use on this benchmark lives mostly in the node
+features. Several observations point the same way. Spatial graphs --- which are identical for every
+subject and therefore carry no diagnostic information of their own --- did at least as well as
+functional and hybrid graphs. A degree-preserving random graph cost about as much as removing the
+graph altogether, which suggests that message passing helps, where it helps at all, by smoothing
+features over neighbouring electrodes rather than by exploiting a particular connectivity pattern.
+And non-graph classifiers on flattened features matched the GCN cell for cell. These results agree
+with the independent conclusion of the 2026 scoping review that apparent representational gains on
+this dataset do not survive leakage-free evaluation \cite{R1}, and they temper the case for
+graph-based modelling made in recent work \cite{R2,R8,F7}: on 19-electrode scalp EEG from 88
+subjects, we see no evidence that graph structure adds information beyond good node features. Whether
+this holds with source-space nodes, learned adjacency or much larger cohorts remains open.
+
+\subsection{Neurophysiological interpretation}
+Representations that describe each electrode's own spectrum (P1, P3) outperformed one built only from
+inter-electrode phase coupling (P2), and the functional graph did not improve on the spatial one.
+Within the limits of scalp EEG, this favours local oscillatory slowing over altered large-scale
+coupling as the dominant discriminative signal, consistent with spectral slowing being the most
+replicated EEG marker of AD \cite{R3,R15} and with the posterior-alpha-to-diffuse-theta shift visible
+in our data (Figure~\ref{fig:topo}). It does not contradict network accounts of dementia
+\cite{F12,F9}: alpha-band wPLI estimated within \SI{10}{\second} windows is noisy, and electrode-level
+graphs are a coarse proxy for cortical networks. The error pattern is clinically recognisable:
+controls are identified best, while FTD --- the smallest group, and less slowed than AD --- is
+identified worst and is usually mistaken for AD. Separating the two dementias remains the hard part of the problem.
+
+\subsection{What the PSWE results mean for an EEG marker of BBB dysfunction}
+With the fixed threshold, our data agree in direction with Milikovsky et al.: PSWE rates were roughly
+three times higher in AD than in controls after adjusting for age and sex, and FTD --- not previously
+studied --- was also elevated. Two further analyses change the interpretation. The fixed-threshold
+rate was almost collinear with relative delta+theta power, and adjusting for that slowing reversed
+the AD effect. When events were instead defined as transient drops below each channel's own
+background, AD and FTD showed fewer of them than controls, under every variant we examined. Together
+these results suggest that, in resting scalp EEG with diffuse slowing, a median power frequency below
+\SI{6}{\hertz} mostly flags a slow \emph{background} rather than \emph{paroxysmal} events.
+
+We draw three cautious conclusions. First, a fixed-threshold PSWE rate should not be read as evidence
+of BBB dysfunction without controlling for background slowing. Second, background-relative
+definitions are needed if PSWEs are to capture transient cortical dysfunction, although they bring
+their own floor effect in very slow recordings, which we observed in the Hz-drop variants. Third, our
+data cannot test the BBB link itself: ds004504 contains no BBB imaging, the original detection
+details include parameters we could not verify from the full text, and Milikovsky et al.\ studied
+different patients under different recording conditions. The decisive test is a cohort with both EEG
+and dynamic contrast-enhanced MRI.
+
+\subsection{Implications for how results on this benchmark are read}
+On one pipeline, the choice between subject-level and window-level splitting moved subject-level
+macro-F1 by about 0.4 --- roughly three times the gap between the best and worst representation, and
+several times larger than any graph or architecture change we tested. Figures in the high 90s on ds004504 should therefore be read alongside their
+splitting protocol, and studies that report window-level metrics or allow a subject's windows into
+both training and test sets cannot be compared with subject-level results. We name no individual
+study: the point is that the protocol, not the model, determines most of the reported number, as
+argued independently in \cite{R1,F8}. The permutation test confirms that the honest result is
+nonetheless real.
+
+\subsection{Limitations}
+The cohort is small: test folds contain 17--18 subjects, and under the conservative Nadeau--Bengio
+correction no pairwise difference between representations, and no single ablation, reached
+significance. We report both corrected and uncorrected tests and give effect sizes, but small
+differences between leading representations should not be over-interpreted. All data come from one
+site, device and protocol, and FTD is the smallest class ($n=23$). The planned external validation on
+an independent cohort (ds004584) and two planned ablations (window length and ICA on/off) were not
+run for this draft. Hyperparameters were fixed a priori and not tuned; early stopping on a
+validation set of about 14 subjects stopped training early, which may disadvantage higher-capacity
+configurations such as raw windows (P5, about 84k parameters). Calibration was poor. Graphs are
+defined on electrodes rather than cortical sources. The demographic floor (\demoFOne) shows residual
+age and sex information, which residualisation reduced but did not remove. For PSWEs, the MPF
+frequency range was not reported in the source and was set by us, we detected events per channel
+rather than over averaged regions, the background-relative analysis is post hoc, and no BBB measure
+is available.
+
+\subsection{Future work}
+The most valuable next study is a multi-site replication of this exact protocol, since a single-site
+design cannot establish device or population invariance. Natural extensions are source-space graphs
+\cite{F7}, learned adjacency \cite{F4}, spatio-temporal graphs over window sequences \cite{R10,F6},
+an architecture sweep under a fixed representation (the transpose of this design) \cite{F5}, an
+MCI class, and --- for the BBB question --- simultaneous EEG and dynamic contrast-enhanced MRI to test
+whether any PSWE definition tracks measured barrier leakage \cite{B5,B8}.
