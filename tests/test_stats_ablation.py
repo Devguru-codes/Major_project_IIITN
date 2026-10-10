@@ -42,11 +42,23 @@ def test_permutation_p_value(rng):
     assert r["n_perm"] == 50 and r["p"] == pytest.approx(1 / 51)
 
 
+def _factorial(rng, effects):
+    return pd.concat([_runs(rng, "main", p, e, m + d) for p, m in effects for e, d in
+                      (("spatial", 0.0), ("hybrid", -0.005), ("functional", 0.002))])
+
+
 def test_rm_anova_detects_representation_effect(rng):
-    df = pd.concat([_runs(rng, "main", p, e, m + d)
-                    for p, m in (("P1", 0.55), ("P3", 0.58), ("P4", 0.43))
-                    for e, d in (("spatial", 0.0), ("hybrid", -0.005))])
-    aov = rm_anova(df)
-    p_col = "p-unc" if "p-unc" in aov.columns else aov.columns[-1]
-    src = aov.set_index("Source")
-    assert src.loc["pipeline", p_col] < 1e-6
+    aov = rm_anova(_factorial(rng, (("P1", 0.55), ("P3", 0.58), ("P4", 0.43)))).set_index("Source")
+    assert aov.loc["pipeline", "p-GG-corr"] < 1e-6 and aov.loc["pipeline", "np2"] > 0.9
+    assert aov.loc["edge", "p-unc"] > 1e-4 and 0 < aov.loc["edge", "eps-GG"] <= 1
+
+
+def test_rm_anova_matches_statsmodels(rng):
+    from statsmodels.stats.anova import AnovaRM
+
+    df = _factorial(rng, (("P1", 0.55), ("P3", 0.56), ("P4", 0.54)))
+    ours = rm_anova(df).set_index("Source")
+    ref = AnovaRM(df, "macro_f1", "unit", within=["pipeline", "edge"]).fit().anova_table
+    for src, ref_src in (("pipeline", "pipeline"), ("edge", "edge"), ("pipeline * edge", "pipeline:edge")):
+        assert ours.loc[src, "F"] == pytest.approx(ref.loc[ref_src, "F Value"], rel=1e-6)
+        assert ours.loc[src, "p-unc"] == pytest.approx(ref.loc[ref_src, "Pr > F"], rel=1e-5)

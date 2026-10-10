@@ -104,19 +104,49 @@ def pairwise(wide: pd.DataFrame, test_train_ratio: float) -> pd.DataFrame:
     return out
 
 
-def rm_anova(df: pd.DataFrame) -> pd.DataFrame:
-    try:
-        import pingouin as pg
+def _orthonormal_contrasts(k: int) -> np.ndarray:
+    """k × (k−1) orthonormal contrasts (columns orthogonal to the constant vector)."""
+    q, _ = np.linalg.qr(np.column_stack([np.ones(k), np.eye(k)[:, :-1]]))
+    return q[:, 1:]
 
-        return pg.rm_anova(data=df, dv="macro_f1", within=["pipeline", "edge"], subject="unit", effsize="np2",
-                           correction=True)
-    except Exception as exc:          # fallback without sphericity correction (reported as such)
-        from statsmodels.stats.anova import AnovaRM
 
-        print(f"[stats] pingouin rm_anova failed ({exc}); using statsmodels AnovaRM (no GG correction)")
-        t = AnovaRM(df, "macro_f1", "unit", within=["pipeline", "edge"]).fit().anova_table.reset_index()
-        t["np2"] = t["F Value"] * t["Num DF"] / (t["F Value"] * t["Num DF"] + t["Den DF"])
-        return t.rename(columns={"index": "Source", "Pr > F": "p-unc"})
+def _gg_epsilon(y: np.ndarray, L: np.ndarray) -> float:
+    """Greenhouse–Geisser ε for per-unit vectors y (n × m) and contrast matrix L (m × p)."""
+    v = L.T @ np.cov(y, rowvar=False) @ L
+    return float(np.trace(v) ** 2 / (L.shape[1] * np.trace(v @ v)))
+
+
+def rm_anova(df: pd.DataFrame, dv: str = "macro_f1", a: str = "pipeline", b: str = "edge",
+             unit: str = "unit") -> pd.DataFrame:
+    """Balanced two-way repeated-measures ANOVA (both factors within-unit) with partial η² and
+    Greenhouse–Geisser-corrected p-values. Implemented directly from the sums of squares."""
+    cube = df.pivot_table(index=unit, columns=[a, b], values=dv, aggfunc="mean")
+    la, lb = sorted(df[a].unique()), sorted(df[b].unique())
+    cube = cube.reindex(columns=pd.MultiIndex.from_product([la, lb])).dropna()
+    n, A, B = len(cube), len(la), len(lb)
+    y = cube.to_numpy().reshape(n, A, B)
+    m = y.mean()
+    ya, yb, yab = y.mean((0, 2)), y.mean((0, 1)), y.mean(0)
+    yu, yua, yub = y.mean((1, 2)), y.mean(2), y.mean(1)
+    ss = {
+        a: (n * B * ((ya - m) ** 2).sum(), B * ((yua - yu[:, None] - ya[None] + m) ** 2).sum(), A - 1),
+        b: (n * A * ((yb - m) ** 2).sum(), A * ((yub - yu[:, None] - yb[None] + m) ** 2).sum(), B - 1),
+        f"{a} * {b}": (n * ((yab - ya[:, None] - yb[None] + m) ** 2).sum(),
+                       ((y - yua[:, :, None] - yub[:, None, :] - yab[None] + ya[None, :, None]
+                         + yb[None, None, :] + yu[:, None, None] - m) ** 2).sum(), (A - 1) * (B - 1)),
+    }
+    La, Lb = _orthonormal_contrasts(A), _orthonormal_contrasts(B)
+    eps = {a: _gg_epsilon(yua, La), b: _gg_epsilon(yub, Lb),
+           f"{a} * {b}": _gg_epsilon(y.reshape(n, A * B), np.kron(La, Lb))}
+    rows = []
+    for src, (ss_eff, ss_err, df1) in ss.items():
+        df2 = df1 * (n - 1)
+        f = (ss_eff / df1) / (ss_err / df2)
+        e = min(1.0, eps[src])
+        rows.append({"Source": src, "SS": ss_eff, "ddof1": df1, "ddof2": df2, "F": f,
+                     "p-unc": stats.f.sf(f, df1, df2), "eps-GG": e, "p-GG-corr": stats.f.sf(f, df1 * e, df2 * e),
+                     "np2": ss_eff / (ss_eff + ss_err)})
+    return pd.DataFrame(rows)
 
 
 def critical_difference(wide: pd.DataFrame, alpha: float = 0.05) -> dict:
