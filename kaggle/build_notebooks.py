@@ -255,6 +255,29 @@ def main():
             "main-grid run; classical baselines are refit on the GCN's training subjects only.",
             cells, extras="dev"), kernel_sources=nb02)
 
+    # ---- early-stopping sensitivity (selection folds, paired with the main grid) ----
+    es_set = {"es_p50": "train.patience=50", "es_fixed100": "train.patience=null train.max_epochs=100"}
+    es_test = ("sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_model_train.py "
+               "tests/test_stats_ablation.py', log=f'{WORK}/pytest_es.txt')")
+    ES_SHARDS = [
+        [("es_fixed100", "P5"), ("es_p50", "P7")],
+        [("es_p50", "P5"), ("es_fixed100", "P1")],
+        [("es_fixed100", "P2,P3"), ("es_p50", "P6")],
+        [("es_fixed100", "P4,P6,P7")],
+        [("es_p50", "P1,P2,P3,P4")],
+    ]
+    for k, jobs in enumerate(ES_SHARDS):
+        cells = [es_test, find_cache] + [
+            f"sh(f'{{PY}} grid --cache {{CACHE}} --folds {{FOLDS}} --pipelines {p} --edges spatial,functional,hybrid "
+            f"--tag {tag} --set {es_set[tag]} --out {{WORK}}/es_runs.jsonl --max-hours 9', log=f'{{WORK}}/{tag}_{i}.log')"
+            for i, (tag, p) in enumerate(jobs)]
+        write_kernel(f"nb10-es-sensitivity-s{k}", f"nb10 es sensitivity s{k}", notebook(
+            f"NB10 — early-stopping sensitivity, shard {k} (CPU)",
+            "Jobs: " + "; ".join(f"`{t}` {p}" for t, p in jobs) + ". Same 25 selection splits as the main grid; "
+            "only the stopping rule changes (patience 50, or no early stopping: 100 epochs on the training "
+            "subjects, final weights).",
+            cells, extras="dev"), kernel_sources=nb02)
+
     write_kernel("nb03a-folds-demographics", "nb03a folds demographics", notebook(
         "NB03a — frozen folds + demographics confound check (CPU)",
         "Writes the frozen subject-level fold assignment (5 repeats x 5 folds) and runs the "

@@ -127,6 +127,20 @@ def build_report(reports: str | Path, cache_dir: str | Path, preproc_dirs: list[
     else:
         confirmation_summary = None
 
+    # ---- early-stopping sensitivity (present once reports/es_sensitivity/ is committed) ----
+    es_dir, es_summary = rep / "es_sensitivity", None
+    if es_dir.exists():
+        from .stats_sensitivity import ES_RULES, es_sensitivity, write_sensitivity
+
+        es_runs = load_runs(sorted(glob.glob(str(es_dir / "es_runs_s*.jsonl"))))
+        variants = {label: es_runs[es_runs.tag == tag] for tag, label in ES_RULES.items()}
+        ctrain = pd.read_csv(conf_dir / "classical_train.csv")
+        es = es_sensitivity(main, variants, ctrain)
+        write_sensitivity(es, tabs / "es_sensitivity")
+        step("figS7 early-stopping sensitivity", lambda: F.fig_es_sensitivity(
+            es["representations"], {"patience 20 (main)": main, **variants}, figs))
+        es_summary = es["summary"].to_dict("records")
+
     best = grid["cells"].iloc[0]
     summary = {
         "n_main_runs": int(len(main)), "n_ablation_runs": int(len(abl)),
@@ -139,6 +153,7 @@ def build_report(reports: str | Path, cache_dir: str | Path, preproc_dirs: list[
         "permutation": {k: {kk: vv for kk, vv in v.items() if kk != "null"} for k, v in abl_res["permutation"].items()},
         "cpu_hours_main_grid": float(main["seconds"].sum() / 3600),
         "confirmation": confirmation_summary,
+        "es_sensitivity": es_summary,
         "report_errors": errors,
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=1, default=float))

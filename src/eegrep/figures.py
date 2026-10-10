@@ -314,6 +314,27 @@ def fig_confirmation(main_cells: pd.DataFrame, confirm_cells: pd.DataFrame, out_
     save(fig, out_dir, "figS6_confirmation")
 
 
+def fig_es_sensitivity(reps: pd.DataFrame, runs: dict, out_dir):
+    """Fig S7: macro-F1 per representation (mean and 95% CI over the 25 splits, averaged over graph types)
+    under each stopping rule (left), and the epoch at which the kept weights were taken (right)."""
+    rules = list(dict.fromkeys(reps["rule"]))
+    pipes = sorted(reps["pipeline"].unique())
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(7.2, 3.0), width_ratios=[2.2, 1], layout="constrained")
+    for k, rule in enumerate(rules):
+        g = reps[reps.rule == rule].set_index("pipeline").reindex(pipes)
+        x = np.arange(len(pipes)) + (k - (len(rules) - 1) / 2) * 0.22
+        ax.errorbar(x, g["macro_f1"], yerr=[g["macro_f1"] - g["ci_lo"], g["ci_hi"] - g["macro_f1"]], fmt="o",
+                    ms=4, capsize=2, color=SEQ[k % len(SEQ)], label=rule)
+    ax.axhline(1 / 3, ls=":", color="grey", lw=0.8)
+    ax.set_xticks(range(len(pipes)), pipes); ax.set_ylabel("Subject-level macro-F1")
+    ax.legend(frameon=False, fontsize=7, loc="upper right")
+    data = [runs[r]["best_epoch"].dropna().to_numpy() for r in rules]
+    bx.boxplot(data, showfliers=False, widths=0.5)
+    bx.set_xticks(range(1, len(rules) + 1), [r.split(" (")[0] for r in rules], fontsize=7, rotation=15)
+    bx.set_ylabel("Epoch of kept weights")
+    save(fig, out_dir, "figS7_early_stopping")
+
+
 def fig_forest(abl: pd.DataFrame, out_dir, name: str = "fig13_ablation_forest"):
     """Fig 13: Δ macro-F1 (ablated − reference) with 95% CI, per ablation and cell; * = Holm NB-corrected p < .05."""
     cells = list(abl["cell"].unique())

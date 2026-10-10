@@ -80,3 +80,20 @@ def test_fair_comparisons_have_both_training_regimes(rng):
     cls = pd.concat([_runs(rng, "x", "P1", "-", 0.56).assign(model=m) for m in ("lr", "rf")])
     out = fair_comparisons(main, refit, cls, cls)
     assert set(out["training_subjects"]) == {"train only", "train + val"} and len(out) == 2
+
+
+def test_es_sensitivity_pairs_variants_with_main(rng):
+    from eegrep.stats_sensitivity import MAIN_RULE, es_sensitivity
+
+    effects = (("P1", 0.55), ("P3", 0.58), ("P4", 0.43))
+    main = _factorial(rng, effects).assign(epochs_run=30, best_epoch=10)
+    fixed = _factorial(rng, tuple((p, m + 0.05) for p, m in effects)).assign(epochs_run=100, best_epoch=100)
+    cls = pd.concat([_runs(rng, "x", p, "-", 0.5) for p, _ in effects]).assign(model="rf")
+    res = es_sensitivity(main, {"fixed 100 epochs": fixed}, cls)
+    s = res["summary"].set_index("rule")
+    assert list(s.index) == [MAIN_RULE, "fixed 100 epochs"]
+    assert s.loc["fixed 100 epochs", "median_best_epoch"] == 100 and s.loc[MAIN_RULE, "best_cell"].startswith("P3")
+    assert s.loc["fixed 100 epochs", "spearman_vs_main"] > 0.8 and s.loc["fixed 100 epochs", "rep_p"] < 1e-6
+    r = res["representations"].set_index(["rule", "pipeline"])
+    assert r.loc[("fixed 100 epochs", "P3"), "delta_vs_main"] == pytest.approx(0.05, abs=0.02)
+    assert r.loc[(MAIN_RULE, "P3"), "delta_vs_main"] == 0 and len(res["gcn_vs_classical"]) == 6

@@ -69,6 +69,23 @@ def test_refit_trains_on_train_plus_val_for_given_epochs(cfg, small_cache, tmp_p
     assert [r["epochs_run"] for r in sorted(rows, key=lambda r: r["fold"])] == [3, 4, 5]
 
 
+def test_patience_null_disables_early_stopping(cfg, small_cache, tmp_path):
+    import json
+
+    from eegrep.cli import _overrides
+
+    subjects = sorted(set(small_cache.subject))
+    labels = [int(small_cache.label[small_cache.subject == s][0]) for s in subjects]
+    folds = make_folds(subjects, labels, [0], n_folds=3, val_frac=0.34)
+    ov = _overrides(["train.patience=null", "train.max_epochs=4"])
+    assert ov == {"train.patience": None, "train.max_epochs": 4}
+    store = ResultStore(tmp_path / "fixed.jsonl")
+    run_cell(small_cache, folds, cfg, store, pipeline="P1", edge="hybrid", tag="es_fixed", overrides=ov)
+    rows = [json.loads(l) for l in open(tmp_path / "fixed.jsonl")]
+    assert all(r["epochs_run"] == 4 and r["best_epoch"] == 4 for r in rows)    # final weights, no stopping
+    assert all(0.0 <= r["val_macro_f1"] <= 1.0 for r in rows)                   # validation only scored
+
+
 def test_classical_fit_on_train_only_uses_fewer_windows(cfg, small_cache):
     from eegrep.baselines import classical_baseline
 

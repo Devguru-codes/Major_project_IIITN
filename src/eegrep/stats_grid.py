@@ -33,7 +33,8 @@ def load_runs(paths, tag: str | None = None) -> pd.DataFrame:
                              **{f"{k}": v for k, v in r["subject"].items() if k != "confusion"},
                              "confusion": r["subject"]["confusion"],
                              "window_macro_f1": r["window"]["macro_f1"], "seconds": r["seconds"],
-                             "epochs_run": r["epochs_run"], "preds": r["preds"]})
+                             "epochs_run": r["epochs_run"], "best_epoch": r.get("best_epoch"),
+                             "preds": r["preds"]})
     df = pd.DataFrame(rows)
     df["unit"] = df["seed"].astype(str) + "-" + df["fold"].astype(str)
     return df.drop_duplicates(["tag", "pipeline", "edge", "seed", "fold", "config_hash"])
