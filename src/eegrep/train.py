@@ -65,7 +65,9 @@ def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: 
               covariates: np.ndarray | None = None, refit_epochs: int | None = None) -> dict:
     """refit_epochs: if given, train on train ∪ val for exactly that many epochs (the epoch count chosen by
     early stopping on the same split) with no validation-based selection — so the GCN sees the same subjects
-    as the train+val classical baselines."""
+    as the train+val classical baselines.
+    cfg["train"]["patience"] = None disables early stopping (sensitivity analysis): train on the training
+    subjects for exactly max_epochs and keep the final weights; validation subjects are only scored."""
     t0 = time.time()
     torch.manual_seed(seed)
     np.random.seed(seed)
@@ -111,6 +113,7 @@ def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: 
     gen = torch.Generator(device="cpu").manual_seed(seed)
     best = (-1.0, np.inf)
     best_state, best_epoch, epoch = None, 0, 0
+    fixed = refit_epochs is not None or tc["patience"] is None      # no validation-based selection
     for epoch in range(1, (refit_epochs or tc["max_epochs"]) + 1):
         model.train()
         perm = train_idx[torch.randperm(len(train_idx), generator=gen).to(device)]
@@ -122,7 +125,7 @@ def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: 
             opt.zero_grad(set_to_none=True)
             loss.backward()
             opt.step()
-        if refit_epochs is not None:
+        if fixed:
             continue
         f1, vloss = subject_score(idx_val)
         if f1 > best[0] or (f1 == best[0] and vloss < best[1]):
@@ -133,6 +136,9 @@ def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: 
 
     if refit_epochs is not None:
         best_epoch = epoch                      # final weights; validation subjects were trained on
+    elif fixed:
+        best_epoch = epoch                      # final weights; validation subjects only scored
+        best = subject_score(idx_val)
     else:
         model.load_state_dict(best_state)
     test_logits = predict(idx_test)
