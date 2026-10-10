@@ -1,0 +1,134 @@
+[report] ok   latex tables
+[report] ok   fig02 cohort
+[report] ok   fig03 band topomaps
+[report] ok   fig04 pswe example
+[report] ok   fig05 pswe burden
+[report] ok   fig06/07 main effects
+[report] ok   fig08 interaction
+[report] ok   fig09 critical difference
+[report] ok   fig10 confusion matrices
+[report] ok   fig11 roc/pr
+[report] ok   fig12 leakage
+[report] ok   fig13 ablation forest
+[report] ok   figS3 seed variance
+[report] ok   figS5 permutation
+{
+ "n_main_runs": 525,
+ "n_ablation_runs": 1700,
+ "best_cell": "P3xspatial",
+ "best_macro_f1": 0.5860840731336087,
+ "best_macro_f1_boot_ci": [
+  0.5380757559072523,
+  0.6283830808740073
+ ],
+ "anova": [
+  {
+   "Source": "pipeline",
+   "SS": 1.3961232589085373,
+   "ddof1": 6,
+   "ddof2": 144,
+   "F": 11.833003281622425,
+   "p-unc": 9.121762930828372e-11,
+   "eps-GG": 0.7123915219840541,
+   "p-GG-corr": 2.9523545132000778e-08,
+   "np2": 0.33022638902531465
+  },
+  {
+   "Source": "edge",
+   "SS": 0.019066796770114202,
+   "ddof1": 2,
+   "ddof2": 48,
+   "F": 4.027006822955389,
+   "p-unc": 0.024167322587299127,
+   "eps-GG": 0.9632318531886036,
+   "p-GG-corr": 0.0257155828137286,
+   "np2": 0.14368308568923202
+  },
+  {
+   "Source": "pipeline * edge",
+   "SS": 0.04038588403608931,
+   "ddof1": 12,
+   "ddof2": 288,
+   "F": 1.4323705260116912,
+   "p-unc": 0.15026238768343878,
+   "eps-GG": 0.5962334702227255,
+   "p-GG-corr": 0.193719673463408,
+   "np2": 0.0563207635146198
+  }
+ ],
+ "friedman_p": 6.2981599742945726e-21,
+ "cd": 6.263639831998871,
+ "marginal_representation": {
+  "P1": 0.5519,
+  "P2": 0.4534,
+  "P3": 0.569,
+  "P4": 0.4345,
+  "P5": 0.4893,
+  "P6": 0.5429,
+  "P7": 0.4475
+ },
+ "marginal_edge": {
+  "functional": 0.4971,
+  "hybrid": 0.4917,
+  "spatial": 0.5063
+ },
+ "leakage": [
+  {
+   "cell": "P3xhybrid",
+   "protocol": "subject-level (correct)",
+   "subject_macro_f1": 0.5677,
+   "subject_macro_f1_sd": 0.103,
+   "window_macro_f1": 0.4975,
+   "window_macro_f1_sd": 0.0754,
+   "subject_accuracy": 0.5983,
+   "inflation_window_vs_correct": 0.2621
+  },
+  {
+   "cell": "P3xhybrid",
+   "protocol": "window-level (leaky)",
+   "subject_macro_f1": 0.9745,
+   "subject_macro_f1_sd": 0.0257,
+   "window_macro_f1": 0.8299,
+   "window_macro_f1_sd": 0.0183,
+   "subject_accuracy": 0.975,
+   "inflation_window_vs_correct": 0.2621
+  },
+  {
+   "cell": "P3xspatial",
+   "protocol": "subject-level (correct)",
+   "subject_macro_f1": 0.5861,
+   "subject_macro_f1_sd": 0.1116,
+   "window_macro_f1": 0.5091,
+   "window_macro_f1_sd": 0.0662,
+   "subject_accuracy": 0.6142,
+   "inflation_window_vs_correct": 0.256
+  },
+  {
+   "cell": "P3xspatial",
+   "protocol": "window-level (leaky)",
+   "subject_macro_f1": 0.9879,
+   "subject_macro_f1_sd": 0.0177,
+   "window_macro_f1": 0.8421,
+   "window_macro_f1_sd": 0.0198,
+   "subject_accuracy": 0.9882,
+   "inflation_window_vs_correct": 0.256
+  }
+ ],
+ "permutation": {
+  "P3xspatial": {
+   "n_perm": 200,
+   "observed_seed0_macro_f1": 0.5746987125934495,
+   "null_mean": 0.31314600272710047,
+   "null_sd": 0.0587681320243188,
+   "null_max": 0.47388648388648386,
+   "p": 0.004975124378109453
+  }
+ },
+ "cpu_hours_main_grid": 2.3907042617268033,
+ "report_errors": []
+}
+
+/tmp/eegrep-src/src/eegrep/figures.py:35: FutureWarning: Montage name 'standard_1020' is deprecated and will be removed in MNE 1.14. Use 'colin27_1020' instead.
+  info.set_montage("standard_1020")
+/tmp/eegrep-src/src/eegrep/figures.py:35: FutureWarning: Montage name 'standard_1020' is deprecated and will be removed in MNE 1.14. Use 'colin27_1020' instead.
+  info.set_montage("standard_1020")
