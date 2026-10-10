@@ -1,0 +1,22 @@
+# External validation cohort (IMPLEMENTATION_PLAN.md §5, RQ5): OpenNeuro ds004584, 100 Parkinson's disease
+# (PD) and 49 controls, 2-5 min eyes-open resting EEG, 63-channel BrainVision, 500 Hz, online reference Pz.
+# Only what must differ from ds004504 is overridden; preprocessing, features, graphs, model and training are
+# inherited unchanged.
+base: default.yaml
+
+dataset:
+  name: ds004584
+  cite_doi: 10.18112/openneuro.ds004584.v1.0.0
+  group_to_label: {PD: 0, Control: 1}
+  class_names: [PD, CN]
+  # same 19 electrodes in the same node order as ds004504 (already standard_1020 names)
+  channels: [Fp1, Fp2, F3, F4, C3, C4, P3, P4, O1, O2, F7, F8, T7, T8, P7, P8, Fz, Cz, Pz]
+  channel_rename: {}
+  task: Rest
+  add_reference: Pz            # the online reference is not stored; restored as a flat channel, then re-referenced
+  # MoCA is the cognitive score here (analysis only); UPDRS is a PD-only label proxy and is never loaded.
+  participant_columns: {participant_id: subject, GENDER: sex, AGE: age, GROUP: group, MOCA: mmse}
+  qc: {n_subjects: 149, n_windows: [1900, 2600], duration_s: [120, 345], slowing_check: null}
+
+preprocess:
+  notch: 60.0                  # US mains

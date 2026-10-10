@@ -398,3 +398,37 @@ These fix three flaws found in the internal 5-reviewer critique.
 - Refitting on train+val changes the mean by only +0.005.
 
 **Paper:** Results, Abstract, Discussion and Conclusion now lead with the confirmation-fold estimates. New: Table S1 (fair comparisons), Table S2 (selection-fold ablations), Fig. S2 (selection vs confirmation).
+
+### External validation on ds004584 — fixed before any ds004584 run (2026-10-10)
+Approved by the user on 2026-10-10. Only metadata had been inspected before this entry was written.
+
+**Cohort (metadata only):**
+- 149 subjects: 100 PD, 49 controls.
+- One recording per subject: eyes-open rest, 121–343 s (median 146 s), so about 2,330 10-s windows in total.
+- 63-channel BrainVision at 500 Hz, online reference Pz, 60 Hz mains.
+- All 18 non-reference channels of our 19-electrode montage are present in every subject.
+- Download is about 3 GB, done on Kaggle only.
+
+**Protocol (`configs/ds004584.yaml` overlay):** identical preamble, features, graphs, model, training and CV, except for:
+1. Pz restored as a flat channel before average re-referencing (exact, because all stored channels are relative to Pz);
+2. 60 Hz notch;
+3. `task-Rest` files;
+4. labels PD=0, CN=1 (a two-class problem);
+5. MoCA as the analysis-only cognitive score; UPDRS is a PD-only label proxy and is never used;
+6. QC gates of 149 subjects and 1,900–2,600 windows, with no slowing gate.
+
+Folds use seeds 0–4. They are generated in NB11a and committed before any training run (NB11b).
+
+**Pre-specified questions:**
+1. **Ranking transfer.** Spearman ρ (and Kendall τ) between ds004504 and ds004584 cell means, over 21 cells and over the 7 representation means. A positive ρ means the representation ordering generalises across disease, site and task.
+2. **Selected configuration.** P3×spatial, chosen on ds004504, is evaluated on ds004584 without re-selection. Reported: its macro-F1 with bootstrap CI, its rank among 21 cells, and a permutation p (100 permutations, first repeat).
+3. **Controls.** Matched-training non-graph twins (train-only and train+val); the age+sex floor; and window-level leakage (A10) on P3×spatial.
+4. **PSWE.** Fixed-threshold rate, PD vs CN, using a negative-binomial model adjusted for age and sex, with and without adjusting for slowing; its correlation with δ+θ slowing; its correlation with MoCA within PD. The background-relative variants are exploratory.
+   - Expectation from B3 (Milikovsky 2023, "PSWEs are uncommon in PD"): little PD excess at the fixed threshold.
+   - Expectation from our ds004504 result: any excess tracks slowing.
+
+**Caveats that will be stated in the paper:**
+- eyes open vs eyes closed;
+- PD medication state is not recorded;
+- recordings are about 5× shorter than ds004504's;
+- a different disease, so the absolute scores are not comparable. Only the rankings and the protocol effects are compared.

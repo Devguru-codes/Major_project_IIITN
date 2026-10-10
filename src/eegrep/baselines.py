@@ -36,7 +36,7 @@ def demographics_baseline(participants: pd.DataFrame, folds: dict) -> pd.DataFra
             for name, m in models.items():
                 m.fit(cov.loc[fit].values, y_all.loc[fit].values)
                 prob = m.predict_proba(cov.loc[f["test"]].values)
-                met = classification_metrics(y_all.loc[f["test"]].values, prob)
+                met = classification_metrics(y_all.loc[f["test"]].values, prob, y_all.nunique())
                 rows.append({"model": name, "seed": rep["seed"], "fold": k,
                              **{key: v for key, v in met.items() if key != "confusion"}})
     return pd.DataFrame(rows)
@@ -67,14 +67,15 @@ def classical_baseline(cache, folds: dict, pipeline: str, cfg: dict, fit_on: str
             # "trainval": train + validation subjects (no tuning, so validation is otherwise unused)
             tr = cache.window_indices(f["train"] + (f["val"] if fit_on == "trainval" else []))
             te = cache.window_indices(f["test"])
-            w = window_weights(cache.subject[tr], cache.label[tr], 3, cfg["train"]["subject_equal_weighting"])
+            n_cls = len(cfg["dataset"]["class_names"])
+            w = window_weights(cache.subject[tr], cache.label[tr], n_cls, cfg["train"]["subject_equal_weighting"])
             scaler = StandardScaler().fit(X[tr])
             for name, model in _classical_models(rep["seed"] * 100 + k).items():
                 model.fit(scaler.transform(X[tr]), cache.label[tr], sample_weight=w)
                 logp = np.log(model.predict_proba(scaler.transform(X[te])) + 1e-9)
                 _, y, mean_logp = aggregate_by_subject(logp, cache.subject[te], cache.label[te])
                 prob = np.exp(mean_logp - mean_logp.max(1, keepdims=True))
-                met = classification_metrics(y, prob / prob.sum(1, keepdims=True))
+                met = classification_metrics(y, prob / prob.sum(1, keepdims=True), n_cls)
                 rows.append({"model": name, "pipeline": pipeline, "fit_on": fit_on, "seed": rep["seed"], "fold": k, **met})
                 print(f"[classical] {pipeline} {name} seed{rep['seed']} fold{k} macroF1={met['macro_f1']:.3f}",
                       flush=True)

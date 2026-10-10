@@ -278,6 +278,59 @@ def main():
             "subjects, final weights).",
             cells, extras="dev"), kernel_sources=nb02)
 
+    # ---- external validation on ds004584 (PD vs controls) ----
+    ext = "EXT = f'{PY} --config configs/ds004584.yaml'\n"
+    write_kernel("nb11a-external-prep", "nb11a external prep", notebook(
+        "NB11a — external cohort ds004584: download, fixed preamble, features, PSWE, frozen folds (CPU)",
+        "Same code path as NB01–NB03 with the `configs/ds004584.yaml` overlay (Pz reference restored, 60 Hz notch, "
+        "eyes-open task, PD/Control labels, MoCA as the analysis-only cognitive score). The fold file is "
+        "committed to the repository before any training run on this cohort (NB11b).",
+        [f"sh(f'cd {{SRC}} && {{sys.executable}} -m pytest -q -p no:cacheprovider', log=f'{{WORK}}/pytest.txt')",
+         ext + "sh(f'{EXT} download --dest /tmp/ds004584', log=f'{WORK}/download.log')\n"
+         "shutil.copy('/tmp/ds004584/download_manifest.json', f'{WORK}/download_manifest.json')\n"
+         "shutil.copy('/tmp/ds004584/participants.tsv', f'{WORK}/participants.tsv')",
+         ext + "sh(f'{EXT} preprocess --bids /tmp/ds004584 --out {WORK}/preproc --n-jobs 4', log=f'{WORK}/preprocess.log')",
+         ext + "sh(f'{EXT} cache --preproc {WORK}/preproc --participants {WORK}/participants.tsv --out {WORK}/cache', "
+         "log=f'{WORK}/cache.log')\n"
+         "sh(f'{EXT} qc --cache {WORK}/cache --logs {WORK}/preproc/preprocess_log.jsonl --out {WORK}/qc_report.json --no-fail')\n"
+         "print(json.load(open(f'{WORK}/qc_report.json'))['gate_failures'])",
+         ext + "sh(f'{EXT} folds --participants {WORK}/participants.tsv --out {WORK}/folds_ds004584.json')\n"
+         "sh(f'{EXT} demographics --participants {WORK}/participants.tsv --folds {WORK}/folds_ds004584.json "
+         "--out {WORK}/demographics.csv', log=f'{WORK}/demographics.txt')",
+         ext + "sh(f'{EXT} pswe-stats --cache {WORK}/cache --participants {WORK}/participants.tsv --out {WORK}/rq6', "
+         "log=f'{WORK}/pswe_stats.txt')\n"
+         "sh(f'{EXT} pswe-relative --preproc {WORK}/preproc --cache {WORK}/cache --participants {WORK}/participants.tsv "
+         "--out {WORK}/rq6_relative', log=f'{WORK}/pswe_relative.txt')"],
+        extras="preprocess,dev,stats"))
+
+    ext_folds = "{SRC}/splits/folds_ds004584.json"
+    EXT_SHARDS = [
+        [f"sh(f'{{EXT}} grid --cache {{CACHE}} --folds {ext_folds} --pipelines P1,P2,P3,P4 --tag main "
+         "--out {WORK}/ext_runs.jsonl --max-hours 6', log=f'{WORK}/grid_0.log')",
+         f"sh(f'{{EXT}} classical --cache {{CACHE}} --folds {ext_folds} --fit-on train --out {{WORK}}/cls_train.csv', "
+         "log=f'{WORK}/classical_train.log')\n"
+         f"sh(f'{{EXT}} classical --cache {{CACHE}} --folds {ext_folds} --fit-on trainval --out {{WORK}}/cls_tv.csv', "
+         "log=f'{WORK}/classical_tv.log')\n"
+         "import pandas as pd\n"
+         "pd.concat([pd.read_csv(f'{WORK}/cls_train.csv'), pd.read_csv(f'{WORK}/cls_tv.csv')]).to_csv("
+         "f'{WORK}/classical.csv', index=False)"],
+        [f"sh(f'{{EXT}} grid --cache {{CACHE}} --folds {ext_folds} --pipelines P5,P6,P7 --tag main "
+         "--out {WORK}/ext_runs.jsonl --max-hours 6', log=f'{WORK}/grid_1.log')",
+         f"sh(f'{{EXT}} ablate --cache {{CACHE}} --folds {ext_folds} --participants {{PART}} --cells P3xspatial "
+         "--which A10_window_split --n-perm 100 --perm-start 0 --out {WORK}/ext_ablations.jsonl --max-hours 6', "
+         "log=f'{WORK}/ablate.log')"],
+    ]
+    for k, jobs in enumerate(EXT_SHARDS):
+        write_kernel(f"nb11b-external-train-s{k}", f"nb11b external train s{k}", notebook(
+            f"NB11b — external cohort ds004584: fixed GCN grid and controls, shard {k} (CPU)",
+            "The unchanged 7 x 3 protocol as a two-class (PD vs control) problem on the frozen ds004584 folds; "
+            "shard 0 adds the non-graph twins, shard 1 the leakage experiment and 100 label permutations for the "
+            "configuration selected on ds004504 (P3 x spatial).",
+            [f"sh(f'cd {{SRC}} && {{sys.executable}} -m pytest -q -p no:cacheprovider tests/test_external.py "
+             "tests/test_model_train.py', log=f'{WORK}/pytest_ext.txt')",
+             find_cache + "\n" + ext + f"assert os.path.exists(f'{ext_folds}'), 'commit the NB11a folds first'"] + jobs,
+            extras="dev"), kernel_sources=[f"{OWNER}/eegrep-nb11a-external-prep"])
+
     write_kernel("nb03a-folds-demographics", "nb03a folds demographics", notebook(
         "NB03a — frozen folds + demographics confound check (CPU)",
         "Writes the frozen subject-level fold assignment (5 repeats x 5 folds) and runs the "

@@ -11,6 +11,11 @@ dataset:
   channels: [Fp1, Fp2, F3, F4, C3, C4, P3, P4, O1, O2, F7, F8, T3, T4, T5, T6, Fz, Cz, Pz]
   # old 10-20 names -> standard_1020 names (coordinates only)
   channel_rename: {T3: T7, T4: T8, T5: P7, T6: P8}
+  task: eyesclosed                                # sub-XXX_task-<task>_eeg.set
+  add_reference: null                             # online reference absent from the files (restored as zeros)
+  # participants.tsv columns -> internal names. "mmse" holds the dataset's cognitive score (analysis only).
+  participant_columns: {participant_id: subject, Gender: sex, Age: age, Group: group, MMSE: mmse}
+  qc: {n_subjects: 88, n_windows: [6500, 7100], duration_s: [300, 1300], slowing_check: [AD, CN]}
 
 preprocess:
   l_freq: 0.5

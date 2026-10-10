@@ -22,7 +22,8 @@ def _overrides(pairs: list[str]) -> dict:
 def _shard_subjects(participants: str, cfg: dict, shard: int | None, n_shards: int | None) -> list[str]:
     from .data.participants import load_participants
 
-    subjects = list(load_participants(participants, cfg["dataset"]["group_to_label"])["subject"])
+    subjects = list(load_participants(participants, cfg["dataset"]["group_to_label"],
+                           cfg["dataset"]["participant_columns"])["subject"])
     return subjects if shard is None else subjects[shard::n_shards]
 
 
@@ -49,7 +50,8 @@ def cmd_cache(a, cfg):
     from .data.participants import load_participants
     from .preprocess import iter_preprocessed
 
-    df = load_participants(a.participants, cfg["dataset"]["group_to_label"])
+    df = load_participants(a.participants, cfg["dataset"]["group_to_label"],
+                           cfg["dataset"]["participant_columns"])
     subjects = sorted(p.stem for p in Path(a.preproc).glob("sub-*.npz"))
     labels = dict(zip(df["subject"], df["label"]))
     coords = graphs.electrode_positions(cfg["dataset"]["channels"], cfg["dataset"]["channel_rename"])
@@ -66,7 +68,7 @@ def cmd_qc(a, cfg):
     from .qc import gate_failures, qc_report
 
     rep = qc_report(a.cache, a.logs or [], cfg["dataset"]["class_names"])
-    rep["gate_failures"] = gate_failures(rep)
+    rep["gate_failures"] = gate_failures(rep, cfg["dataset"].get("qc"))
     Path(a.out).write_text(json.dumps(rep, indent=1))
     print(json.dumps(rep, indent=1))
     if rep["gate_failures"] and not a.no_fail:
@@ -77,7 +79,8 @@ def cmd_pswe_stats(a, cfg):
     from .data.participants import load_participants
     from .stats_pswe import write_rq6
 
-    df = load_participants(a.participants, cfg["dataset"]["group_to_label"])
+    df = load_participants(a.participants, cfg["dataset"]["group_to_label"],
+                           cfg["dataset"]["participant_columns"])
     res = write_rq6(a.cache, df, cfg["dataset"]["class_names"], a.out)
     print(json.dumps(res, indent=1))
 
@@ -86,7 +89,8 @@ def cmd_pswe_relative(a, cfg):
     from .data.participants import load_participants
     from .stats_pswe import write_relative
 
-    df = load_participants(a.participants, cfg["dataset"]["group_to_label"])
+    df = load_participants(a.participants, cfg["dataset"]["group_to_label"],
+                           cfg["dataset"]["participant_columns"])
     res = write_relative(a.preproc, a.cache, df, cfg, a.out)
     prim = res[res["primary"]]
     print(json.dumps({"primary": res["primary"], **{k: prim[k] for k in prim if k.startswith(("nb_", "pswe_v"))}},
@@ -117,7 +121,8 @@ def cmd_ablate(a, cfg):
 
     cache = FeatureCache(a.cache)
     folds = load_folds(a.folds, sorted(set(cache.subject)))
-    part = load_participants(a.participants, cfg["dataset"]["group_to_label"])
+    part = load_participants(a.participants, cfg["dataset"]["group_to_label"],
+                           cfg["dataset"]["participant_columns"])
     store = ResultStore(a.out)
     deadline = time.time() + 3600 * a.max_hours
     for cell in a.cells.split(","):
@@ -150,7 +155,8 @@ def cmd_demographics(a, cfg):
     from .data.participants import load_participants
     from .splits import load_folds
 
-    df = load_participants(a.participants, cfg["dataset"]["group_to_label"])
+    df = load_participants(a.participants, cfg["dataset"]["group_to_label"],
+                           cfg["dataset"]["participant_columns"])
     res = demographics_baseline(df, load_folds(a.folds, df["subject"]))
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     res.to_csv(a.out, index=False)
@@ -161,7 +167,8 @@ def cmd_folds(a, cfg):
     from .data.participants import load_participants
     from .splits import file_sha256, make_folds, save_folds
 
-    df = load_participants(a.participants, cfg["dataset"]["group_to_label"])
+    df = load_participants(a.participants, cfg["dataset"]["group_to_label"],
+                           cfg["dataset"]["participant_columns"])
     cv = cfg["cv"]
     seeds = [int(s) for s in a.seeds.split(",")] if a.seeds else cv["seeds"]
     folds = make_folds(df["subject"], df["label"], seeds, cv["n_folds"], cv["val_frac"],
@@ -184,7 +191,8 @@ def cmd_smoke(a, cfg):
     work.mkdir(parents=True, exist_ok=True)
     recs, part = synthetic.make_recordings()
     part.to_csv(work / "participants.tsv", sep="\t", index=False)
-    df = load_participants(work / "participants.tsv", cfg["dataset"]["group_to_label"])
+    df = load_participants(work / "participants.tsv", cfg["dataset"]["group_to_label"],
+                           cfg["dataset"]["participant_columns"])
     labels = dict(zip(df["subject"], df["label"]))
     coords = graphs.electrode_positions(cfg["dataset"]["channels"], cfg["dataset"]["channel_rename"])
     cache = FeatureCache(build_cache(recs, labels, cfg, coords, work / "cache"))

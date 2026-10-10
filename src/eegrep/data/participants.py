@@ -9,12 +9,15 @@ from pathlib import Path
 
 import pandas as pd
 
-FORBIDDEN_MODEL_COLUMNS = frozenset({"mmse", "MMSE"})
+FORBIDDEN_MODEL_COLUMNS = frozenset({"mmse", "MMSE", "moca", "MOCA", "updrs", "UPDRS"})
+DEFAULT_COLUMNS = {"participant_id": "subject", "Gender": "sex", "Age": "age", "Group": "group", "MMSE": "mmse"}
 
 
-def load_participants(path: str | Path, group_to_label: dict) -> pd.DataFrame:
+def load_participants(path: str | Path, group_to_label: dict, columns: dict | None = None) -> pd.DataFrame:
+    """columns: participants.tsv name -> internal name (config dataset.participant_columns). Internal "mmse" is
+    the dataset's cognitive score (MMSE for ds004504, MoCA for ds004584), used for statistics only."""
     df = pd.read_csv(path, sep="\t")
-    df = df.rename(columns={"participant_id": "subject", "Gender": "sex", "Age": "age", "Group": "group", "MMSE": "mmse"})
+    df = df.rename(columns=columns or DEFAULT_COLUMNS)
     unknown = set(df["group"]) - set(group_to_label)
     if unknown:
         raise ValueError(f"unknown group codes in participants.tsv: {unknown}")

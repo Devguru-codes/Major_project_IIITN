@@ -127,6 +127,26 @@ def build_report(reports: str | Path, cache_dir: str | Path, preproc_dirs: list[
     else:
         confirmation_summary = None
 
+    # ---- external validation on ds004584 (present once reports/external/ is committed) ----
+    ext_dir, ext_summary = rep / "external", None
+    if ext_dir.exists() and glob.glob(str(ext_dir / "ext_runs_s*.jsonl")):
+        from .config import load_config
+        from .stats_external import external_analysis, write_external
+
+        ext_cfg = load_config(Path(__file__).resolve().parents[2] / "configs" / "ds004584.yaml")
+        ext_main = load_runs(sorted(glob.glob(str(ext_dir / "ext_runs_s*.jsonl"))), tag="main")
+        ext_abl = load_runs(sorted(glob.glob(str(ext_dir / "ext_ablations_s*.jsonl"))))
+        ext_cls = pd.read_csv(ext_dir / "classical.csv")
+        ext = external_analysis(grid["cells"], ext_main, ext_cls[ext_cls.fit_on == "train"],
+                                ext_cls[ext_cls.fit_on == "trainval"], pd.read_csv(ext_dir / "demographics.csv"),
+                                ext_abl, n_boot=n_boot)
+        ext_summary = write_external(ext, tabs / "external")
+        ext_subj = pd.read_csv(ext_dir / "rq6" / "pswe_subject_table.csv")
+        step("fig14 external validation", lambda: F.fig_external(
+            grid["cells"], ext["grid"]["cells"], ext_subj, ext_cfg["dataset"]["class_names"], figs))
+        step("figS8 external confusion", lambda: F.fig_confusions(
+            ext_main, ext_cfg["dataset"]["class_names"], figs, name="figS8_external_confusion"))
+
     # ---- early-stopping sensitivity (present once reports/es_sensitivity/ is committed) ----
     es_dir, es_summary = rep / "es_sensitivity", None
     if es_dir.exists():
@@ -154,6 +174,7 @@ def build_report(reports: str | Path, cache_dir: str | Path, preproc_dirs: list[
         "cpu_hours_main_grid": float(main["seconds"].sum() / 3600),
         "confirmation": confirmation_summary,
         "es_sensitivity": es_summary,
+        "external": ext_summary,
         "report_errors": errors,
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=1, default=float))

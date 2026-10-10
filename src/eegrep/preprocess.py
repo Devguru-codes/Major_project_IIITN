@@ -1,6 +1,6 @@
 """The fixed preamble — one identical code path for every condition.
 
-band-pass 0.5–45 Hz -> 50 Hz notch -> average reference -> ICA (extended infomax,
+band-pass 0.5–45 Hz -> mains notch (50 Hz; 60 Hz for ds004584) -> average reference -> ICA (extended infomax,
 fit on a 1 Hz high-passed copy) + ICLabel, drop eye/muscle components with
 p >= 0.8 -> resample 128 Hz. Output is continuous µV data; windowing happens in
 cache.build_cache.
@@ -19,17 +19,27 @@ import numpy as np
 ICA_RANDOM_STATE = 97
 
 
+def prepare_channels(raw, ds: dict):
+    """Restore an unstored online reference as a flat channel (e.g. Pz in ds004584; exact, because every stored
+    channel is relative to it), then keep the 19 electrodes in the fixed node order with standard_1020 names."""
+    import mne
+
+    if ds.get("add_reference"):
+        mne.add_reference_channels(raw, ds["add_reference"], copy=False)
+    raw.pick(ds["channels"])
+    raw.reorder_channels(ds["channels"])
+    raw.rename_channels(ds["channel_rename"])
+    raw.set_montage("standard_1020")
+    return raw
+
+
 def preprocess_recording(set_path: str | Path, cfg: dict) -> tuple[np.ndarray, float, dict]:
     import mne
     from mne.preprocessing import ICA
     from mne_icalabel import label_components
 
     pc, ds = cfg["preprocess"], cfg["dataset"]
-    raw = mne.io.read_raw_eeglab(set_path, preload=True, verbose="error")
-    raw.pick(ds["channels"])
-    raw.reorder_channels(ds["channels"])
-    raw.rename_channels(ds["channel_rename"])
-    raw.set_montage("standard_1020")
+    raw = prepare_channels(mne.io.read_raw_eeglab(set_path, preload=True, verbose="error"), ds)
     sfreq_in, duration = raw.info["sfreq"], raw.n_times / raw.info["sfreq"]
 
     raw.filter(pc["l_freq"], pc["h_freq"], verbose="error")
@@ -65,7 +75,7 @@ def preprocess_dataset(bids_root: str | Path, subjects: list[str], cfg: dict, ou
     todo = [s for s in subjects if not (out / f"{s}.npz").exists()]
 
     def one(subject):
-        set_path = Path(bids_root) / subject / "eeg" / f"{subject}_task-eyesclosed_eeg.set"
+        set_path = Path(bids_root) / subject / "eeg" / f"{subject}_task-{cfg['dataset']['task']}_eeg.set"
         data, sfreq, log = preprocess_recording(set_path, cfg)
         np.savez(out / f"{subject}.npz", data=data, sfreq=sfreq)
         return {"subject": subject, **log}
