@@ -30,10 +30,25 @@ question we test directly.
 
 \paragraph{Evaluation protocol and leakage.}
 Leakage --- information from test data reaching training --- is a general failure mode of
-machine-learning-based science \cite{F8}. In EEG it takes a specific form: windows cut from one
-recording are highly correlated, so splitting \emph{windows} rather than \emph{subjects} lets a model
-recognise individuals instead of disease. The 2026 scoping review of ds004504 attributes the upper
-end of reported accuracies to this effect \cite{R1}. We measure it directly on one pipeline.
+machine-learning-based science \cite{F8}, and has been shown to inflate prediction performance in
+connectome-based neuroimaging models \cite{L5}. Saeb et al.\ showed that when the use case is
+prediction for new individuals, record-wise cross-validation, which lets one person's records appear
+in both training and test sets, greatly overestimates accuracy relative to subject-wise
+cross-validation \cite{L1}. In EEG the problem takes a specific form: windows cut from one recording
+are highly correlated, so splitting \emph{windows} rather than \emph{subjects} lets a model recognise
+individuals instead of disease. Individual differences and non-stationarity make the partitioning
+decision consequential for cross-participant EEG models, whose error rates improper partitioning can
+understate severalfold \cite{L4}. Brookshire et al.\ found that segment-based holdout strongly
+overestimated performance on unseen subjects in an Alzheimer's and an epilepsy dataset, and that most
+translational deep-learning EEG studies they surveyed used it \cite{L2}; a recent audit across ADHD
+and Parkinson's cohorts --- the latter the same cohort we use for external validation --- reproduced
+the inflation in both \cite{L3}. In connectome-based neuroimaging models, leakage through repeated
+subjects drastically inflated prediction performance, and more so in small datasets \cite{L5}. The
+2026 scoping review of ds004504 attributes the upper end of reported accuracies on this benchmark to
+the same effect \cite{R1}. Best-practice guidance for prediction studies \cite{L7} and the large
+error bars of cross-validation in small samples \cite{L6} add a separate caution for cohorts of our
+size. We measure the leakage effect directly on one pipeline in both cohorts, and report
+subject-level confidence intervals throughout.
 
 \paragraph{EEG and the blood--brain barrier.}
 BBB breakdown precedes and predicts cognitive decline \cite{B5,B8}. Milikovsky et al.\ proposed

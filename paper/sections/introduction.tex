@@ -25,7 +25,10 @@ studies change several things at once: (i) the \emph{signal representation} fed 
 that the last of these matters most. A 2026 scoping review of this exact benchmark concluded that
 apparent deep-learning gains ``arise not from inherent representational advantage, but from data
 leakage'' \cite{R1}, echoing a broader warning about leakage across machine-learning-based science
-\cite{F8}. A 2026 comparison of five time--frequency representations under a single convolutional
+\cite{F8} and in neuroimaging prediction specifically \cite{L5}. In clinical machine learning,
+splitting records rather than subjects has long been known to overestimate accuracy for new
+patients \cite{L1}, and segment-level splitting is common in, and inflates, deep-learning studies of
+translational EEG \cite{L2,L3}. A 2026 comparison of five time--frequency representations under a single convolutional
 network \cite{R2} isolated representation, but its authors note that it ``does not explicitly model
 the true spatial topology'' and that graph-based schemes remain unexplored; others observe that most
 studies ``overlook spatial connectivity between channels'' \cite{R9}, and explicitly call for graph
