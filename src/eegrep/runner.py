@@ -45,12 +45,14 @@ def run_cell(cache: FeatureCache, folds: dict, cfg: dict, store: ResultStore, *,
              edge: str, tag: str = "main", feature_set: list[str] | None = None, deadline: float = float("inf"),
              device: str = "cpu", max_repeats: int | None = None, overrides: dict | None = None,
              covariates: np.ndarray | None = None, labels: np.ndarray | None = None,
-             window_folds: list[dict] | None = None) -> int:
+             window_folds: list[dict] | None = None, refit_epochs: dict | None = None) -> int:
     """Train every (repeat, fold) of one cell. Returns the number of runs executed now.
 
     covariates: per-window (N, d) demographics to regress out (A12).
     labels: per-window label override (permutation test).
     window_folds: explicit window-index splits (A10 leakage protocol) instead of subject folds.
+    refit_epochs: {(pipeline, edge, seed, fold): epochs} — refit on train ∪ val for the early-stopped
+        epoch count of the matching main-grid run (fair comparison with train+val baselines).
     """
     cfg = apply_overrides(cfg, {"graph.edge": edge, **(overrides or {})})
     chash = config_hash(cfg)
@@ -72,8 +74,9 @@ def run_cell(cache: FeatureCache, folds: dict, cfg: dict, store: ResultStore, *,
                 idx = (f["train"], f["val"], f["test"])
             else:
                 idx = tuple(cache.window_indices(f[s]) for s in ("train", "val", "test"))
+            n_ep = refit_epochs[(pipeline, edge, seed, k)] if refit_epochs is not None else None
             res = train_one(X, A, cache.subject, y, *idx, cfg, seed=seed * 100 + k, device=device,
-                            covariates=covariates)
+                            covariates=covariates, refit_epochs=n_ep)
             store.append({"key": key, "tag": tag, "pipeline": pipeline, "edge": edge, "seed": seed, "fold": k,
                           "config_hash": chash, "overrides": overrides or {}, "git_sha": git_sha(),
                           "python": platform.python_version(), **res})
@@ -103,6 +106,19 @@ def bench(cache: FeatureCache, folds: dict, cfg: dict, *, pipeline: str, edge: s
     if hours > max_hours:
         raise SystemExit(f"projected {hours:.2f} h exceeds budget {max_hours} h — shard the grid")
     return hours
+
+
+def best_epochs(run_files, tag: str = "main") -> dict:
+    """{(pipeline, edge, seed, fold): best_epoch} from earlier early-stopped runs."""
+    out = {}
+    for p in run_files:
+        with open(p, encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    r = json.loads(line)
+                    if r["tag"] == tag:
+                        out[(r["pipeline"], r["edge"], r["seed"], r["fold"])] = max(1, int(r["best_epoch"]))
+    return out
 
 
 def summarize(path: str | Path) -> dict:

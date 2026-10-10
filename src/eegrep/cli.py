@@ -102,7 +102,7 @@ def cmd_classical(a, cfg):
 
     cache = FeatureCache(a.cache)
     folds = load_folds(a.folds, sorted(set(cache.subject)))
-    res = pd.concat([classical_baseline(cache, folds, p, cfg) for p in a.pipelines.split(",")])
+    res = pd.concat([classical_baseline(cache, folds, p, cfg, fit_on=a.fit_on) for p in a.pipelines.split(",")])
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     res.to_csv(a.out, index=False)
     print(summarize(res, by=("pipeline", "model")).round(3).to_string())
@@ -163,11 +163,12 @@ def cmd_folds(a, cfg):
 
     df = load_participants(a.participants, cfg["dataset"]["group_to_label"])
     cv = cfg["cv"]
-    folds = make_folds(df["subject"], df["label"], cv["seeds"], cv["n_folds"], cv["val_frac"],
+    seeds = [int(s) for s in a.seeds.split(",")] if a.seeds else cv["seeds"]
+    folds = make_folds(df["subject"], df["label"], seeds, cv["n_folds"], cv["val_frac"],
                        meta={"dataset": cfg["dataset"]["cite_doi"],
                              "participants_sha256": file_sha256(a.participants)})
     save_folds(folds, a.out)
-    print(f"[folds] {len(df)} subjects, {len(cv['seeds'])} repeats x {cv['n_folds']} folds -> {a.out}")
+    print(f"[folds] {len(df)} subjects, {len(seeds)} repeats (seeds {seeds}) x {cv['n_folds']} folds -> {a.out}")
 
 
 def cmd_smoke(a, cfg):
@@ -221,10 +222,15 @@ def cmd_grid(a, cfg):
     folds = load_folds(a.folds, sorted(set(cache.subject)))
     store = ResultStore(a.out)
     deadline = time.time() + 3600 * (a.max_hours or cfg["budget"]["max_hours"])
+    refit = None
+    if a.refit_from:
+        from .runner import best_epochs
+
+        refit = best_epochs(a.refit_from)
     for p in a.pipelines.split(","):
         for e in a.edges.split(","):
             run_cell(cache, folds, cfg, store, pipeline=p, edge=e, tag=a.tag, deadline=deadline,
-                     device=a.device, overrides=_overrides(a.set))
+                     device=a.device, overrides=_overrides(a.set), refit_epochs=refit)
     print(json.dumps({"runs_done": len(store.done)}))
 
 
@@ -253,6 +259,7 @@ def main(argv=None):
     s.add_argument("--out", required=True); s.set_defaults(fn=cmd_pswe_relative)
     s = sub.add_parser("classical");s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
     s.add_argument("--pipelines", default="P1,P2,P3,P4,P6,P7"); s.add_argument("--out", required=True)
+    s.add_argument("--fit-on", choices=["train", "trainval"], default="trainval")
     s.set_defaults(fn=cmd_classical)
     s = sub.add_parser("ablate"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
     s.add_argument("--participants", required=True)
@@ -267,6 +274,7 @@ def main(argv=None):
     s = sub.add_parser("select-cells"); s.add_argument("--runs", nargs="+", required=True)
     s.add_argument("--top", type=int, default=2); s.set_defaults(fn=cmd_select_cells)
     s = sub.add_parser("folds"); s.add_argument("--participants", required=True)
+    s.add_argument("--seeds", default=None, help="comma list; default = config cv.seeds")
     s.add_argument("--out", default="splits/folds_ds004504.json"); s.set_defaults(fn=cmd_folds)
     s = sub.add_parser("demographics"); s.add_argument("--participants", required=True)
     s.add_argument("--folds", required=True); s.add_argument("--out", default="results/demographics.csv")
@@ -284,6 +292,7 @@ def main(argv=None):
             s.add_argument("--edges", default="spatial,functional,hybrid")
             s.add_argument("--tag", default="main"); s.add_argument("--out", default="results/runs.jsonl")
             s.add_argument("--set", nargs="*", help="config overrides key=value")
+            s.add_argument("--refit-from", nargs="*", help="main-grid runs.jsonl: refit on train+val")
         s.set_defaults(fn=fn)
 
     a = ap.parse_args(argv)

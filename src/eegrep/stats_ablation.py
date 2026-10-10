@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from .stats_grid import nadeau_bengio
+from .stats_grid import RATIO_TRAIN, nadeau_bengio
 from .stats_pswe import holm
 
 
@@ -23,7 +23,7 @@ def split_tag(tag: str) -> tuple[str, str, str]:
     return name, p, e
 
 
-def ablation_table(main: pd.DataFrame, abl: pd.DataFrame, test_train_ratio: float = 17.6 / 70.4) -> pd.DataFrame:
+def ablation_table(main: pd.DataFrame, abl: pd.DataFrame, test_train_ratio: float = RATIO_TRAIN) -> pd.DataFrame:
     rows = []
     for tag, g in abl[~abl["tag"].str.startswith(("perm", "A10"))].groupby("tag"):
         name, p, e = split_tag(tag)
@@ -97,7 +97,7 @@ def baseline_table(main: pd.DataFrame, classical: pd.DataFrame, demographics: pd
     return pd.DataFrame(rows).sort_values(["representation", "macro_f1"], ascending=[True, False])
 
 
-def gcn_vs_classical(main: pd.DataFrame, classical: pd.DataFrame, test_train_ratio: float = 17.6 / 70.4) -> pd.DataFrame:
+def gcn_vs_classical(main: pd.DataFrame, classical: pd.DataFrame, test_train_ratio: float = RATIO_TRAIN) -> pd.DataFrame:
     """Paired (seed, fold) comparison of each representation's best GCN cell vs its best classical twin."""
     classical = classical.assign(unit=classical["seed"].astype(str) + "-" + classical["fold"].astype(str))
     rows = []

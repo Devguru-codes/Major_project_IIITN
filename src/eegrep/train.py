@@ -62,11 +62,16 @@ def _softmax(z: np.ndarray) -> np.ndarray:
 def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: np.ndarray,
               idx_train: np.ndarray, idx_val: np.ndarray, idx_test: np.ndarray,
               cfg: dict, seed: int, device: str = "cpu", n_classes: int = 3,
-              covariates: np.ndarray | None = None) -> dict:
+              covariates: np.ndarray | None = None, refit_epochs: int | None = None) -> dict:
+    """refit_epochs: if given, train on train ∪ val for exactly that many epochs (the epoch count chosen by
+    early stopping on the same split) with no validation-based selection — so the GCN sees the same subjects
+    as the train+val classical baselines."""
     t0 = time.time()
     torch.manual_seed(seed)
     np.random.seed(seed)
     tc = cfg["train"]
+    if refit_epochs is not None:
+        idx_train = np.concatenate([idx_train, idx_val])
 
     if covariates is not None:      # ablation A12: regress age/sex out of every feature (train fit only)
         X = residualize(X, covariates, idx_train)
@@ -106,7 +111,7 @@ def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: 
     gen = torch.Generator(device="cpu").manual_seed(seed)
     best = (-1.0, np.inf)
     best_state, best_epoch, epoch = None, 0, 0
-    for epoch in range(1, tc["max_epochs"] + 1):
+    for epoch in range(1, (refit_epochs or tc["max_epochs"]) + 1):
         model.train()
         perm = train_idx[torch.randperm(len(train_idx), generator=gen).to(device)]
         for s in range(0, len(perm), tc["batch_size"]):
@@ -117,6 +122,8 @@ def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: 
             opt.zero_grad(set_to_none=True)
             loss.backward()
             opt.step()
+        if refit_epochs is not None:
+            continue
         f1, vloss = subject_score(idx_val)
         if f1 > best[0] or (f1 == best[0] and vloss < best[1]):
             best, best_epoch = (f1, vloss), epoch
@@ -124,7 +131,10 @@ def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: 
         elif epoch - best_epoch >= tc["patience"]:
             break
 
-    model.load_state_dict(best_state)
+    if refit_epochs is not None:
+        best_epoch = epoch                      # final weights; validation subjects were trained on
+    else:
+        model.load_state_dict(best_state)
     test_logits = predict(idx_test)
     subjects, y_subj, subj_logits = aggregate_by_subject(test_logits, win_subject[idx_test], win_label[idx_test])
     subj_prob = _softmax(subj_logits)
