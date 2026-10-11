@@ -9,6 +9,7 @@ import json
 import re
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -422,12 +423,20 @@ if lfiles:
     lc = L[L.tag == "learned_adj_confirm"]
     if len(lc):
         put("learnConfPThree", lc["macro_f1"].mean())
+        cf = pd.DataFrame([json.loads(line) for f in sorted((REP / "confirm").glob("confirm_runs_s*.jsonl"))
+                           for line in open(f)])
+        cf = cf[(cf.tag == "confirm") & (cf.pipeline == "P3") & (cf.edge == "spatial")]
+        if len(cf):
+            put("learnConfDelta", lc["macro_f1"].mean() - cf["subject"].map(lambda s: s["macro_f1"]).mean(), "{:+.3f}")
+    put("learnPThreeDelta", round(lm.get("P3", np.nan) - rs.get("P3", np.nan), 3) + 0.0, "{:+.3f}")
     put("learnNRuns", len(L), "{:d}")
+    put("cpuHoursLearned", L["seconds"].sum() / 3600, "{:.1f}")
 
 # ---- occlusion importance (NB16) ----
 occ_f = REP / "explain" / "occlusion_summary.csv"
 if occ_f.exists():
     occ = pd.read_csv(occ_f)
+    occ["unit"] = occ["unit"].str.replace("-", "--", regex=False)
     el = occ[occ.kind == "electrode"].sort_values("drop", ascending=False)
     put("occTopElectrodes", ", ".join(el.unit.head(4)))
     put("occTopDrop", el["drop"].iloc[0], "{:.3f}"); put("occElecMedian", el["drop"].median(), "{:.3f}")
@@ -436,8 +445,16 @@ if occ_f.exists():
     put("occTopBand", bd.unit.iloc[0]); put("occTopBandDrop", bd["drop"].iloc[0], "{:.3f}")
     put("occSecondBand", bd.unit.iloc[1]); put("occSecondBandDrop", bd["drop"].iloc[1], "{:.3f}")
     put("occBottomBand", bd.unit.iloc[-1]); put("occBottomBandDrop", bd["drop"].iloc[-1], "{:.3f}")
+    put("occTopBandLo", bd.ci_lo.iloc[0], "{:.3f}"); put("occTopBandHi", bd.ci_hi.iloc[0], "{:.3f}")
+    put("occNBandPositive", int((bd.ci_lo > 0).sum()), "{:d}")
     for cname in ("AD", "FTD", "CN"):
         put(f"occTop{cname}", el.sort_values(f"drop_{cname}", ascending=False).unit.iloc[0])
+        b_ = bd.sort_values(f"drop_{cname}", ascending=False)
+        put(f"occBand{cname}", b_.unit.iloc[0]); put(f"occBand{cname}Drop", b_[f"drop_{cname}"].iloc[0], "{:.3f}")
+    occ_raw = REP / "explain" / "occlusion_raw.csv"
+    if occ_raw.exists():
+        oraw = pd.read_csv(occ_raw)
+        put("occNSubjects", oraw["subject"].nunique(), "{:d}")
 
 # ---- PSWE A11 rule grid and collinearity of the slowing adjustment (NB15) ----
 for ds, tag, pats in (("ds004504", "", ("AD", "FTD")), ("ds004584", "Ext", ("PD",))):

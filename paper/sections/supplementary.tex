@@ -56,8 +56,8 @@ All experiments ran on free Kaggle sessions (4 vCPUs); the only GPU use was the 
 baselines (\deepGpuHours{} GPU-hours of training on one Kaggle GPU). The 525-run main grid
 took \cpuHoursGrid{} CPU-hours, and the \nConfirmRuns{} further runs (confirmation grid, ablations and permutations on the
 confirmation folds, and the train + val refits) took \cpuHoursConfirm{} CPU-hours. The stopping-rule sensitivity grid and the
-external cohort added 
-ExtraRuns{} runs and \cpuHoursExtra{} CPU-hours. The mixed models fit in seconds. Every run is logged with its configuration hash, code version and seed.
+external cohort added \nExtraRuns{} runs and \cpuHoursExtra{} CPU-hours, and the learned-adjacency GCN
+\learnNRuns{} runs and \cpuHoursLearned{} CPU-hours. The mixed models fit in seconds. Every run is logged with its configuration hash, code version and seed.
 
 \subsection*{Supplementary results}
 \paragraph{Background-relative PSWEs (exploratory).} Defining PSWEs relative to each channel's own
@@ -172,6 +172,16 @@ of the best graph type for each representation.}
 \caption{Deep-learning baselines on raw windows (ds004504, 25 selection splits): row-normalised
 confusion matrices of EEGNet and the 1D-CNN.}
 \label{fig:deep-confusion}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{figS10_importance}
+\caption{Occlusion importance for the best cell (P3~$\times$~spatial, 25 selection splits): drop in the
+probability assigned to the true class when one electrode (topomaps, overall and per class) or one
+wavelet sub-band on every electrode (bars, mean and subject-bootstrap 95\% CI) is replaced by its
+training mean. Higher values mean the model relies more on that input.}
+\label{fig:importance}
 \end{figure}
 
 % ---- moved from the main text to meet the journal length (second internal review) ----

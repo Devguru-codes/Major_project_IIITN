@@ -163,6 +163,23 @@ completeness.
 
 \paragraph{Stopping-rule sensitivity.} The grid was re-run with patience 50 and without early stopping (Supplementary methods).
 
+\paragraph{Learned adjacency (added).} To test whether a graph fitted to the data would help where
+the three fixed constructions did not, the GCN was given a trainable, symmetric, non-negative
+$19\times19$ adjacency (softplus of free parameters, symmetrised and degree-normalised), initialised at
+the spatial graph and learned jointly with the other weights (361 extra parameters). It was run for
+every representation on the 25 selection splits and for P3 on the 25 confirmation splits, and compared
+with the fixed spatial graph split by split; everything else was unchanged.
+
+\paragraph{Occlusion importance (added).} For the best cell (P3~$\times$~spatial), each of the 25
+selection-split models was re-fitted with its original seed (the runs store predictions, not weights)
+and its test subjects were scored again with one electrode's features replaced by their training mean
+(zero after standardisation), or with one wavelet sub-band's four features replaced in the same way on
+every electrode; the model was not retrained for each occlusion. Importance is the drop in the
+probability assigned to each test subject's true class, averaged within subject over the five repeats
+and then over the \occNSubjects{} subjects, with a subject-bootstrap 95\% confidence interval, and also
+within each class. Occlusion measures what a trained model relies on, not
+where the disease is.
+
 \subsection{PSWE detection}\label{sec:pswe}
 Following Milikovsky et al.\ \cite{B1}, with parameters as reported in \cite{B3}, we computed the
 median power frequency (MPF) of each channel from FFTs of \SI{2}{\second} Hann-windowed segments with
@@ -213,7 +230,11 @@ the model reduces to a by-subject repeated-measures ANOVA, which our implementat
 exactly in tests, and its false-positive rate is nominal in simulations with subject-by-representation
 variation. We report model-based marginal means with 95\% confidence intervals and Holm-corrected
 pairwise contrasts between representations. The same model was fitted to the confirmation folds and to
-the external cohort.
+the external cohort. Two cross-checks were added after review: a by-subject repeated-measures ANOVA on
+the same subject-by-cell values (Greenhouse--Geisser corrected), and the same mixed model fitted to the
+proportion of repeats in which each subject was \emph{correctly} classified --- a linear-probability
+approximation to a logistic mixed model of the binary decisions, which tests the decisions a clinician
+would see rather than the model's confidence.
 
 \paragraph{Secondary analyses on macro-F1.} The 25 test splits are the repeated-measures units. Main
 effects of representation and graph construction, and their interaction, were tested with a balanced
@@ -232,7 +253,7 @@ subjects only (the main grid and the ablations) and $17.6/70.4$ when validation 
 
 \paragraph{Equivalence.} A non-significant difference is not evidence of no difference. For every paired
 comparison read as ``no advantage'' (GCN versus its non-graph twin, graph types, ablations, deep-learning
-baselines and stopping rules) we report two one-sided tests (TOST) against a margin of $\pm0.05$
+baselines, stopping rules and the learned adjacency) we report two one-sided tests (TOST) against a margin of $\pm0.05$
 macro-F1 --- about one additional correctly classified subject in a test fold of 17--18 --- using the
 Nadeau--Bengio corrected standard error, with Holm correction within each family, together with the
 90\% confidence interval and the minimum difference detectable with 80\% power. With the corrected
@@ -262,11 +283,12 @@ them, and ablations, leakage and permutation tests were moved onto them.
 (iii)~\emph{Matched training data.} Classical baselines were first fitted on training plus validation
 subjects; we added train-only fits and train + val GCN refits, and corrected the Nadeau--Bengio ratio.
 (iv)~\emph{Added analyses.} The background-relative PSWE definitions (Section~\ref{sec:pswe}), the
-stopping-rule sensitivity, the PSWE detector robustness and collinearity checks, and the equivalence tests
-were added after the corresponding results were known; their definitions, variants and margins were fixed
+stopping-rule sensitivity, the PSWE detector robustness and collinearity checks, the equivalence tests,
+the learned-adjacency GCN, occlusion importance and the two mixed-model cross-checks were added after the corresponding results were known; their definitions, variants and margins were fixed
 in the configuration before they were run. A7, A8 and the A11 PSWE rule grid were planned but run late.
-(v)~\emph{Not done.} Planned explainability analyses (integrated gradients, connectome and embedding
-plots) and calibration diagrams were not carried out.
+(v)~\emph{Changed or not done.} Planned integrated-gradients explanations were replaced by occlusion,
+which is model-agnostic and reads directly as lost probability for the true class; the planned connectome and embedding plots and calibration
+diagrams were not carried out.
 (vi)~\emph{Implementation details.} Hjorth activity in P4 was replaced by line length (it duplicates the
 variance); PSWEs are detected per channel rather than over averaged regions, with an MPF range set by us
 (the source does not report one); EEGNet's max-norm constraints were replaced by the shared weight decay

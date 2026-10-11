@@ -36,8 +36,15 @@ marginal means spanned only \mixSelEdgeRange{} (\mixSelMspatial{} spatial, \mixS
 \mixSelMhybrid{} hybrid). Subjects accounted for \mixSelShareSubject\% of the variance and
 subject~$\times$~representation for \mixSelShareSubjectxrepresentation\%, while subject~$\times$~graph
 variance was estimated at zero: individuals differ in which representation suits them, not in which
-graph does. On macro-F1, every pairwise comparison of graph types was formally equivalent within
-$\pm\eqMargin$ on both fold sets (TOST with the Nadeau--Bengio correction, Holm $p\le$ \eqGraphPMax{}
+graph does. A by-subject repeated-measures ANOVA on the same values gave essentially the same statistics
+(representation $F=\mixSelAovRepF$, graph $F=\mixSelAovEdgeF$; Greenhouse--Geisser $p\mixSelAovRepP$ and
+$p\mixSelAovEdgeP$). Modelling whether each subject was correctly classified, rather than the probability,
+weakened every effect but left the pattern intact: representation remained significant on both fold sets
+($F=\mixSelCorrRepF$, $p\mixSelCorrRepP$; confirmation $F=\mixConfCorrRepF$, $p\mixConfCorrRepP$), with
+P3 again highest (mean proportion correct \mixSelCorrMPThree{} and \mixConfCorrMPThree{}), whereas the graph
+effect was marginal on the selection folds ($p\mixSelCorrEdgeP$, range \mixSelCorrEdgeRange{}) and absent on
+the confirmation folds ($p\mixConfCorrEdgeP$). On macro-F1, every pairwise comparison of graph types was formally equivalent within
+$\pm\eqMargin$ on both fold sets (TOST with the Nadeau--Bengio correction, largest Holm-corrected $p\eqGraphPMax$
 after correction; all corrected 90\% intervals within $\pm$\eqGraphCiMax{}; Table~\ref{tab:equivalence}).
 This is positive evidence that the choice of graph does not matter at that resolution, not merely an
 absence of significance.
@@ -114,6 +121,18 @@ recordings were most often misclassified as AD, except with PSWE features, where
 often taken for controls (Figure~\ref{fig:confusion}). The ROC and precision--recall
 curves show the same ordering (Figure~\ref{fig:roc}). The models were poorly calibrated (expected
 calibration error \bestEce{}), so their probabilities should not be read as clinical risks.
+
+\paragraph{What the best model relies on.} Occluding one wavelet sub-band on every electrode cost
+far more than occluding any single electrode (Figure~\ref{fig:importance}). The theta sub-band
+\occTopBand{} mattered most (drop in true-class probability \occTopBandDrop{}, 95\% CI
+\occTopBandLo{}--\occTopBandHi{}), followed by \occSecondBand{} (\occSecondBandDrop{}); of the five bands,
+\occNBandPositive{} had confidence intervals above zero, and the slowest, \occBottomBand{}, mattered least
+(\occBottomBandDrop{}). The classes leaned on different bands: controls on \occBandCN{} (\occBandCNDrop{}),
+FTD on \occBandFTD{} (\occBandFTDDrop{}) and AD on \occBandAD{} (\occBandADDrop{}). No single electrode
+was critical (largest drop \occTopDrop{}; the four most important were \occTopElectrodes{}, and
+\occNElecPositive{} of 19 had intervals above zero), so the information is spread across the scalp. That the frontopolar electrodes rank first
+may partly reflect residual ocular activity after ICA, and these importances describe this model rather
+than the topography of disease.
 
 \subsection{Graph models do not beat their non-graph twins}\label{sec:res-baselines}
 Table~\ref{tab:baselines} compares every representation's best GCN cell with classical classifiers
@@ -193,6 +212,17 @@ preprocessing changes but still not significant. None of the ablations could be 
 either (median detectable difference \eqAblMde{}): they exclude large effects of these design choices,
 not small ones. The selection-fold ablations
 (Table~\ref{tab:ablations-main}) led to the same conclusions.
+
+\paragraph{A learned graph does no better.} Letting the GCN learn its adjacency, starting from the
+spatial graph, changed macro-F1 by between \learnDeltaMin{} and \learnDeltaMax{} across the seven
+representations on the selection folds (P3: \learnPThree{}, difference \learnPThreeDelta{}) and by
+\learnConfDelta{} for P3 on the confirmation folds (\learnConfPThree{}). The ranking of representations
+was unchanged (Spearman $\rho=\learnRho$ with the fixed spatial graph). Of the \eqLearnN{} comparisons,
+\eqLearnNEquiv{} were formally equivalent within $\pm\eqMargin$ (P1, P2, P6, P7); the other
+four (P3, P4 and P5, and P3 on the confirmation folds) had corrected 90\% intervals that included zero
+but reached $\pm$\eqLearnCiMax{}, and were inconclusive rather than different
+(Table~\ref{tab:equivalence}). A data-driven graph therefore did not
+recover information that the fixed constructions missed.
 
 \subsection{The stopping rule does not drive the results}\label{sec:res-es}
 Early stopping selected a median of epoch \bestEpochMedian{}. Re-running the whole grid with patience
