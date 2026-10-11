@@ -9,7 +9,8 @@ leading. Second, how the graph is built matters little: its effect on macro-F1 d
 across fold sets, and although it is detectable per subject, the three graph types differ by less than
 0.01 in the probability assigned to the true class, in a direction that differs between cohorts; the
 GCN is not significantly better than a random forest or SVM trained on the same features and the same
-subjects. These conclusions held under three stopping rules, with \SI{5}{\second} to \SI{20}{\second}
+subjects, and end-to-end deep EEG networks (EEGNet, a 1D-CNN) on raw windows did not reach it
+either. These conclusions held under three stopping rules, with \SI{5}{\second} to \SI{20}{\second}
 windows and without ICA. Third, splitting windows instead
 of subjects inflates subject-level macro-F1 from about 0.6 to about 0.98 on the identical pipeline,
 reproducing the top of the published range. Fourth, the
