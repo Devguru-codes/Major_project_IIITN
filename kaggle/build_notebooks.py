@@ -6,10 +6,13 @@ run identical code. Re-run after editing, then `kaggle kernels push -p <folder>`
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 HERE = Path(__file__).parent
 OWNER = "dev123123456"            # account behind ~/.kaggle/access_token
+# second account (CPU only) for NB20a/b; set EEGREP_KAGGLE_OWNER to its username before building
+ALT_OWNER = os.environ.get("EEGREP_KAGGLE_OWNER", OWNER)
 N_SHARDS = 3
 GRID_SHARDS = ["P1,P5", "P2,P3,P4", "P6,P7"]   # P5 (1280-dim) is the heaviest; balance by cost
 # (grid-rank index of the cell, ablations, n permutations, first permutation) — ≤ 5 kernels (Kaggle CPU limit)
@@ -70,12 +73,12 @@ def notebook(title: str, intro: str, cells: list[str], extras: str) -> dict:
 
 
 def write_kernel(slug: str, title: str, nb: dict, gpu: bool = False, internet: bool = True,
-                 kernel_sources: list[str] | None = None) -> None:
+                 kernel_sources: list[str] | None = None, owner: str | None = None) -> None:
     d = HERE / slug
     d.mkdir(exist_ok=True)
     fname = slug.replace("-", "_") + ".ipynb"
     (d / fname).write_text(json.dumps(nb, indent=1), encoding="utf-8")
-    meta = {"id": f"{OWNER}/eegrep-{slug}", "title": f"eegrep {title}", "code_file": fname,
+    meta = {"id": f"{owner or OWNER}/eegrep-{slug}", "title": f"eegrep {title}", "code_file": fname,
             "language": "python", "kernel_type": "notebook", "is_private": True, "enable_gpu": gpu,
             "enable_tpu": False, "enable_internet": internet, "dataset_sources": [],
             "competition_sources": [], "kernel_sources": kernel_sources or []}
@@ -540,6 +543,30 @@ def main():
          f"sh(f'{{PY}} refit-check --cache {{CACHE}} --folds {{FOLDS}} --runs {grid_runs} --tag main "
          f"--pipeline P3 --edge spatial --out {{WORK}}/refit', log=f'{{WORK}}/refit.log')"],
         extras="dev,stats"), kernel_sources=nb02)
+
+    # ---- NB20a/b: the same two checks as NB20, split for the second (CPU-only) account. That account cannot read
+    # the first account's private outputs, so NB20b rebuilds the feature cache from OpenNeuro itself ----
+    write_kernel("nb20a-simulation", "nb20a simulation", notebook(
+        "NB20a — calibration of the Nadeau-Bengio-adjusted omnibus F by simulation (CPU, no data)",
+        "False-positive rate and power of the uncorrected and adjusted repeated-measures F under the study's "
+        "5 x 5 subject-level resampling of 88 simulated subjects.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_review3.py "
+         "tests/test_review2.py', log=f'{WORK}/pytest_nb20a.txt')",
+         "sh(f'{PY} simulate-omnibus --n-sim 300 --out {WORK}/simulation', log=f'{WORK}/simulation.log')"],
+        extras="dev,stats"), owner=ALT_OWNER)
+    write_kernel("nb20b-refit", "nb20b refit", notebook(
+        "NB20b — do the occlusion re-fits reproduce the stored runs? (CPU; rebuilds the cache from OpenNeuro)",
+        "Downloads ds004504, runs the fixed preamble and feature cache for all 88 subjects (as NB01 + NB02, "
+        "unsharded), then re-fits P3 x spatial on the 25 selection splits with the main-grid seeds and compares the "
+        "subject probabilities with the stored runs. Small differences can also come from library versions.",
+        ["sh(f'{PY} download --dest /tmp/ds004504', log=f'{WORK}/download.log')\n"
+         "shutil.copy('/tmp/ds004504/participants.tsv', f'{WORK}/participants.tsv')",
+         "sh(f'{PY} preprocess --bids /tmp/ds004504 --out /tmp/preproc --n-jobs 4', log=f'{WORK}/preprocess.log')",
+         "sh(f'{PY} cache --preproc /tmp/preproc --participants {WORK}/participants.tsv --out /tmp/cache', "
+         "log=f'{WORK}/cache.log')",
+         f"sh(f'{{PY}} refit-check --cache /tmp/cache --folds {{SRC}}/splits/folds_ds004504.json --runs {grid_runs} "
+         f"--tag main --pipeline P3 --edge spatial --out {{WORK}}/refit', log=f'{{WORK}}/refit.log')"],
+        extras="preprocess,dev,stats"), owner=ALT_OWNER)
 
     # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
     write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(

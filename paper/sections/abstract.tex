@@ -1,26 +1,22 @@
 \textit{Objective.} EEG classification of Alzheimer's disease (AD) and frontotemporal dementia (FTD) on one
 public dataset reports accuracies from about 50\% to 99\%, but studies change representation, graph, model and
-evaluation protocol at once. We isolated representation and graph construction under a fixed graph
-neural network, and tested a candidate EEG marker linked to blood--brain-barrier dysfunction.
+evaluation protocol at once. We isolated representation and graph construction under a fixed graph neural
+network, and tested a blood--brain-barrier-linked EEG marker.
 \textit{Approach.} On OpenNeuro ds004504 (36 AD, 23 FTD, 29 controls) we crossed seven node-feature
 representations with three graph constructions under one compact, untuned graph convolutional network, on 25
-frozen subject-level splits (\nMainRuns{} runs) and 25 confirmation splits, with a by-subject mixed
-model, overlap-corrected and equivalence tests, matched non-graph and deep-learning baselines, 16 ablations,
-permutation and leakage experiments, and external validation on a Parkinson's disease cohort (ds004584,
-$n=149$). We also characterised paroxysmal slow-wave events (PSWEs).
-\textit{Main results.} Representation had the largest effect in every analysis (by-subject mixed model
-$F(\mixSelRepDf,\mixSelRepDenDf)=\mixSelRepF$; \mixConfRepF{} on confirmation splits; \mixExtRepF{} externally)
-and its ordering replicated across independent splits ($\rho=\confRankRho$); allowing for overlapping training
-sets, it remained significant externally ($p\nbExtRepP$) but not on ds004504 ($p\nbSelRepP$; confirmation $p\nbConfRepP$). Graph construction
-had no detectable effect, averaged graph types were equivalent within $\pm\eqMargin$ macro-F1, and a learned
-graph did no better. The best configuration (wavelet features, spatial graph) reached macro-F1 \confFOne{}
-(95\% CI \confFOneCiLo{}--\confFOneCiHi{}; permutation $p=\cpermPThreespatialP$); non-graph and deep-learning
-baselines did not differ significantly. Window-level splitting raised macro-F1 to
-\cleakPThreespatialLeakySubj{}. The representation ranking did not transfer to Parkinson's disease
-($\rho=\extRepsRho$). PSWEs were more frequent in AD (rate ratio \psweAdjADRR{}) and FTD (\psweAdjFTDRR{}) but
-not in Parkinson's disease, and the excess tracked background slowing ($\rho=\psweSlowRho$) under every event
-rule tested; among patients whose slowing overlapped with controls' it was not detectable.
+frozen subject-level splits and 25 confirmation splits, with matched baselines, 16 ablations, leakage and
+permutation experiments, external validation on a Parkinson's disease cohort ($n=149$), and analysis of
+paroxysmal slow-wave events (PSWEs).
+\textit{Main results.} Representation had the largest effect in every analysis and its ordering replicated
+across fold sets ($\rho=\confRankRho$). In the planned split-level analysis, adjusted for overlapping training
+sets, it was significant externally ($p\nbExtRepP$) but not on ds004504 ($p\nbSelRepP$, $p\nbConfRepP$); with
+subjects as units it was significant everywhere. Graph construction had a detectable but negligible effect,
+averaged graph types were equivalent within $\pm\eqMargin$ macro-F1, and a learned graph did no better. The
+best configuration (wavelet features, spatial graph) reached macro-F1 \confFOne{} (95\% CI
+\confFOneCiLo{}--\confFOneCiHi{}); non-graph and deep-learning baselines did not differ significantly.
+Window-level splitting raised macro-F1 to \cleakPThreespatialLeakySubj{}. PSWEs were more frequent in AD (rate ratio \psweAdjADRR{}) and FTD
+(\psweAdjFTDRR{}) but not in Parkinson's disease; the excess tracked background slowing
+($\rho=\psweSlowRho$) and was not detectable among patients whose slowing overlapped with controls'.
 \textit{Significance.} The evaluation protocol moves reported performance far more than any modelling choice
-we tested, representation matters more than graph construction, and the best representation is
-disease-specific. Fixed-threshold PSWEs on scalp EEG mainly index background slowing. Code, frozen folds and
-all raw runs are released.
+we tested, and representation matters more than graph construction. Fixed-threshold PSWEs on scalp EEG
+mainly index background slowing. Code, folds and all raw runs are released.

@@ -1,0 +1,14 @@
+{
+  "id": "dev123123456/eegrep-nb20b-refit",
+  "title": "eegrep nb20b refit",
+  "code_file": "nb20b_refit.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}

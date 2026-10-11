@@ -507,6 +507,9 @@ if lfiles:
     put("learnPThreeDelta", round(lm.get("P3", np.nan) - rs.get("P3", np.nan), 3) + 0.0, "{:+.3f}")
     put("learnNRuns", len(L), "{:d}")
     put("cpuHoursLearned", L["seconds"].sum() / 3600, "{:.1f}")
+    # occlusion + its re-fit check: 2 x 25 re-trainings of P3 x spatial, timed by the stored main-grid runs
+    _p3 = ref[(ref.pipeline == "P3") & (ref.edge == "spatial")]["seconds"]
+    put("cpuHoursOcc", 2 * 25 * _p3.mean() / 3600, "{:.1f}")
 
 # ---- occlusion importance (NB16) ----
 occ_f = REP / "explain" / "occlusion_summary.csv"

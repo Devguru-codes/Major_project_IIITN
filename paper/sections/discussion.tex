@@ -9,11 +9,12 @@ leading and the ordering replicated across fold sets. These tests do not allow f
 training sets; with the conservative Nadeau--Bengio-type adjustment the effect was not significant on
 ds004504 ($p\nbSelRepP$ and $p\nbConfRepP$) but was in the external cohort ($p\nbExtRepP$), so the existence
 of a representation effect is supported while the size of individual differences is not established.
-Second, how the graph is built had no effect we could detect at the resolution of this cohort: averaged over
-representations the three graph constructions were formally equivalent within $\pm\eqMargin$ macro-F1,
-within single representations the comparisons were inconclusive rather than different, and the small
-per-subject difference spans at most \mixSelEdgeRange{} in the probability assigned to the true class and changes
-direction between cohorts. The GCN showed no detectable advantage over a random forest or SVM trained
+Second, how the graph is built had a detectable but negligible effect: with subjects as units it was
+statistically significant but spans at most \mixSelEdgeRange{} in the probability assigned to the true class,
+it changes direction between cohorts and does not survive the adjustment for overlapping training sets,
+averaged over representations the three graph constructions were formally equivalent within
+$\pm\eqMargin$ macro-F1, and within single representations the comparisons were inconclusive rather than
+different. The GCN showed no detectable advantage over a random forest or SVM trained
 on the same features and subjects, and end-to-end deep EEG networks (EEGNet, a 1D-CNN) on raw windows
 did not reach it either; these comparisons, however, could only have detected differences of about
 \eqGvcMde{}--\eqDeepMde{} macro-F1, so moderate advantages in either direction remain possible. These conclusions held under three stopping rules, with \SI{5}{\second} to \SI{20}{\second}
@@ -80,7 +81,7 @@ these results suggest that, in resting scalp EEG with diffuse slowing, a median 
 
 We draw three cautious conclusions. First, a fixed-threshold PSWE rate should not be read as evidence
 of BBB dysfunction without controlling for background slowing. Second, background-relative
-definitions are needed if PSWEs are to capture transient cortical dysfunction, although they bring
+definitions appear necessary if PSWEs are to capture transient cortical dysfunction, although they bring
 their own floor effect in very slow recordings, which we observed in the Hz-drop variants. Third, our
 data cannot test the BBB link itself: ds004504 contains no BBB imaging, the original detection
 details include parameters we could not verify from the full text, and Milikovsky et al.\ studied
@@ -112,13 +113,13 @@ not diagnostic tools. The permutation test and the confirmation folds show only 
 not an artefact of choosing the best of 21 configurations.
 
 \begin{table}[t]
-\centering\small
+\centering\footnotesize
 \caption{Published subject-wise results on the AHEPA AD/FTD/control EEG cohort, verified against each
 paper's full text, and this study. Accuracy unless stated. LNSO: leave-N-subjects-out; LOSO:
 leave-one-subject-out. Results are not directly comparable: tasks, scored units and validation differ.}
 \label{tab:published}
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{p{2.3cm}p{2.2cm}p{3.0cm}p{1.8cm}p{2.6cm}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{2.1cm}>{\raggedright\arraybackslash}p{3.1cm}>{\raggedright\arraybackslash}p{1.8cm}>{\raggedright\arraybackslash}p{2.6cm}}
 \toprule
 Study & Task & Validation & Scored unit & Result \\
 \midrule
