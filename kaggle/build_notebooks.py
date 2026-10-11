@@ -476,6 +476,17 @@ def main():
             "and for P3 on the confirmation folds.",
             [t16, find_cache] + jobs, extras="dev,stats"), kernel_sources=nb02)
 
+    # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
+    write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(
+        "NB17 — equivalence tests including the learned-adjacency family (CPU)",
+        "Reruns the TOST/MDE table of NB15 from the committed runs, now with the learned-adjacency GCN "
+        "(NB16 shards 1-2) compared with the fixed spatial graph on the selection and confirmation folds.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_equivalence.py', "
+         "log=f'{WORK}/pytest_nb17.txt')",
+         "import glob\nassert len(glob.glob(f'{SRC}/reports/learned/learned_runs_s*.jsonl')) == 2",
+         "sh(f'{PY} equivalence --reports {SRC}/reports --out {WORK}/equivalence', log=f'{WORK}/equivalence.log')"],
+        extras="dev,stats"))
+
     # ---- PSWE robustness: zero-padded MPF grid and artefact rejection (both cohorts) ----
     write_kernel("nb14-pswe-robust", "nb14 pswe robust", notebook(
         "NB14 — fixed-threshold PSWE robustness: zero-padded MPF and artefact rejection (CPU)",

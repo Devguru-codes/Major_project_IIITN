@@ -1,0 +1,125 @@
+{
+ "outcome": "correct",
+ "n_rows": 1848,
+ "n_scores": 9240,
+ "n_subjects": 88,
+ "converged": true,
+ "seconds": 2.3146839141845703,
+ "variance_components": {
+  "subject": {
+   "var": 0.0662084019090312,
+   "share": 0.4797348477048731
+  },
+  "subject x graph": {
+   "var": 8.510825127249496e-05,
+   "share": 0.0006166799497552755
+  },
+  "subject x representation": {
+   "var": 0.06312713163470589,
+   "share": 0.4574084860472997
+  },
+  "residual (subject x cell)": {
+   "var": 0.008589765882862041,
+   "share": 0.06223998629807186
+  }
+ },
+ "fixed_effects": {
+  "Intercept": 0.552116,
+  "C(pipeline, Sum)[S.P1]": 0.034848,
+  "C(pipeline, Sum)[S.P2]": -0.056818,
+  "C(pipeline, Sum)[S.P3]": 0.081818,
+  "C(pipeline, Sum)[S.P4]": -0.080303,
+  "C(pipeline, Sum)[S.P5]": 0.015152,
+  "C(pipeline, Sum)[S.P6]": 0.055303,
+  "C(edge, Sum)[S.functional]": -0.00119,
+  "C(edge, Sum)[S.hybrid]": 0.000108,
+  "C(true_class)[T.1]": -0.268473,
+  "C(true_class)[T.2]": 0.142136,
+  "C(pipeline, Sum)[S.P1]:C(edge, Sum)[S.functional]": 0.003463,
+  "C(pipeline, Sum)[S.P2]:C(edge, Sum)[S.functional]": -0.000325,
+  "C(pipeline, Sum)[S.P3]:C(edge, Sum)[S.functional]": -0.016234,
+  "C(pipeline, Sum)[S.P4]:C(edge, Sum)[S.functional]": 0.027706,
+  "C(pipeline, Sum)[S.P5]:C(edge, Sum)[S.functional]": -0.010931,
+  "C(pipeline, Sum)[S.P6]:C(edge, Sum)[S.functional]": -0.005628,
+  "C(pipeline, Sum)[S.P1]:C(edge, Sum)[S.hybrid]": -0.002381,
+  "C(pipeline, Sum)[S.P2]:C(edge, Sum)[S.hybrid]": 0.005195,
+  "C(pipeline, Sum)[S.P3]:C(edge, Sum)[S.hybrid]": 0.005195,
+  "C(pipeline, Sum)[S.P4]:C(edge, Sum)[S.hybrid]": -0.005411,
+  "C(pipeline, Sum)[S.P5]:C(edge, Sum)[S.hybrid]": -0.007684,
+  "C(pipeline, Sum)[S.P6]:C(edge, Sum)[S.hybrid]": 0.004437
+ },
+ "terms": [
+  {
+   "term": "representation",
+   "df": 6,
+   "chi2": 31.16921695097663,
+   "p_chi2": 2.353136356928436e-05,
+   "F": 5.194869491829438,
+   "den_df": 510,
+   "p": 3.340053597510069e-05
+  },
+  {
+   "term": "graph",
+   "df": 2,
+   "chi2": 0.1743756441329052,
+   "p_chi2": 0.9165049396146364,
+   "F": 0.0871878220664526,
+   "den_df": 170,
+   "p": 0.9165458949414059
+  },
+  {
+   "term": "interaction",
+   "df": 12,
+   "chi2": 24.225949919126588,
+   "p_chi2": 0.018948160871853113,
+   "F": 2.0188291599272157,
+   "den_df": 1020,
+   "p": 0.019963800156649725
+  },
+  {
+   "term": "true class",
+   "df": 2,
+   "chi2": 29.02003965988589,
+   "p_chi2": 4.993194179033773e-07,
+   "F": 14.510019829942944,
+   "den_df": 85,
+   "p": 3.789691558378556e-06
+  }
+ ],
+ "rm_anova": [
+  {
+   "Source": "pipeline",
+   "SS": 6.170606060606059,
+   "ddof1": 6,
+   "ddof2": 522,
+   "F": 5.220229257793572,
+   "p-unc": 3.1113236626860445e-05,
+   "eps-GG": 0.7560225857939689,
+   "p-GG-corr": 0.0002111660375346425,
+   "np2": 0.05660611885057104
+  },
+  {
+   "Source": "edge",
+   "SS": 0.0016017316017315029,
+   "ddof1": 2,
+   "ddof2": 174,
+   "F": 0.09365453434580898,
+   "p-unc": 0.9106431585652327,
+   "eps-GG": 0.8433034675441196,
+   "p-GG-corr": 0.8799543604813782,
+   "np2": 0.0010753313182980035
+  },
+  {
+   "Source": "pipeline * edge",
+   "SS": 0.20809523809523767,
+   "ddof1": 12,
+   "ddof2": 1044,
+   "F": 2.0065973505040335,
+   "p-unc": 0.020860888636016334,
+   "eps-GG": 0.5943068631183209,
+   "p-GG-corr": 0.05091482085976585,
+   "np2": 0.022544366487824964
+  }
+ ],
+ "n_pairs_sig_holm": 4
+}
