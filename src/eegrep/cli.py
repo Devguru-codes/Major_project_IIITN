@@ -137,6 +137,34 @@ def cmd_equivalence(a, cfg):
     print(s.round(3).to_string())
 
 
+def cmd_severity(a, cfg):
+    from .data.participants import analysis_table, load_participants
+    from .stats_could import severity
+    from .stats_grid import load_runs
+
+    ds = cfg["dataset"]
+    part = analysis_table(load_participants(a.participants, ds["group_to_label"], ds.get("participant_columns")))
+    sets = {name: load_runs(paths, tag=tag) for name, tag, paths in
+            (("selection", "main", a.runs), ("confirmation", "confirm", a.confirm_runs or []))
+            if paths}
+    subj, summ, tests, reps = severity(sets, part, ds["class_names"], (a.pipeline, a.edge), a.mild_min)
+    out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    subj.to_csv(out / "severity_subjects.csv", index=False); summ.to_csv(out / "severity_summary.csv", index=False)
+    tests.to_csv(out / "severity_tests.csv", index=False); reps.to_csv(out / "severity_by_representation.csv", index=False)
+    print(summ.round(3).to_string()); print(tests.round(4).to_string())
+
+
+def cmd_deep_dropout(a, cfg):
+    from .stats_could import dropout_sensitivity
+    from .stats_grid import load_runs
+
+    tab = dropout_sensitivity(load_runs(a.main_runs, tag="main"), load_runs(a.deep_runs),
+                              load_runs(a.runs, tag="deep_eegnet_drop025"))
+    Path(a.out).mkdir(parents=True, exist_ok=True)
+    tab.to_csv(Path(a.out) / "eegnet_dropout.csv", index=False)
+    print(tab.round(4).to_string())
+
+
 def cmd_classical(a, cfg):
     import pandas as pd
 
@@ -326,6 +354,14 @@ def main(argv=None):
     s = sub.add_parser("explain"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
     s.add_argument("--out", required=True); s.add_argument("--pipeline", default="P3"); s.add_argument("--edge", default="spatial")
     s.set_defaults(fn=cmd_explain)
+    s = sub.add_parser("severity"); s.add_argument("--participants", required=True)
+    s.add_argument("--runs", nargs="+", required=True); s.add_argument("--confirm-runs", nargs="*")
+    s.add_argument("--pipeline", default="P3"); s.add_argument("--edge", default="spatial")
+    s.add_argument("--mild-min", type=int, default=21); s.add_argument("--out", required=True)
+    s.set_defaults(fn=cmd_severity)
+    s = sub.add_parser("deep-dropout"); s.add_argument("--runs", nargs="+", required=True)
+    s.add_argument("--deep-runs", nargs="+", required=True); s.add_argument("--main-runs", nargs="+", required=True)
+    s.add_argument("--out", required=True); s.set_defaults(fn=cmd_deep_dropout)
     s = sub.add_parser("equivalence"); s.add_argument("--reports", default="reports")
     s.add_argument("--out", required=True); s.set_defaults(fn=cmd_equivalence)
     s = sub.add_parser("classical");s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)

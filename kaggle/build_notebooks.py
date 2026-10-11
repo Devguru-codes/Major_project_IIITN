@@ -476,6 +476,40 @@ def main():
             "and for P3 on the confirmation folds.",
             [t16, find_cache] + jobs, extras="dev,stats"), kernel_sources=nb02)
 
+    # ---- NB18: could items. s0 (GPU, cap 0.75 h): EEGNet with cross-subject dropout 0.25 + its comparisons and
+    # the equivalence table including that family; s1 (CPU): severity-stratified results (MMSE, analysis only) ----
+    t18 = ("sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_could.py "
+           "tests/test_equivalence.py tests/test_model_train.py', log=f'{WORK}/pytest_nb18.txt')")
+    grid_runs = "{SRC}/reports/grid/runs_s0.jsonl {SRC}/reports/grid/runs_s1.jsonl {SRC}/reports/grid/runs_s2.jsonl"
+    write_kernel("nb18-could-s0", "nb18 could s0", notebook(
+        "NB18 s0 — EEGNet with cross-subject dropout 0.25 (GPU, hard cap 0.75 h)",
+        "Same EEGNet-8,2, splits, training rule and aggregation as NB06, with dropout 0.25 (the original paper's "
+        "cross-subject setting) instead of the shared 0.5; compared with the NB06 EEGNet and the GCN in its own "
+        "Holm family, and added to the equivalence table as a separate family.",
+        [t18, find_cache + "\nimport torch\nassert torch.cuda.is_available(), 'no GPU attached: refusing to run on CPU'\n"
+         "print(torch.cuda.get_device_name(0))",
+         "sh(f'{PY} grid --cache {CACHE} --folds {FOLDS} --pipelines P5 --edges identity --tag deep_eegnet_drop025 "
+         "--set model.arch=eegnet model.dropout=0.25 --device cuda "
+         "--out {WORK}/deep_sensitivity/eegnet_drop025_runs.jsonl --max-hours 0.75', log=f'{WORK}/eegnet_drop025.log')",
+         f"sh(f'{{PY}} deep-dropout --runs {{WORK}}/deep_sensitivity/eegnet_drop025_runs.jsonl "
+         f"--deep-runs {{SRC}}/reports/deep/deep_runs_s0.jsonl --main-runs {grid_runs} "
+         f"--out {{WORK}}/deep_sensitivity', log=f'{{WORK}}/deep_dropout.log')",
+         "import shutil\nshutil.copytree(f'{SRC}/reports', f'{WORK}/reports_tmp')\n"
+         "shutil.copytree(f'{WORK}/deep_sensitivity', f'{WORK}/reports_tmp/deep_sensitivity')\n"
+         "sh(f'{PY} equivalence --reports {WORK}/reports_tmp --out {WORK}/equivalence', log=f'{WORK}/equivalence.log')\n"
+         "shutil.rmtree(f'{WORK}/reports_tmp')"],
+        extras="dev,stats"), gpu=True, kernel_sources=nb02)
+    write_kernel("nb18-could-s1", "nb18 could s1", notebook(
+        "NB18 s1 — severity-stratified results (CPU; MMSE for analysis only)",
+        "Patients split at MMSE >= 21 (mild) vs <= 20 (moderate-to-severe); per-subject correctness, true-class "
+        "probability and share predicted CN for P3 x spatial on the selection and confirmation folds, and per "
+        "representation (descriptive). Mann-Whitney and Spearman tests, Holm-corrected.",
+        [t18, find_cache,
+         f"sh(f'{{PY}} severity --participants {{PART}} --runs {grid_runs} "
+         "--confirm-runs {SRC}/reports/confirm/confirm_runs_s0.jsonl {SRC}/reports/confirm/confirm_runs_s1.jsonl "
+         "--out {WORK}/severity', log=f'{WORK}/severity.log')"],
+        extras="dev,stats"), kernel_sources=nb02)
+
     # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
     write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(
         "NB17 — equivalence tests including the learned-adjacency family (CPU)",
