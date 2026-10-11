@@ -71,6 +71,33 @@ def occlusion(cache, folds, cfg, pipeline: str = "P3", edge: str = "spatial", ma
     return pd.DataFrame(rows, columns=["seed", "fold", "subject", "true_class", "kind", "unit", "drop"])
 
 
+def refit_check(cache, folds, cfg, stored: pd.DataFrame, pipeline: str = "P3", edge: str = "spatial",
+                max_repeats: int | None = None) -> pd.DataFrame:
+    """Do the occlusion re-fits reproduce the stored runs? Retrains every split exactly as occlusion() does and
+    compares the subject probabilities with the stored predictions (stored: load_runs rows of the same cell)."""
+    cfg = apply_overrides(cfg, {"graph.edge": edge})
+    X = cache.X(pipeline)
+    rows = []
+    for rep in folds["repeats"][:max_repeats]:
+        seed = rep["seed"]
+        A = cache.adjacency(cfg, seed=seed)
+        for k, f in enumerate(rep["folds"]):
+            idx = tuple(cache.window_indices(f[s]) for s in ("train", "val", "test"))
+            res = train_one(X, A, cache.subject, cache.label, *idx, cfg, seed=seed * 100 + k,
+                            n_classes=len(cfg["dataset"]["class_names"]))
+            ref = stored[(stored.seed == seed) & (stored.fold == k)]
+            assert len(ref) == 1, (seed, k)
+            ref = ref.iloc[0]
+            p_new = dict(zip(res["preds"]["subjects"], np.asarray(res["preds"]["prob"])))
+            p_old = dict(zip(ref.preds["subjects"], np.asarray(ref.preds["prob"])))
+            assert set(p_new) == set(p_old)
+            diff = max(float(np.abs(p_new[s] - p_old[s]).max()) for s in p_new)
+            agree = float(np.mean([p_new[s].argmax() == p_old[s].argmax() for s in p_new]))
+            rows.append({"seed": seed, "fold": k, "max_abs_prob_diff": diff, "argmax_agreement": agree,
+                         "macro_f1_refit": res["subject"]["macro_f1"], "macro_f1_stored": ref.macro_f1})
+    return pd.DataFrame(rows)
+
+
 def summarise(occ: pd.DataFrame, class_names: list[str]) -> pd.DataFrame:
     """Mean drop per unit, overall and per true class, with a subject-bootstrap 95% CI (overall)."""
     per_subj = occ.groupby(["kind", "unit", "subject", "true_class"], as_index=False)["drop"].mean()

@@ -173,6 +173,37 @@ def cmd_omnibus(a, cfg):
     print(tab.round(4).to_string())
 
 
+def cmd_simulate_omnibus(a, cfg):
+    import pandas as pd
+
+    from .stats_simulation import simulate, summarise
+
+    settings = [(7, 0.0), (2, 0.0), (7, 0.25), (7, 0.5)]
+    sims = pd.concat([simulate(a.n_sim, k=k, spread=s, seed=10 * i) for i, (k, s) in enumerate(settings)],
+                     ignore_index=True)
+    Path(a.out).mkdir(parents=True, exist_ok=True)
+    sims.to_csv(Path(a.out) / "omnibus_simulation.csv", index=False)
+    summ = summarise(sims)
+    summ.to_csv(Path(a.out) / "omnibus_simulation_summary.csv", index=False)
+    print(summ.round(3).to_string())
+
+
+def cmd_refit_check(a, cfg):
+    from .cache import FeatureCache
+    from .explain import refit_check
+    from .splits import load_folds
+    from .stats_grid import load_runs
+
+    cache = FeatureCache(a.cache)
+    folds = load_folds(a.folds, sorted(set(cache.subject)))
+    runs = load_runs(a.runs, tag=a.tag)
+    stored = runs[(runs.pipeline == a.pipeline) & (runs.edge == a.edge)]
+    tab = refit_check(cache, folds, cfg, stored, a.pipeline, a.edge)
+    Path(a.out).mkdir(parents=True, exist_ok=True)
+    tab.to_csv(Path(a.out) / "refit_check.csv", index=False)
+    print(tab.round(5).to_string())
+
+
 def cmd_classical(a, cfg):
     import pandas as pd
 
@@ -362,6 +393,12 @@ def main(argv=None):
     s = sub.add_parser("explain"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
     s.add_argument("--out", required=True); s.add_argument("--pipeline", default="P3"); s.add_argument("--edge", default="spatial")
     s.set_defaults(fn=cmd_explain)
+    s = sub.add_parser("simulate-omnibus"); s.add_argument("--n-sim", type=int, default=300)
+    s.add_argument("--out", required=True); s.set_defaults(fn=cmd_simulate_omnibus)
+    s = sub.add_parser("refit-check"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
+    s.add_argument("--runs", nargs="+", required=True); s.add_argument("--tag", default="main")
+    s.add_argument("--pipeline", default="P3"); s.add_argument("--edge", default="spatial")
+    s.add_argument("--out", required=True); s.set_defaults(fn=cmd_refit_check)
     s = sub.add_parser("omnibus"); s.add_argument("--runs", nargs="+", required=True)
     s.add_argument("--tag", default="main"); s.add_argument("--out", required=True)
     s.add_argument("--prefix", required=True); s.set_defaults(fn=cmd_omnibus)
