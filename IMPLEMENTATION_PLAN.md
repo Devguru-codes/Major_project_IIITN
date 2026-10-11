@@ -594,3 +594,17 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
   - Table 3 p cells fixed.
   - New text: MDE stated as 0.18–0.25; clinical framing; medication/subtype/biomarker limitation; BIDS A1–A2 vs README Cz note; analysis-status table (Table S).
   - Stopping-rule results, severity and the baselines table moved to the supplement. The main text stays about 24 pages despite the additions.
+
+### Fourth internal review (2026-10-12): must and should fixes (NB20). Fixed before running.
+- **S1. Calibration of the NB-adjusted omnibus F by simulation.**
+  - Design:
+    - 88 subjects (36/23/29); k noisy views of one latent class signal (dim 10, separation 0.35, noise 1.5);
+    - 5×5 stratified subject-level CV, with 20% of each training set held out;
+    - logistic regression (C = 0.5); per-split macro-F1; one-way RM-F, uncorrected (GG) and NB-adjusted.
+  - Settings: null k = 7 and k = 2 (equal noise); alternatives k = 7 with noise spread ±25% and ±50%. 300 datasets each, α = 0.05.
+- **R1.2. Re-fit check.** P3×spatial is re-fitted on all 25 selection splits with the main-grid seeds (as occlusion does). Reported: the max absolute probability difference vs the stored runs, argmax agreement, and macro-F1.
+- **Text fixes.**
+  - M1: the graph effect is "detectable but negligible" (not "no effect").
+  - M2: the planned analysis gets equal weight in the abstract.
+  - The Figure 3 caption is corrected.
+  - Smaller fixes: abstract ≤ 300 words, Table 5 typesetting, the data/code statement, compute hours, "(uncorrected)" in the supplement, the Introduction wording, a footnote on the README MMSE SD, and "suggest" in Section 5.4.

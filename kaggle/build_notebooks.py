@@ -527,6 +527,20 @@ def main():
         + ["sh(f'{PY} equivalence --reports {SRC}/reports --out {WORK}/equivalence', log=f'{WORK}/equivalence.log')"],
         extras="dev,stats"))
 
+    # ---- NB20: third-review checks. Calibration of the NB-adjusted omnibus F by simulation; occlusion re-fits ----
+    write_kernel("nb20-review3", "nb20 review3", notebook(
+        "NB20 — third-review checks: calibration of the Nadeau-Bengio-adjusted omnibus F; occlusion re-fit check (CPU)",
+        "Simulated false-positive rate and power of the uncorrected and adjusted repeated-measures F under the "
+        "study's 5 x 5 subject-level resampling (88 subjects); and whether the best cell re-fitted with the main-grid "
+        "seeds (as the occlusion analysis does) reproduces the stored predictions of all 25 selection splits.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_review3.py "
+         "tests/test_review2.py', log=f'{WORK}/pytest_nb20.txt')",
+         find_cache,
+         "sh(f'{PY} simulate-omnibus --n-sim 300 --out {WORK}/simulation', log=f'{WORK}/simulation.log')",
+         f"sh(f'{{PY}} refit-check --cache {{CACHE}} --folds {{FOLDS}} --runs {grid_runs} --tag main "
+         f"--pipeline P3 --edge spatial --out {{WORK}}/refit', log=f'{{WORK}}/refit.log')"],
+        extras="dev,stats"), kernel_sources=nb02)
+
     # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
     write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(
         "NB17 — equivalence tests including the learned-adjacency family (CPU)",
