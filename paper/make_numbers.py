@@ -318,8 +318,10 @@ mix = REP / "mixed"
 if (mix / "selection_summary.json").exists():
     sets = [(s, t) for s, t in (("selection", "Sel"), ("confirmation", "Conf"), ("external", "Ext"))
             if (mix / f"{s}_summary.json").exists()]
-    summ_mix = {s: json.loads((mix / f"{s}_summary.json").read_text()) for s, _ in sets}
-    for s, t in sets:
+    extra_sets = [(s, t) for s, t in (("selection_correct", "SelCorr"), ("confirmation_correct", "ConfCorr"))
+                  if (mix / f"{s}_summary.json").exists()]
+    summ_mix = {s: json.loads((mix / f"{s}_summary.json").read_text()) for s, _ in sets + extra_sets}
+    for s, t in sets + extra_sets:
         m = summ_mix[s]
         put(f"mix{t}NRows", m["n_rows"], "{:,}"); put(f"mix{t}NScores", m["n_scores"], "{:,}")
         put(f"mix{t}NPairsSig", m["n_pairs_sig_holm"], "{:d}")
@@ -334,6 +336,9 @@ if (mix / "selection_summary.json").exists():
             put(f"mix{t}M{r.level}", r["mean"])
         e_ = mg[mg.factor == "edge"]["mean"]
         put(f"mix{t}EdgeRange", e_.max() - e_.min(), "{:.3f}")
+        for r in m.get("rm_anova", []):                     # by-subject RM-ANOVA cross-check (GG-corrected)
+            k = {"pipeline": "Rep", "edge": "Edge"}.get(r["Source"], "Inter")
+            put(f"mix{t}Aov{k}F", r["F"], "{:.2f}"); put(f"mix{t}Aov{k}P", p_fmt(r["p-GG-corr"]))
     rows = []
     for term, label in (("representation", "Representation"), ("graph", "Graph construction"),
                         ("interaction", "Interaction")):
@@ -384,7 +389,7 @@ eqf = REP / "equivalence" / "equivalence.csv"
 if eqf.exists():
     eq = pd.read_csv(eqf)
     fam = {"GCN vs non-graph twin": "Gvc", "graph construction": "Graph", "ablation": "Abl",
-           "deep baseline": "Deep", "stopping rule": "Es"}
+           "deep baseline": "Deep", "stopping rule": "Es", "learned adjacency": "Learn"}
     for f_, tag in fam.items():
         g = eq[eq.family == f_]
         put(f"eq{tag}N", len(g), "{:d}"); put(f"eq{tag}NEquiv", int(g.equivalent.sum()), "{:d}")
@@ -394,12 +399,45 @@ if eqf.exists():
     put("eqGraphPMax", p_fmt(gr.p_tost_holm.max()))
     put("eqMargin", eq.margin.iloc[0], "{:.2f}")
     lab = {"GCN vs non-graph twin": "GCN vs non-graph twin", "graph construction": "Graph types (pairwise)",
-           "ablation": "Ablations", "deep baseline": "Deep-learning baselines", "stopping rule": "Stopping rules"}
+           "ablation": "Ablations", "deep baseline": "Deep-learning baselines", "stopping rule": "Stopping rules",
+           "learned adjacency": "Learned vs fixed graph"}
     rows = []
     for (f_, s_), g in eq.groupby(["family", "setting"], sort=False):
         rows.append(f"{lab[f_]} & {s_} & {len(g)} & {int(g.equivalent.sum())} & "
                     f"{g.delta.abs().max():.3f} & {g.mde80.median():.2f} \\\\")
     EQ_ROWS = "\n".join(rows)
+
+# ---- learned adjacency (NB16): trainable graph initialised at the spatial graph ----
+lfiles = sorted((REP / "learned").glob("learned_runs_s*.jsonl"))
+if lfiles:
+    L = pd.DataFrame([json.loads(line) for f in lfiles for line in open(f)])
+    L["macro_f1"] = L["subject"].map(lambda s: s["macro_f1"])
+    lm = L[L.tag == "learned_adj"].groupby("pipeline")["macro_f1"].mean()
+    ref = runs.assign(macro_f1=runs["subject"].map(lambda s: s["macro_f1"]))
+    rs = ref[ref.edge == "spatial"].groupby("pipeline")["macro_f1"].mean().reindex(lm.index)
+    put("learnBestRep", lm.idxmax()); put("learnBestFOne", lm.max())
+    put("learnDeltaMin", (lm - rs).min(), "{:+.3f}"); put("learnDeltaMax", (lm - rs).max(), "{:+.3f}")
+    put("learnRho", lm.corr(rs, method="spearman"), "{:.2f}")
+    put("learnPThree", lm.get("P3", np.nan))
+    lc = L[L.tag == "learned_adj_confirm"]
+    if len(lc):
+        put("learnConfPThree", lc["macro_f1"].mean())
+    put("learnNRuns", len(L), "{:d}")
+
+# ---- occlusion importance (NB16) ----
+occ_f = REP / "explain" / "occlusion_summary.csv"
+if occ_f.exists():
+    occ = pd.read_csv(occ_f)
+    el = occ[occ.kind == "electrode"].sort_values("drop", ascending=False)
+    put("occTopElectrodes", ", ".join(el.unit.head(4)))
+    put("occTopDrop", el["drop"].iloc[0], "{:.3f}"); put("occElecMedian", el["drop"].median(), "{:.3f}")
+    put("occNElecPositive", int((el.ci_lo > 0).sum()), "{:d}")
+    bd = occ[occ.kind == "band"].sort_values("drop", ascending=False)
+    put("occTopBand", bd.unit.iloc[0]); put("occTopBandDrop", bd["drop"].iloc[0], "{:.3f}")
+    put("occSecondBand", bd.unit.iloc[1]); put("occSecondBandDrop", bd["drop"].iloc[1], "{:.3f}")
+    put("occBottomBand", bd.unit.iloc[-1]); put("occBottomBandDrop", bd["drop"].iloc[-1], "{:.3f}")
+    for cname in ("AD", "FTD", "CN"):
+        put(f"occTop{cname}", el.sort_values(f"drop_{cname}", ascending=False).unit.iloc[0])
 
 # ---- PSWE A11 rule grid and collinearity of the slowing adjustment (NB15) ----
 for ds, tag, pats in (("ds004504", "", ("AD", "FTD")), ("ds004584", "Ext", ("PD",))):
