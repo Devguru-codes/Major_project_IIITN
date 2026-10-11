@@ -7,21 +7,6 @@ dementia was present before any model was trained: the median theta/alpha power 
 \thetaAlphaAD{} in AD, \thetaAlphaFTD{} in FTD and \thetaAlphaCN{} in controls, with the posterior alpha
 of controls replaced by diffuse delta and theta in AD (Figure~\ref{fig:topo}).
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.9\linewidth]{fig02_cohort}
-\caption{Cohort: age, sex and recording length by group.}
-\label{fig:cohort}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.9\linewidth]{fig03_band_topomaps}
-\caption{Group-mean relative band power per electrode (rows: groups; columns: bands; colour scales
-shared within each band).}
-\label{fig:topo}
-\end{figure}
-
 A logistic regression on age and sex alone reached a macro-F1 of \demoFOne{}, against \chanceFOne{}
 for a stratified random classifier. Demographics therefore carry some group information, consistent
 with the sex imbalance between groups (Table~\ref{tab:demographics}). We use \demoFOne{}, not 1/3, as
@@ -47,11 +32,15 @@ correction on each fold set. Graph construction and its interaction with represe
 detectable at the subject level (selection: graph $F(\mixSelEdgeDf,\mixSelEdgeDenDf)=\mixSelEdgeF$,
 $p\mixSelEdgeP$; interaction $F(\mixSelInterDf,\mixSelInterDenDf)=\mixSelInterF$, $p\mixSelInterP$;
 confirmation: $p\mixConfEdgeP$ and $p\mixConfInterP$) but negligible in size: the three graph types'
-marginal means differed by less than 0.01 (\mixSelMspatial{} spatial, \mixSelMfunctional{} functional,
+marginal means spanned only \mixSelEdgeRange{} (\mixSelMspatial{} spatial, \mixSelMfunctional{} functional,
 \mixSelMhybrid{} hybrid). Subjects accounted for \mixSelShareSubject\% of the variance and
 subject~$\times$~representation for \mixSelShareSubjectxrepresentation\%, while subject~$\times$~graph
 variance was estimated at zero: individuals differ in which representation suits them, not in which
-graph does.
+graph does. On macro-F1, every pairwise comparison of graph types was formally equivalent within
+$\pm\eqMargin$ on both fold sets (TOST with the Nadeau--Bengio correction, Holm $p\le$ \eqGraphPMax{}
+after correction; all corrected 90\% intervals within $\pm$\eqGraphCiMax{}; Table~\ref{tab:equivalence}).
+This is positive evidence that the choice of graph does not matter at that resolution, not merely an
+absence of significance.
 
 \begin{table}[t]
 \centering\small
@@ -77,7 +66,7 @@ Term & $F$ (df) & $p$ & $F$ (df) & $p$ & $F$ (df) & $p$ \\
 \caption{Model-based marginal mean probability on the true class (95\% CI) for each representation
 (left, averaged over graph types) and each graph type (right), from the by-subject mixed model, on the
 selection and confirmation folds. The intervals include between-subject variation; the tests in
-Table~ef{tab:mixed} compare levels within subjects, which is why a difference much smaller than these
+Table~\ref{tab:mixed} compare levels within subjects, which is why a difference much smaller than these
 intervals can still be detected.}
 \label{fig:mixed}
 \end{figure}
@@ -108,51 +97,6 @@ by \pThreeFourDiff{} macro-F1 on the selection folds (Cohen's $d=\pThreeFourD$; 
 $p\pThreeFourWilP$; Nadeau--Bengio--Holm $p\pThreeFourNbP$). We regard the omnibus effect and the
 ordering, which replicated, as robust, and individual pairwise differences as suggestive.
 
-\begin{table}[t]
-\centering\scriptsize
-\caption{Subject-level performance of every cell (mean $\pm$ SD over the 25 selection splits,
-seeds 0--4). CI: subject-bootstrap 95\% interval of macro-F1. BA: balanced accuracy; AUC: one-vs-rest
-macro ROC-AUC. Confirm.: macro-F1 of the same cell on the 25 independent confirmation splits
-(seeds 5--9).}
-\label{tab:cells}
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{llccccccc}
-\toprule
-Representation & Graph & Macro-F1 & 95\% CI & BA & AUC & $\kappa$ & Brier & Confirm. \\
-\midrule
-\inputtab{generated/tab/cells.tex}
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[t]
-\centering\small
-\caption{Two-way repeated-measures ANOVA on subject-level macro-F1 (units: 25 test splits), on the
-selection folds and, independently, on the confirmation folds. $\varepsilon$: Greenhouse--Geisser;
-$p$: GG-corrected; $\eta^2_p$: partial eta squared.}
-\label{tab:anova}
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lccccccccc}
-\toprule
- & & \multicolumn{4}{c}{Selection (seeds 0--4)} & \multicolumn{4}{c}{Confirmation (seeds 5--9)} \\
-\cmidrule(lr){3-6}\cmidrule(lr){7-10}
-Effect & df & $F$ & $\varepsilon$ & $p$ & $\eta^2_p$ & $F$ & $\varepsilon$ & $p$ & $\eta^2_p$ \\
-\midrule
-\inputtab{generated/tab/anova.tex}
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.62\linewidth]{fig06_representation}\hfill
-\includegraphics[width=0.33\linewidth]{fig07_edge}
-\caption{Subject-level macro-F1 by representation (left, averaged over graph types) and by graph
-construction (right, averaged over representations). Points are the 25 test splits; black markers,
-mean $\pm$ 95\% CI; dotted line, 1/3.}
-\label{fig:rep}\label{fig:edge}
-\end{figure}
-
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{fig08_interaction}
@@ -160,14 +104,6 @@ mean $\pm$ 95\% CI; dotted line, 1/3.}
 interaction plot (right). Lines are close to parallel: the best representation does not depend on
 how the graph is built.}
 \label{fig:interaction}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{fig09_critical_difference}
-\caption{Critical-difference diagram over the 21 cells. Cells joined by a black bar are not separated
-by the Nemenyi test.}
-\label{fig:cd}
 \end{figure}
 
 \subsection{What the models get right and wrong}\label{sec:res-errors}
@@ -178,22 +114,6 @@ recordings were most often misclassified as AD, except with PSWE features, where
 often taken for controls (Figure~\ref{fig:confusion}). The ROC and precision--recall
 curves show the same ordering (Figure~\ref{fig:roc}). The models were poorly calibrated (expected
 calibration error \bestEce{}), so their probabilities should not be read as clinical risks.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{fig10_confusion_matrices}
-\caption{Row-normalised confusion matrices summed over the 25 test splits, for the best graph type
-of each representation.}
-\label{fig:confusion}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{fig11_roc_pr}
-\caption{One-vs-rest ROC (top) and precision--recall (bottom) curves for the three best cells; mean
-$\pm$ SD across the five repeats.}
-\label{fig:roc}
-\end{figure}
 
 \subsection{Graph models do not beat their non-graph twins}\label{sec:res-baselines}
 Table~\ref{tab:baselines} compares every representation's best GCN cell with classical classifiers
@@ -207,7 +127,10 @@ train + val regime, and none was significant under either Holm-corrected test (T
 for P3, train only: \fairTrPThreeDelta{}, Wilcoxon--Holm $p\fairTrPThreeWilP$; train + val:
 \fairTvPThreeDelta{}, $p\fairTvPThreeWilP$). The GCN on wavelet features was numerically the best
 model in both regimes, but its advantage over non-graph classifiers is within the noise of this
-cohort. The spectral, wavelet, fused and raw representations cleared the demographic floor of
+cohort. Nor could any of these comparisons be shown equivalent: with the corrected standard error the
+smallest difference detectable with 80\% power was about \eqGvcMde{} macro-F1
+(Table~\ref{tab:equivalence}), so an advantage of the graph model of that order can neither be shown nor
+excluded with 88 subjects. The spectral, wavelet, fused and raw representations cleared the demographic floor of
 \demoFOne{}; the connectivity (P2), time-domain (P4) and PSWE (P7) representations scored within
 about 0.05 of it.
 
@@ -219,7 +142,9 @@ the GCN on wavelet features (\deepEegnetVsBestDelta{}, $p\deepEegnetVsBestWilP$;
 $p\deepCnnVsBestWilP$). The latter difference was significant for the 1D-CNN under the Wilcoxon test
 but under neither comparison with the Nadeau--Bengio correction. Learning features end to end from raw
 signal therefore did not substitute for a good hand-crafted representation on this cohort, while
-using \deepGpuHours{} GPU-hours against none for every other model.
+using \deepGpuHours{} GPU-hours against none for every other model. As for the classical twins, these
+comparisons are imprecise (detectable difference about \eqDeepMde{}), so they show only that the deep
+networks are not dramatically better.
 
 \begin{table}[t]
 \centering\small
@@ -255,7 +180,7 @@ Two changes had uncorrected $t$-intervals that excluded zero for the spatial cel
 fully connected graph (\cablPThreespatialAThreefullDelta{} [\cablPThreespatialAThreefullLo{},
 \cablPThreespatialAThreefullHi{}]), the latter consistent with over-smoothing; neither interval
 accounts for the overlap between cross-validation training sets. Sparsity ($k=3$ or 6), binarised
-edges, depth and loss weighting changed macro-F1 by at most about 0.02. Regressing age and sex out of
+edges, depth and loss weighting changed macro-F1 by at most \cablSmallMax{}. Regressing age and sex out of
 every feature cost \cablPThreespatialAOneTworesidualizedDelta{} [\cablPThreespatialAOneTworesidualizedLo{},
 \cablPThreespatialAOneTworesidualizedHi{}] for the spatial cell, leaving performance well above the
 demographic floor. Shorter (\SI{5}{\second}) or longer (\SI{20}{\second}) windows changed macro-F1 by
@@ -264,7 +189,9 @@ cell (\cablPThreehybridASevenwindowFiveDelta{} and \cablPThreehybridASevenwindow
 hybrid cell), so \SI{10}{\second} windows were never improved upon. Removing ICA artefact rejection
 cost \cablPThreespatialAEightnoicaDelta{} [\cablPThreespatialAEightnoicaLo{},
 \cablPThreespatialAEightnoicaHi{}] and \cablPThreehybridAEightnoicaDelta{}, the largest of the
-preprocessing changes but still not significant. The selection-fold ablations
+preprocessing changes but still not significant. None of the ablations could be shown equivalent
+either (median detectable difference \eqAblMde{}): they exclude large effects of these design choices,
+not small ones. The selection-fold ablations
 (Table~\ref{tab:ablations-main}) led to the same conclusions.
 
 \subsection{The stopping rule does not drive the results}\label{sec:res-es}
@@ -272,27 +199,14 @@ Early stopping selected a median of epoch \bestEpochMedian{}. Re-running the who
 50 (median epoch \esPFiftyEpochMedian{}) or with no early stopping (100 epochs, final weights) left the
 conclusions unchanged (Table~\ref{tab:es}, Figure~\ref{fig:es}): \bestCell{} remained the best cell
 under every rule (\esPFiftyBestFOne{} and \esFixedBestFOne{}), the mean over all cells moved by at most
-0.003, cell rankings were preserved (Spearman $\rho=\esPFiftyRho$ and \esFixedRho{} against the main
+\esGrandShiftMax{}, cell rankings were preserved (Spearman $\rho=\esPFiftyRho$ and \esFixedRho{} against the main
 grid), representation stayed significant, and no representation's score changed significantly under
 either rule (\esNSigWil{} of 14 Holm-corrected Wilcoxon tests). Raw windows (P5), the configuration
 with most parameters, did not benefit from longer training (\esPFiftyPFiveDelta{} and
-\esFixedPFiveDelta{}), and no GCN-versus-classical comparison became significant.
-
-\begin{table}[t]
-\centering\scriptsize
-\caption{Stopping-rule sensitivity on the 25 selection splits: median epoch of the kept weights, best
-cell, macro-F1 of \bestCell{}, mean over the 21 cells, split-level ANOVA $F$ for representation and
-graph, and Spearman correlation of the 21 cell means with the main grid.}
-\label{tab:es}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lccccccc}
-\toprule
-Stopping rule & Epoch & Best cell & P3 $\times$ spatial & Mean & $F_\mathrm{rep}$ & $F_\mathrm{graph}$ & $\rho$ \\
-\midrule
-\inputtab{generated/tab/es.tex}
-\bottomrule
-\end{tabular}
-\end{table}
+\esFixedPFiveDelta{}), and no GCN-versus-classical comparison became significant. Formal equivalence
+within $\pm\eqMargin$ was shown for \eqEsNEquiv{} of the \eqEsN{} representation-level comparisons, all
+for patience 50; training without early stopping changed scores too variably for equivalence to be
+shown.
 
 \begin{table}[t]
 \centering\scriptsize
@@ -310,14 +224,6 @@ Ablation & $\Delta$ [95\% CI] & $p_\mathrm{Holm}$ & $\Delta$ [95\% CI] & $p_\mat
 \bottomrule
 \end{tabular}
 \end{table}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.75\linewidth]{fig13_ablation_forest}
-\caption{Ablations on the confirmation folds as paired differences from the two reference cells
-(mean and 95\% CI over 25 splits). An asterisk would mark Nadeau--Bengio--Holm $p<0.05$; none qualifies.}
-\label{fig:forest}
-\end{figure}
 
 \subsection{Leakage inflates results to the published range}\label{sec:res-leak}
 Re-running the two best cells on the confirmation folds with window-level splitting --- identical
@@ -354,8 +260,17 @@ $p\psweAdjADP$) in AD and \psweAdjFTDRR{} (\psweAdjFTDLo{}--\psweAdjFTDHi{}, $p\
 
 The PSWE rate was, however, almost collinear with background slowing (Spearman $\rho=\psweSlowRho$
 with relative delta+theta power; age- and sex-adjusted partial $\rho=\psweSlowPartial$). Once slowing
-was added to the model, the AD rate ratio reversed to \psweAdjSlowADRR{} (\psweAdjSlowADLo{}--\psweAdjSlowADHi{},
-$p\psweAdjSlowADP$), and FTD fell to \psweAdjSlowFTDRR{} ($p\psweAdjSlowFTDP$). The PSWE rate was not
+was added to the model, the AD rate ratio fell below one, to \psweAdjSlowADRR{}
+(\psweAdjSlowADLo{}--\psweAdjSlowADHi{}, $p\psweAdjSlowADP$), and FTD to \psweAdjSlowFTDRR{}
+($p\psweAdjSlowFTDP$). This is not an artefact of multicollinearity among the predictors --- the
+variance inflation of the slowing covariate given group, age and sex was only \colVif{} --- but it does
+rest on extrapolation: \colADOutside\% of AD and \colFTDOutside\% of FTD patients were more slowed than
+any control. Restricted to the \colADInSupport{} AD and \colFTDInSupport{} FTD patients whose slowing lay
+within the control range, there was no PSWE excess even before adjusting for slowing (rate ratios
+\colSupADRR{}, $p\colSupADP$, and \colSupFTDRR{}, $p\colSupFTDP$). Relative to the events that their
+slowing predicts --- the slowing--PSWE relation estimated in controls only --- patients had fewer events
+than controls (median observed/expected \colOeAD{} for AD and \colOeFTD{} for FTD versus \colOeCN{};
+Kruskal--Wallis $p\colOeP$). The PSWE rate was not
 significantly associated with MMSE within patients ($\rho=\psweMmseRho$, $p\psweMmseP$). In the
 classifier, PSWE features alone (P7) performed near the demographic floor (\repPSeven{}), and adding
 them to the best representation, or using PSWE co-occurrence as the graph, did not help
@@ -365,31 +280,16 @@ them to the best representation, or using PSWE co-occurrence as the graph, did n
 zero-padded spectra and artefact rejection together (a median of at most \psweRobRejectPct\% of segments
 rejected per group), rates correlated $\rho=\psweRobRhoMain$ with the original ones, the age- and sex-adjusted
 rate ratios were \psweRobAdjADRR{} for AD ($p\psweRobAdjADP$) and \psweRobAdjFTDRR{} for FTD
-($p\psweRobAdjFTDP$), and adjusting for slowing again reversed them (\psweRobAdjSlowADRR{} and
+($p\psweRobAdjFTDP$), and adjusting for slowing again brought them below one (\psweRobAdjSlowADRR{} and
 \psweRobAdjSlowFTDRR{}). Without ICA, the rate ratios were \noIcaPsweADRR{} and \noIcaPsweFTDRR{}
-($\rho=\noIcaPsweSlowRho$ with slowing), so ocular artefacts do not create the excess either.
+($\rho=\noIcaPsweSlowRho$ with slowing), so ocular artefacts do not create the excess either. Nor does
+the event rule (Table~\ref{tab:pswe-grid}): across the \gridN{} combinations of 5--\SI{7}{\hertz}
+thresholds and 3--\SI{8}{\second} minimum durations (A11), the age- and sex-adjusted AD rate ratio ranged
+from \gridADRrMin{} to \gridADRrMax{} (significant in \gridADNSig{} of \gridN{}), FTD from \gridFTDRrMin{} to
+\gridFTDRrMax{} (\gridFTDNSig{} of \gridN{}), the correlation with slowing from \gridRhoMin{} to \gridRhoMax{},
+and every slowing-adjusted AD ratio was below one (\gridADSlowMin{}--\gridADSlowMax{}).
 
-\paragraph{Background-relative PSWEs (exploratory).} Defining PSWEs relative to each channel's own
-background reversed the group pattern. With the primary definition (a drop of at least \SI{2}{\hertz}
-below the channel median), AD showed \emph{fewer} transient slowing events than controls (rate ratio
-\reldropTwoAdjADRR{}, \reldropTwoAdjADLo{}--\reldropTwoAdjADHi{}, $p\reldropTwoAdjADP$), FTD a
-non-significant reduction (\reldropTwoAdjFTDRR{}), and the event rate was only weakly related to
-slowing ($\rho=\reldropTwoSlowRho$) and not to MMSE ($\rho=\reldropTwoMmseRho$). After additional
-adjustment for background MPF the AD effect was no longer significant (\reldropTwoAdjBgADRR{},
-$p\reldropTwoAdjBgADP$). The MAD-scaled variants gave the same direction more strongly and survived
-that adjustment (for 2~MAD: AD \relmadTwoAdjBgADRR{}, $p\relmadTwoAdjBgADP$; FTD \relmadTwoAdjBgFTDRR{},
-$p\relmadTwoAdjBgFTDP$). Every variant pointed the same way: relative to their own background,
-patients with dementia had fewer, not more, transient slowing events.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{fig04_pswe_example}
-\caption{Fixed-threshold PSWE detection in the AD recording with the highest PSWE rate among the
-example shard (first 120\,s, channel with most events). Top: EEG; bottom: median power frequency
-with the \SI{6}{\hertz} threshold; shaded, detected PSWEs. Because this subject's background is
-already slow, most of the recording is flagged --- the pattern behind the collinearity with slowing.}
-\label{fig:pswe-example}
-\end{figure}
+\paragraph{Background-relative PSWEs (exploratory).} Defined relative to each channel's own background, transient slowing events were less frequent in AD and FTD than in controls under every variant (Supplementary results).
 
 \begin{figure}[t]
 \centering
@@ -432,28 +332,14 @@ ds004504, ranked third and fourth on ds004584, and raw windows (P5) fell to last
 disease than in controls (median \extPsweRatePD{} versus \extPsweRateCN{} events/min; age- and
 sex-adjusted rate ratio \extPsweAdjRR{}, 95\% CI \extPsweAdjLo{}--\extPsweAdjHi{}, $p\extPsweAdjP$),
 consistent with the earlier report that they are uncommon in this disease \cite{B3}. As on ds004504, the
-rate tracked background slowing ($\rho=\extPsweSlowRho$), and adjusting for slowing reversed the ratio
+rate tracked background slowing ($\rho=\extPsweSlowRho$), and adjusting for slowing brought the ratio below one
 (\extPsweAdjSlowRR{}, $p\extPsweAdjSlowP$). The rate was not associated with MoCA within patients
 ($\rho=\extPsweMocaRho$, $p\extPsweMocaP$), no background-relative variant differed between groups
 (smallest $p\extRelMinP$), and zero-padding with artefact rejection left the result unchanged (rate
-ratio \psweExtRobAdjPDRR{}, $p\psweExtRobAdjPDP$).
-
-\begin{table}[t]
-\centering\small
-\caption{Mean macro-F1 of each representation (averaged over graph types) and its rank on ds004504
-(AD/FTD/CN, three classes) and on the external cohort ds004584 (PD/CN, two classes). Absolute values
-are not comparable across datasets; ranks are.}
-\label{tab:external}
-\begin{tabular}{lcccc}
-\toprule
- & \multicolumn{2}{c}{ds004504} & \multicolumn{2}{c}{ds004584} \\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}
-Representation & Macro-F1 & Rank & Macro-F1 & Rank \\
-\midrule
-\inputtab{generated/tab/external.tex}
-\bottomrule
-\end{tabular}
-\end{table}
+ratio \psweExtRobAdjPDRR{}, $p\psweExtRobAdjPDP$). No event rule of the A11 grid produced a
+significant Parkinson's excess (rate ratios \gridExtPDRrMin{}--\gridExtPDRrMax{}), almost all patients lay
+within the controls' range of slowing (\colExtPDInSupport{} of 100), and relative to their slowing they had
+fewer events than controls (median observed/expected \colExtOePD{} versus \colExtOeCN{}, $p\colExtOeP$).
 
 \begin{figure}[t]
 \centering

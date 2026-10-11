@@ -1,5 +1,77 @@
 \appendix
 \section*{Supplementary material}
+
+\subsection*{Supplementary methods}
+\paragraph{Deep-learning baselines.} To place the GCN against standard end-to-end EEG networks, EEGNet-8,2
+\cite{F14} (temporal convolution of 64 taps, depthwise spatial convolution, separable convolution;
+\num{3331} parameters) and a compact 1D-CNN (three temporal convolution blocks over the 19 channels,
+global average pooling; \num{47939} parameters) were trained on the same raw \SI{10}{\second} windows
+as P5, with the same 25 selection splits, optimiser, early-stopping rule, subject-equal weighting and
+subject-level aggregation as the GCN, so that every comparison is paired. EEGNet's max-norm weight
+constraints were replaced by the shared weight decay; no hyperparameter was tuned.
+
+The GCN learns its weights from the training subjects only and uses the validation subjects only to
+choose when to stop, whereas the classical models have no stopping rule. To compare models trained
+on the same subjects, we evaluate both under two regimes on the same 25 test splits:
+(i)~\emph{train only}, with the classical models fitted on the training subjects and the GCN as in the
+main grid; and (ii)~\emph{train + val}, with the classical models fitted on training and validation
+subjects and the GCN refitted on the same subjects for the number of epochs selected by early
+stopping in the corresponding main-grid run (\nRefitRuns{} refits, no validation monitoring).
+
+\paragraph{Stopping-rule sensitivity.} Early stopping on about 14 validation subjects often selected
+an early epoch. To test whether this shaped the conclusions, the full $7\times3$ grid was re-run on
+the 25 selection splits with patience 50 instead of 20, and with no early stopping at all (100
+epochs on the training subjects, final weights kept; validation subjects unused), each paired with
+the main grid split by split.
+
+\paragraph{Background-relative PSWE (exploratory).} After observing that the fixed-threshold rate
+was strongly correlated with background slowing (Section~\ref{sec:res-pswe}), we added a
+post-hoc analysis, labelled as such throughout. Its definitions were fixed in the configuration
+before it was run on any real data. A relative PSWE is a run of at least \SI{5}{\second} in which a
+channel's MPF lies below that channel's own recording-median MPF by at least \SI{2}{\hertz}
+(primary), \SI{1.5}{\hertz} or \SI{3}{\hertz}, or by at least 2 or 3 robust standard deviations
+($1.4826\times$ median absolute deviation).
+
+\paragraph{Detector robustness.} Two properties of the fixed-threshold detector could bias it: with
+\SI{2}{\second} windows the MPF is quantised to \SI{0.5}{\hertz} steps, so the \SI{6}{\hertz} threshold
+falls on a bin edge; and artefacts add low-frequency power. In a pre-specified robustness analysis we
+re-detected events with each segment zero-padded to an \SI{8}{\second} FFT (MPF on a
+\SI{0.125}{\hertz} grid, window unchanged), with amplitude-based artefact rejection (a channel's
+\SI{2}{\second} segment rejected if its peak-to-peak amplitude exceeded \SI{200}{\micro\volt} or it was
+flat, SD $<\SI{0.5}{\micro\volt}$; rejected seconds break events and are removed from the exposure
+time), and with both (primary), and repeated the statistics below. The unmodified variant reproduced
+the main event counts exactly in both cohorts. The fixed-threshold statistics were also repeated on
+the recordings preprocessed without ICA (A8), and across a grid of event rules (A11: MPF thresholds of 5, 6
+and \SI{7}{\hertz} crossed with minimum durations of 3, 5 and \SI{8}{\second}).
+
+\paragraph{Collinearity of the slowing adjustment.} Because PSWE rate and relative delta+theta power are
+strongly correlated, a model containing both can give unstable group coefficients. We therefore report
+the variance inflation of the slowing covariate given group, age and sex; refit the models on subjects
+whose slowing lies within the range observed in controls (common support); and compare groups on the
+ratio of observed to expected events, where the expectation comes from a negative-binomial model of
+events on slowing, age and sex fitted in controls only.
+
+\paragraph{Compute.}
+All experiments ran on free Kaggle sessions (4 vCPUs); the only GPU use was the two deep-learning
+baselines (\deepGpuHours{} GPU-hours of training on one Kaggle GPU). The 525-run main grid
+took \cpuHoursGrid{} CPU-hours, and the \nConfirmRuns{} further runs (confirmation grid, ablations and permutations on the
+confirmation folds, and the train + val refits) took \cpuHoursConfirm{} CPU-hours. The stopping-rule sensitivity grid and the
+external cohort added 
+ExtraRuns{} runs and \cpuHoursExtra{} CPU-hours. The mixed models fit in seconds. Every run is logged with its configuration hash, code version and seed.
+
+\subsection*{Supplementary results}
+\paragraph{Background-relative PSWEs (exploratory).} Defining PSWEs relative to each channel's own
+background reversed the group pattern. With the primary definition (a drop of at least \SI{2}{\hertz}
+below the channel median), AD showed \emph{fewer} transient slowing events than controls (rate ratio
+\reldropTwoAdjADRR{}, \reldropTwoAdjADLo{}--\reldropTwoAdjADHi{}, $p\reldropTwoAdjADP$), FTD a
+non-significant reduction (\reldropTwoAdjFTDRR{}), and the event rate was only weakly related to
+slowing ($\rho=\reldropTwoSlowRho$) and not to MMSE ($\rho=\reldropTwoMmseRho$). After additional
+adjustment for background MPF the AD effect was no longer significant (\reldropTwoAdjBgADRR{},
+$p\reldropTwoAdjBgADP$). The MAD-scaled variants gave the same direction more strongly and survived
+that adjustment (for 2~MAD: AD \relmadTwoAdjBgADRR{}, $p\relmadTwoAdjBgADP$; FTD \relmadTwoAdjBgFTDRR{},
+$p\relmadTwoAdjBgFTDP$). Every variant pointed the same way: relative to their own background,
+patients with dementia had fewer, not more, transient slowing events.
+
 \renewcommand{\thefigure}{S\arabic{figure}}\setcounter{figure}{0}
 \renewcommand{\thetable}{S\arabic{table}}\setcounter{table}{0}
 
@@ -101,3 +173,172 @@ of the best graph type for each representation.}
 confusion matrices of EEGNet and the 1D-CNN.}
 \label{fig:deep-confusion}
 \end{figure}
+
+% ---- moved from the main text to meet the journal length (second internal review) ----
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{fig02_cohort}
+\caption{Cohort: age, sex and recording length by group.}
+\label{fig:cohort}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{fig03_band_topomaps}
+\caption{Group-mean relative band power per electrode (rows: groups; columns: bands; colour scales
+shared within each band).}
+\label{fig:topo}
+\end{figure}
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{Subject-level performance of every cell (mean $\pm$ SD over the 25 selection splits,
+seeds 0--4). CI: subject-bootstrap 95\% interval of macro-F1. BA: balanced accuracy; AUC: one-vs-rest
+macro ROC-AUC. Confirm.: macro-F1 of the same cell on the 25 independent confirmation splits
+(seeds 5--9).}
+\label{tab:cells}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{llccccccc}
+\toprule
+Representation & Graph & Macro-F1 & 95\% CI & BA & AUC & $\kappa$ & Brier & Confirm. \\
+\midrule
+\inputtab{generated/tab/cells.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering\small
+\caption{Two-way repeated-measures ANOVA on subject-level macro-F1 (units: 25 test splits), on the
+selection folds and, independently, on the confirmation folds. $\varepsilon$: Greenhouse--Geisser;
+$p$: GG-corrected; $\eta^2_p$: partial eta squared.}
+\label{tab:anova}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccccccc}
+\toprule
+ & & \multicolumn{4}{c}{Selection (seeds 0--4)} & \multicolumn{4}{c}{Confirmation (seeds 5--9)} \\
+\cmidrule(lr){3-6}\cmidrule(lr){7-10}
+Effect & df & $F$ & $\varepsilon$ & $p$ & $\eta^2_p$ & $F$ & $\varepsilon$ & $p$ & $\eta^2_p$ \\
+\midrule
+\inputtab{generated/tab/anova.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.62\linewidth]{fig06_representation}\hfill
+\includegraphics[width=0.33\linewidth]{fig07_edge}
+\caption{Subject-level macro-F1 by representation (left, averaged over graph types) and by graph
+construction (right, averaged over representations). Points are the 25 test splits; black markers,
+mean $\pm$ 95\% CI; dotted line, 1/3.}
+\label{fig:rep}\label{fig:edge}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{fig09_critical_difference}
+\caption{Critical-difference diagram over the 21 cells. Cells joined by a black bar are not separated
+by the Nemenyi test.}
+\label{fig:cd}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{fig10_confusion_matrices}
+\caption{Row-normalised confusion matrices summed over the 25 test splits, for the best graph type
+of each representation.}
+\label{fig:confusion}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{fig11_roc_pr}
+\caption{One-vs-rest ROC (top) and precision--recall (bottom) curves for the three best cells; mean
+$\pm$ SD across the five repeats.}
+\label{fig:roc}
+\end{figure}
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{Stopping-rule sensitivity on the 25 selection splits: median epoch of the kept weights, best
+cell, macro-F1 of \bestCell{}, mean over the 21 cells, split-level ANOVA $F$ for representation and
+graph, and Spearman correlation of the 21 cell means with the main grid.}
+\label{tab:es}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccccccc}
+\toprule
+Stopping rule & Epoch & Best cell & P3 $\times$ spatial & Mean & $F_\mathrm{rep}$ & $F_\mathrm{graph}$ & $\rho$ \\
+\midrule
+\inputtab{generated/tab/es.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\linewidth]{fig13_ablation_forest}
+\caption{Ablations on the confirmation folds as paired differences from the two reference cells
+(mean and 95\% CI over 25 splits). An asterisk would mark Nadeau--Bengio--Holm $p<0.05$; none qualifies.}
+\label{fig:forest}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{fig04_pswe_example}
+\caption{Fixed-threshold PSWE detection in the AD recording with the highest PSWE rate among the
+example shard (first 120\,s, channel with most events). Top: EEG; bottom: median power frequency
+with the \SI{6}{\hertz} threshold; shaded, detected PSWEs. Because this subject's background is
+already slow, most of the recording is flagged --- the pattern behind the collinearity with slowing.}
+\label{fig:pswe-example}
+\end{figure}
+
+\begin{table}[h]
+\centering\small
+\caption{Mean macro-F1 of each representation (averaged over graph types) and its rank on ds004504
+(AD/FTD/CN, three classes) and on the external cohort ds004584 (PD/CN, two classes). Absolute values
+are not comparable across datasets; ranks are.}
+\label{tab:external}
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{ds004504} & \multicolumn{2}{c}{ds004584} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Representation & Macro-F1 & Rank & Macro-F1 & Rank \\
+\midrule
+\inputtab{generated/tab/external.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{Equivalence tests for the comparisons read as ``no difference'': two one-sided tests against
+$\pm\eqMargin$ macro-F1 with the Nadeau--Bengio corrected standard error, Holm-corrected within each
+family. Max $|\Delta|$: largest absolute mean difference; MDE: median difference detectable with 80\%
+power.}
+\label{tab:equivalence}
+\begin{tabular}{llcccc}
+\toprule
+Family & Folds & Comparisons & Equivalent & Max $|\Delta|$ & MDE \\
+\midrule
+\inputtab{generated/tab/equivalence.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{PSWE event-rule grid (A11) on ds004504: age- and sex-adjusted rate ratios against controls
+without and with adjustment for relative delta+theta power, and the Spearman correlation of the PSWE
+rate with slowing, for each MPF threshold and minimum duration.}
+\label{tab:pswe-grid}
+\begin{tabular}{ccccccc}
+\toprule
+ & & \multicolumn{2}{c}{Adjusted} & \multicolumn{2}{c}{+ slowing} & \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Threshold (Hz) & Min.\ duration (s) & AD & FTD & AD & FTD & $\rho$ \\
+\midrule
+\inputtab{generated/tab/pswe_grid.tex}
+\bottomrule
+\end{tabular}
+\end{table}

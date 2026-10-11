@@ -1,0 +1,14 @@
+.....................                                                    [100%]
+=============================== warnings summary ===============================
+tests/test_equivalence.py::test_collinearity_vif_and_observed_expected
+tests/test_equivalence.py::test_collinearity_vif_and_observed_expected
+  /usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:268: HessianInversionWarning: Inverting hessian failed, no bse or cov_params available
+    mlefit = super().fit(
+
+tests/test_equivalence.py::test_collinearity_vif_and_observed_expected
+tests/test_equivalence.py::test_collinearity_vif_and_observed_expected
+  /usr/local/lib/python3.13/dist-packages/statsmodels/discrete/discrete_model.py:268: ConvergenceWarning: Maximum Likelihood optimization failed to converge. Check mle_retvals
+    mlefit = super().fit(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
