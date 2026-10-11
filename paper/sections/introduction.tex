@@ -28,9 +28,10 @@ leakage'' \cite{R1}, echoing a broader warning about leakage across machine-lear
 \cite{F8} and in neuroimaging prediction specifically \cite{L5}. In clinical machine learning,
 splitting records rather than subjects has long been known to overestimate accuracy for new
 patients \cite{L1}, and segment-level splitting is common in, and inflates, deep-learning studies of
-translational EEG \cite{L2,L3}. A 2026 comparison of five time--frequency representations under a single convolutional
-network \cite{R2} isolated representation, but its authors note that it ``does not explicitly model
-the true spatial topology'' and that graph-based schemes remain unexplored; others observe that most
+translational EEG \cite{L2,L3}. A 2026 comparison of five time--frequency representations under each of three pretrained
+convolutional networks \cite{R2} isolated representation, but its authors note that it ``does not
+explicitly model the true spatial topology'' and suggest that graph-based or topology-aware schemes
+may improve on it; others observe that most
 studies ``overlook spatial connectivity between channels'' \cite{R9}, and explicitly call for graph
 convolutional networks in future work \cite{R8,F7}. No study has varied representation and graph
 construction together while holding the model and the evaluation protocol fixed.

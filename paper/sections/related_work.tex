@@ -45,7 +45,9 @@ and Parkinson's cohorts --- the latter the same cohort we use for external valid
 the inflation in both \cite{L3}. In connectome-based neuroimaging models, leakage through repeated
 subjects drastically inflated prediction performance, and more so in small datasets \cite{L5}. The
 2026 scoping review of ds004504 attributes the upper end of reported accuracies on this benchmark to
-the same effect \cite{R1}. Best-practice guidance for prediction studies \cite{L7} and the large
+the same effect \cite{R1}, and a recent representation comparison on an 88-subject AD/FTD/control
+cohort reported 98.8\% accuracy with random splitting but 84.3\% with subject-wise splitting for the
+same model \cite{R2}. Best-practice guidance for prediction studies \cite{L7} and the large
 error bars of cross-validation in small samples \cite{L6} add a separate caution for cohorts of our
 size. We measure the leakage effect directly on one pipeline in both cohorts, and report
 subject-level confidence intervals throughout.
@@ -63,23 +65,31 @@ Table~\ref{tab:positioning} summarises how this study differs from the closest p
 
 \begin{table}[t]
 \centering\footnotesize
-\caption{Positioning against the closest prior work on EEG dementia classification.
-\checkmark\ = yes; -- = no; ? = not yet verified against the full text.}
+\caption{Positioning against the closest prior work on EEG dementia classification, verified against
+each paper's full text. \checkmark\ = yes; (\checkmark) = partly (see notes); -- = no.}
 \label{tab:positioning}
 \begin{tabular}{lccccc}
 \toprule
 Study & Varies repr. & Varies graph & Fixed model & Subject-level split & Public data \\
 \midrule
 DICE-Net \cite{F2} & -- & -- & \checkmark & \checkmark & \checkmark \\
-FC-measure GNN \cite{F3} & -- & \checkmark & \checkmark & ? & ? \\
-Adaptive GCN \cite{F4} & -- & \checkmark & -- & ? & ? \\
-TFR comparison \cite{R2} & \checkmark & -- & \checkmark & ? & \checkmark \\
-Spatial--functional GNN \cite{R9} & -- & -- & -- & ? & ? \\
-Multi-connectivity GCN \cite{R12} & -- & \checkmark & -- & ? & ? \\
+FC-measure GNN \cite{F3} & -- & \checkmark & (\checkmark)$^a$ & \checkmark & --$^e$ \\
+Adaptive GCN \cite{F4} & -- & (\checkmark)$^b$ & -- & \checkmark & --$^e$ \\
+TFR comparison \cite{R2} & \checkmark & -- & (\checkmark)$^c$ & (\checkmark)$^d$ & \checkmark \\
+Spatial--functional GNN \cite{R9} & -- & -- & -- & \checkmark & \checkmark \\
+Multi-connectivity GCN \cite{R12} & -- & (\checkmark)$^b$ & -- & \checkmark & \checkmark \\
 Graph transformer \cite{B6} & -- & -- & \checkmark & \checkmark & \checkmark \\
 \textbf{This study} & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
 \bottomrule
 \end{tabular}
+
+\smallskip
+\begin{minipage}{0.95\linewidth}\raggedright\scriptsize
+$^a$~Same GNN architecture for every connectivity measure, but hyperparameters tuned separately for
+each. $^b$~Graph construction varied only by ablating the proposed model's graph module (learned graph
+replaced by a fully connected one \cite{F4}; one of two connectivity matrices removed \cite{R12}).
+$^c$~Representations compared under each of three pretrained CNNs (MobileNetV2, ResNet-50,
+InceptionV3). $^d$~Reports both random (segment-level) and subject-wise splits (98.8\% versus 84.3\%
+accuracy). $^e$~In-house clinical cohort (20 AD, 20 controls); no public release stated.
+\end{minipage}
 \end{table}
-% TODO (author): resolve every "?" from the full text before submission (several of these papers
-% are paywalled; see paywalled_papers.md). Do not convert a "?" to a mark from the abstract alone.

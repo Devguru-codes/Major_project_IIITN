@@ -472,3 +472,24 @@ Added after internal review. Config is `pswe_robust`, which is outside the confi
   - the F values equal statsmodels AnovaRM for balanced data;
   - recovery of a planted effect;
   - null calibration over 30 simulations that include subject × representation variance.
+
+### Table 1 positioning cells verified against full texts (2026-10-11)
+All "?" cells are resolved from each paper's Methods and data-availability sections.
+
+**Sources:**
+- Europe PMC full text: R2, R9.
+- Springer open-access HTML: R12.
+- IEEE Xplore open-access HTML: F3, F4.
+- bioRxiv full text: B6.
+
+**Per paper:**
+- **F3** — in-house Sheffield cohort (20 AD / 20 HC), not public. Subject-grouped 20-fold CV. Hyperparameters tuned separately per FC measure, so "Fixed model" is partial.
+- **F4** — same in-house cohort, not public. Subject-grouped 10-fold CV. The graph is varied only by ablation (fully connected instead of learned), so "Varies graph" is partial.
+- **R2** — public OpenNeuro ds006036 (88 subjects). Reports both random splits (98.8%) and subject-wise splits (84.3%). Uses three CNNs, so the earlier "Fixed model ✓" was wrong and is now partial.
+- **R9** — public AHEPA/ds004504 data. Participant-level 80/20 split.
+- **R12** — public ds004504. Segments from one subject are only in train or only in test. Graph varied only by ablation, so "Varies graph" is partial.
+- **B6** — leave-one-subject-out split, so its existing ✓ is confirmed.
+
+**Text corrections:**
+- Intro: R2 used three pretrained CNNs, not one. Its graph remark is "may improve on it", not "remain unexplored". Both quoted passages were checked verbatim.
+- Related work: R2's random-vs-subject-wise split result added as independent leakage evidence.
