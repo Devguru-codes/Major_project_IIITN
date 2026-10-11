@@ -36,8 +36,11 @@ with the independent conclusion of the 2026 scoping review that apparent represe
 this dataset do not survive leakage-free evaluation \cite{R1}, and they temper the case for
 graph-based modelling made in recent work \cite{R2,R8,F7}: on 19-electrode scalp EEG from 88
 subjects and with this compact, untuned GCN, we see no evidence that graph structure adds information
-beyond good node features. Whether this holds for tuned or deeper graph models, source-space nodes,
-learned adjacency or much larger cohorts remains open.
+beyond good node features. A graph learned from the data, starting from the spatial one, did no better
+either (Section~\ref{sec:res-ablations}). These conclusions are scoped to the architecture we fixed: a
+two-layer GCN of about 3k parameters, with fixed hyperparameters, on 19 scalp electrodes. Whether they
+hold for tuned or deeper graph models, attention over time, source-space nodes or much larger cohorts
+remains open.
 
 \subsection{Neurophysiological interpretation}
 Representations that describe each electrode's own spectrum (P1, P3) outperformed one built only from
@@ -45,7 +48,9 @@ inter-electrode phase coupling (P2), and the functional graph did not improve on
 Within the limits of scalp EEG, this favours local oscillatory slowing over altered large-scale
 coupling as the dominant discriminative signal, consistent with spectral slowing being the most
 replicated EEG marker of AD \cite{R3,R15} and with the posterior-alpha-to-diffuse-theta shift visible
-in our data (Figure~\ref{fig:topo}). It does not contradict network accounts of dementia
+in our data (Figure~\ref{fig:topo}). Occlusion of the best model points the same way: it relied
+mainly on the 4--8 and 8--16 Hz wavelet bands, recognised controls chiefly through theta, and
+depended on no single electrode (Figure~\ref{fig:importance}). It does not contradict network accounts of dementia
 \cite{F12,F9}: alpha-band wPLI estimated within \SI{10}{\second} windows is noisy, and electrode-level
 graphs are a coarse proxy for cortical networks. The error pattern is clinically recognisable:
 controls are identified best, while FTD --- the smallest group, and less slowed than AD --- is
@@ -123,7 +128,7 @@ is available.
 \subsection{Future work}
 The most valuable next study is a multi-site replication of this exact protocol, since a single-site
 design cannot establish device or population invariance. Natural extensions are source-space graphs
-\cite{F7}, learned adjacency \cite{F4}, spatio-temporal graphs over window sequences \cite{R10,F6},
+\cite{F7}, richer learned-graph models than our single trainable adjacency \cite{F4}, spatio-temporal graphs over window sequences \cite{R10,F6},
 an architecture sweep under a fixed representation (the transpose of this design) \cite{F5}, an
 MCI class, and --- for the BBB question --- simultaneous EEG and dynamic contrast-enhanced MRI to test
 whether any PSWE definition tracks measured barrier leakage \cite{B5,B8}.

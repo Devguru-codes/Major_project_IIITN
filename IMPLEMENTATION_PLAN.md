@@ -516,3 +516,18 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
 1. **By-subject mixed model on correct/incorrect predictions** (per-subject accuracy over repeats). This separates discrimination from calibration. A by-subject RM-ANOVA with Greenhouse–Geisser correction is reported beside every mixed model.
 2. **Occlusion importance for P3×spatial**, on held-out subjects of the 25 selection splits, with models retrained using the main-grid seeds. Each electrode and each DWT sub-band (A5, D5–D2) is set to its training mean. The quantity is the drop in the probability assigned to the true class, averaged per subject and then per class, with a subject-bootstrap CI.
 3. **Learned adjacency.** The same GCN with a trainable symmetric non-negative graph, initialised at the spatial graph. It is run for all 7 representations on the selection folds, and for P3 on the confirmation folds. Compared with the fixed spatial graph by paired difference and TOST (±0.05).
+
+**Should-fix results (NB16, then NB17 to re-run the equivalence table; 2026-10-11).**
+- **Pytest:** passed in all three NB16 shards and in NB17.
+- **By-subject RM-ANOVA:** matches the mixed model. Representation F = 16.60 on the selection folds and 19.81 on the confirmation folds.
+- **Correct/incorrect mixed model:**
+  - Representation is still significant: F = 4.02 (selection) and 5.19 (confirmation), both p < 0.001. P3 remains highest.
+  - Graph: p = 0.038 (selection), range 0.013; p = 0.917 (confirmation).
+- **Occlusion:**
+  - D4 (4–8 Hz) is the most important band: drop 0.074, CI 0.026–0.121. D3 is next.
+  - Per class: CN relies on θ (0.194), FTD on D2 β (0.177), AD on D5 δ (0.044).
+  - No single electrode matters much: the largest drop is 0.019 (Fp1). Caveat: possible residual ocular activity.
+- **Learned adjacency:**
+  - Difference from the fixed graph: −0.016 to +0.005 on the selection folds; +0.002 for P3 on the confirmation folds. Ranking vs the fixed spatial graph: ρ = 0.89.
+  - TOST: 4 of 8 comparisons equivalent; the rest are inconclusive, with every CI including 0.
+- **Integrated gradients** were replaced by occlusion; this is listed under Deviations. Connectome, embedding and calibration plots were still not done.
