@@ -544,3 +544,14 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
    - Same EEGNet-8,2, splits, training rule and aggregation as NB06. GPU T4, hard cap 0.75 h. Tag `deep_eegnet_drop025`.
    - Stored in `reports/deep_sensitivity/`, so the pre-specified NB06 deep-baseline Holm family is unchanged.
    - Paired comparisons with EEGNet (dropout 0.5), with GCN P3×spatial, and with the best GCN P5 cell. Each uses Wilcoxon and the NB-corrected t-test, Holm-corrected within this family of 3. TOST against ±0.05 forms a separate equivalence family, "EEGNet dropout".
+
+**Could-item results (NB18; 2026-10-11).**
+- The first launch failed at the pytest gate. The cause was a synthetic test in which the best cell happened to be P5, so two reference columns collapsed into one. The test was fixed and the kernels relaunched; all 26 tests then passed in both kernels. The failed launch used only a few minutes of GPU session and no training.
+- **Severity:**
+  - Mild AD: n = 8, 0.60 correct on the selection folds and 0.475 on the confirmation folds. Moderate-to-severe AD: n = 28, 0.66 on both.
+  - FTD runs the other way: mild 0.40 vs 0.30.
+  - All 8 tests were non-significant (smallest uncorrected p = 0.207; Holm p = 1.0). |ρ(MMSE, p_true)| ≤ 0.06. Mild AD did worse in 7 of 7 representations, but the stratum is underpowered.
+- **EEGNet with dropout 0.25:**
+  - Macro-F1 0.551 ± 0.116: +0.021 vs dropout 0.5 (p = 0.77) and −0.035 vs GCN P3×spatial (p = 0.71).
+  - TOST is not equivalent (MDE 0.20). Training cost 0.23 GPU-h, so total GPU use for the study is now ≈ 0.57 h.
+- Other equivalence families are unchanged byte-for-byte.

@@ -8,7 +8,10 @@
 global average pooling; \num{47939} parameters) were trained on the same raw \SI{10}{\second} windows
 as P5, with the same 25 selection splits, optimiser, early-stopping rule, subject-equal weighting and
 subject-level aggregation as the GCN, so that every comparison is paired. EEGNet's max-norm weight
-constraints were replaced by the shared weight decay; no hyperparameter was tuned.
+constraints were replaced by the shared weight decay; no hyperparameter was tuned. Because the original
+EEGNet paper recommends dropout 0.25 for cross-subject classification, EEGNet was re-run once with that
+value (everything else unchanged; \dropGpuHours{} GPU-hours) and compared with the original EEGNet and the
+GCN in its own Holm family, so the pre-specified comparisons above are unaffected.
 
 The GCN learns its weights from the training subjects only and uses the validation subjects only to
 choose when to stop, whereas the classical models have no stopping rule. To compare models trained
@@ -53,7 +56,8 @@ events on slowing, age and sex fitted in controls only.
 
 \paragraph{Compute.}
 All experiments ran on free Kaggle sessions (4 vCPUs); the only GPU use was the two deep-learning
-baselines (\deepGpuHours{} GPU-hours of training on one Kaggle GPU). The 525-run main grid
+baselines (\deepGpuHours{} GPU-hours of training on one Kaggle GPU, plus \dropGpuHours{} for the EEGNet
+dropout sensitivity run). The 525-run main grid
 took \cpuHoursGrid{} CPU-hours, and the \nConfirmRuns{} further runs (confirmation grid, ablations and permutations on the
 confirmation folds, and the train + val refits) took \cpuHoursConfirm{} CPU-hours. The stopping-rule sensitivity grid and the
 external cohort added \nExtraRuns{} runs and \cpuHoursExtra{} CPU-hours, and the learned-adjacency GCN
@@ -183,6 +187,25 @@ wavelet sub-band on every electrode (bars, mean and subject-bootstrap 95\% CI) i
 training mean. Higher values mean the model relies more on that input.}
 \label{fig:importance}
 \end{figure}
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{Severity-stratified results for P3~$\times$~spatial (MMSE used for analysis only). Per stratum:
+number of patients, proportion of runs classified correctly, mean probability of the true class and
+proportion of runs predicted as controls, each averaged per patient over the five repeats. None of the
+Mann--Whitney or Spearman tests was significant after Holm correction.}
+\label{tab:severity}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llcccccccc}
+\toprule
+ & & \multicolumn{4}{c}{Selection folds} & \multicolumn{4}{c}{Confirmation folds} \\
+\cmidrule(lr){3-6}\cmidrule(lr){7-10}
+Group & Stratum & $n$ & Correct & $p_\mathrm{true}$ & Pred.\ CN & $n$ & Correct & $p_\mathrm{true}$ & Pred.\ CN \\
+\midrule
+\inputtab{generated/tab/severity.tex}
+\bottomrule
+\end{tabular}
+\end{table}
 
 % ---- moved from the main text to meet the journal length (second internal review) ----
 \begin{figure}[h]

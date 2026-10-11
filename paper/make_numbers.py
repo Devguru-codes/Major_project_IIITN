@@ -367,6 +367,53 @@ if (nb07 / "tables" / "deep" / "deep_baselines.csv").exists():
     sec = sum(json.loads(line)["seconds"] for f in sorted((REP / "deep").glob("deep_runs_s*.jsonl")) for line in open(f))
     put("deepGpuHours", sec / 3600, "{:.2f}")
 
+# ---- could items (NB18): EEGNet with dropout 0.25; severity-stratified results ----
+DROP = None
+drop_f = REP / "deep_sensitivity" / "eegnet_dropout.csv"
+if drop_f.exists():
+    DROP = pd.read_csv(drop_f)
+    put("dropFOne", DROP.macro_f1.iloc[0]); put("dropSd", DROP.sd.iloc[0]); put("dropAuc", DROP.roc_auc.iloc[0])
+    for ref, k in (("EEGNet (dropout 0.5)", "Old"), ("GCN P3 x spatial", "Best"), ("GCN P5", "Raw")):
+        r_ = DROP[DROP.reference.str.startswith(ref)].iloc[0]
+        put(f"dropVs{k}Delta", r_.delta, "{:+.3f}"); put(f"dropVs{k}P", p_fmt(r_.nb_p_holm))
+        put(f"dropVs{k}WilP", p_fmt(r_.wilcoxon_p_holm))
+    dsec = sum(json.loads(line)["seconds"] for f in sorted((REP / "deep_sensitivity").glob("*.jsonl")) for line in open(f))
+    put("dropGpuHours", dsec / 3600, "{:.2f}")
+
+SEV_ROWS = None
+sev_d = REP / "severity"
+if (sev_d / "severity_summary.csv").exists():
+    sv = pd.read_csv(sev_d / "severity_summary.csv")
+    st_ = pd.read_csv(sev_d / "severity_tests.csv")
+    put("sevMildMin", 21, "{:d}")
+    SN = {"selection": "Sel", "confirmation": "Conf"}; STN = {"mild": "Mild", "moderate-severe": "Mod"}
+    for _, r in sv.iterrows():
+        k = f"sev{SN[r.set]}{r.group}{STN[r.stratum]}"
+        put(k + "N", int(r.n), "{:d}"); put(k + "Correct", r.correct); put(k + "PredCn", r.pred_cn)
+        put(k + "PTrue", r.p_true); put(k + "Mmse", r.mmse_median, "{:.0f}")
+    for _, r in st_.iterrows():
+        k = f"sev{SN[r.set]}{r.group}{'Rho' if r.test.startswith('Spearman') else 'Mwu'}"
+        put(k, r.effect, "{:.2f}"); put(k + "P", p_fmt(r.p_holm)); put(k + "PRaw", p_fmt(r.p))
+    put("sevNTests", len(st_), "{:d}"); put("sevNSig", int((st_.p_holm < 0.05).sum()), "{:d}")
+    put("sevRhoMaxAbs", st_[st_.test.str.startswith("Spearman")].effect.abs().max(), "{:.2f}")
+    put("sevPRawMin", p_fmt(st_.p.min())); put("sevPHolmMin", p_fmt(st_.p_holm.min()))
+    rows = []
+    for g_ in ("AD", "FTD"):
+        for s_ in ("mild", "moderate-severe"):
+            cells_ = []
+            for set_ in ("selection", "confirmation"):
+                r = sv[(sv.set == set_) & (sv.group == g_) & (sv.stratum == s_)]
+                cells_ += ([f"{int(r.n.iloc[0])}", f"{r.correct.iloc[0]:.2f}", f"{r.p_true.iloc[0]:.2f}",
+                            f"{r.pred_cn.iloc[0]:.2f}"] if len(r) else ["--"] * 4)
+            lab_ = "Mild (MMSE $\\ge$ 21)" if s_ == "mild" else "Moderate--severe ($\\le$ 20)"
+            rows.append(f"{g_ if s_ == 'mild' else ''} & {lab_} & " + " & ".join(cells_) + " \\\\")
+    SEV_ROWS = "\n".join(rows)
+    br = pd.read_csv(sev_d / "severity_by_representation.csv")
+    for g_ in ("AD", "FTD"):
+        w = br[br.group == g_].pivot(index="pipeline", columns="stratum", values="correct")
+        put(f"sevRep{g_}NMildWorse", int((w["mild"] < w["moderate-severe"]).sum()), "{:d}")
+        put(f"sevRep{g_}NReps", len(w), "{:d}")
+
 # ---- PSWE robustness: zero-padded MPF + artefact rejection (NB14) ----
 for ds, tag, groups in (("ds004504", "Rob", (("AD", AD), ("FTD", FTD))),
                         ("ds004584", "ExtRob", (("PD", "C(group, Treatment('CN'))[T.PD]"),))):
@@ -390,7 +437,8 @@ eqf = REP / "equivalence" / "equivalence.csv"
 if eqf.exists():
     eq = pd.read_csv(eqf)
     fam = {"GCN vs non-graph twin": "Gvc", "graph construction": "Graph", "ablation": "Abl",
-           "deep baseline": "Deep", "stopping rule": "Es", "learned adjacency": "Learn"}
+           "deep baseline": "Deep", "stopping rule": "Es", "learned adjacency": "Learn",
+           "EEGNet dropout": "Drop"}
     for f_, tag in fam.items():
         g = eq[eq.family == f_]
         put(f"eq{tag}N", len(g), "{:d}"); put(f"eq{tag}NEquiv", int(g.equivalent.sum()), "{:d}")
@@ -401,7 +449,7 @@ if eqf.exists():
     put("eqMargin", eq.margin.iloc[0], "{:.2f}")
     lab = {"GCN vs non-graph twin": "GCN vs non-graph twin", "graph construction": "Graph types (pairwise)",
            "ablation": "Ablations", "deep baseline": "Deep-learning baselines", "stopping rule": "Stopping rules",
-           "learned adjacency": "Learned vs fixed graph"}
+           "learned adjacency": "Learned vs fixed graph", "EEGNet dropout": "EEGNet dropout 0.25 vs 0.5"}
     rows = []
     for (f_, s_), g in eq.groupby(["family", "setting"], sort=False):
         rows.append(f"{lab[f_]} & {s_} & {len(g)} & {int(g.equivalent.sum())} & "
@@ -547,6 +595,9 @@ for p in sorted(REPN):
         for model, label in (("eegnet", "EEGNet"), ("cnn1d", "1D-CNN")):
             r_ = DEEP[DEEP.model == model].iloc[0]
             rows.append(f" & {label} & {r_.macro_f1:.3f} $\\pm$ {r_.sd:.3f} & -- \\\\")
+            if model == "eegnet" and DROP is not None:      # could item: cross-subject dropout 0.25
+                r_ = DROP.iloc[0]
+                rows.append(f" & EEGNet (dropout 0.25) & {r_.macro_f1:.3f} $\\pm$ {r_.sd:.3f} & -- \\\\")
     rows.append("\\addlinespace")
 d = pd.read_csv(REP / "nb03a_demographics.csv")
 rows.append(f"Age + sex & Logistic regression & -- & {ms(d[d.model == 'demographics_lr'].macro_f1)} \\\\")
@@ -602,6 +653,8 @@ if EQ_ROWS is not None:
     (TAB / "equivalence.tex").write_text(EQ_ROWS, encoding="utf-8")
 if GRID_ROWS is not None:
     (TAB / "pswe_grid.tex").write_text(GRID_ROWS, encoding="utf-8")
+if SEV_ROWS is not None:
+    (TAB / "severity.tex").write_text(SEV_ROWS, encoding="utf-8")
 if MIX_ROWS is not None:
     (TAB / "mixed.tex").write_text(MIX_ROWS, encoding="utf-8")
 if EXT_ROWS is not None:

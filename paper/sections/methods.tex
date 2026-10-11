@@ -163,6 +163,12 @@ completeness.
 
 \paragraph{Stopping-rule sensitivity.} The grid was re-run with patience 50 and without early stopping (Supplementary methods).
 
+\paragraph{Severity (added).} To ask whether the models only find advanced disease, patients were split
+at the conventional mild cut-point (MMSE $\ge$ \sevMildMin{} versus $\le$ 20; MMSE is used for analysis only).
+For P3~$\times$~spatial on both fold sets we compared, within AD and within FTD, the probability assigned to
+the true class between strata (Mann--Whitney) and its rank correlation with MMSE (Spearman), with Holm
+correction over the \sevNTests{} tests; the stratum sizes are those of the cohort and were not chosen.
+
 \paragraph{Learned adjacency (added).} To test whether a graph fitted to the data would help where
 the three fixed constructions did not, the GCN was given a trainable, symmetric, non-negative
 $19\times19$ adjacency (softplus of free parameters, symmetrised and degree-normalised), initialised at
@@ -284,7 +290,8 @@ them, and ablations, leakage and permutation tests were moved onto them.
 subjects; we added train-only fits and train + val GCN refits, and corrected the Nadeau--Bengio ratio.
 (iv)~\emph{Added analyses.} The background-relative PSWE definitions (Section~\ref{sec:pswe}), the
 stopping-rule sensitivity, the PSWE detector robustness and collinearity checks, the equivalence tests,
-the learned-adjacency GCN, occlusion importance and the two mixed-model cross-checks were added after the corresponding results were known; their definitions, variants and margins were fixed
+the learned-adjacency GCN, occlusion importance, the two mixed-model cross-checks, the severity-stratified
+analysis and an EEGNet run with dropout 0.25 were added after the corresponding results were known; their definitions, variants and margins were fixed
 in the configuration before they were run. A7, A8 and the A11 PSWE rule grid were planned but run late.
 (v)~\emph{Changed or not done.} Planned integrated-gradients explanations were replaced by occlusion,
 which is model-agnostic and reads directly as lost probability for the true class; the planned connectome and embedding plots and calibration
@@ -292,7 +299,8 @@ diagrams were not carried out.
 (vi)~\emph{Implementation details.} Hjorth activity in P4 was replaced by line length (it duplicates the
 variance); PSWEs are detected per channel rather than over averaged regions, with an MPF range set by us
 (the source does not report one); EEGNet's max-norm constraints were replaced by the shared weight decay
-and its dropout kept at the shared 0.5.
+and its dropout kept at the shared 0.5 (a run with the cross-subject value of 0.25 is reported as a
+sensitivity analysis).
 
 \subsection{Compute}
 All computation ran on free Kaggle sessions; resources are detailed in the Supplementary methods.
