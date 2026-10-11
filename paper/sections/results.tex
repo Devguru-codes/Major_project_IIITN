@@ -122,6 +122,16 @@ often taken for controls (Figure~\ref{fig:confusion}). The ROC and precision--re
 curves show the same ordering (Figure~\ref{fig:roc}). The models were poorly calibrated (expected
 calibration error \bestEce{}), so their probabilities should not be read as clinical risks.
 
+\paragraph{Severity.} Mild patients were not detectably harder to classify. For \bestCell{}, mild AD
+(MMSE $\ge$ \sevMildMin{}, $n=\sevSelADMildN$) was classified correctly in \sevSelADMildCorrect{} of runs on the
+selection folds and \sevConfADMildCorrect{} on the confirmation folds, against \sevSelADModCorrect{} and
+\sevConfADModCorrect{} for moderate-to-severe AD ($n=\sevSelADModN$); FTD showed the opposite, small difference
+(\sevSelFTDMildCorrect{} mild, $n=\sevSelFTDMildN$, against \sevSelFTDModCorrect{}, $n=\sevSelFTDModN$;
+Table~\ref{tab:severity}). None of the \sevNTests{} tests was significant (smallest uncorrected $p\sevPRawMin$),
+and within patients the true-class probability was unrelated to MMSE ($|\rho|\le\sevRhoMaxAbs$). Mild AD was
+less often correct than moderate-to-severe AD for \sevRepADNMildWorse{} of \sevRepADNReps{} representations,
+so a modest disadvantage for early AD is plausible, but with only \sevSelADMildN{} mild AD patients it cannot be estimated.
+
 \paragraph{What the best model relies on.} Occluding one wavelet sub-band on every electrode cost
 far more than occluding any single electrode (Figure~\ref{fig:importance}). The theta sub-band
 \occTopBand{} mattered most (drop in true-class probability \occTopBandDrop{}, 95\% CI
@@ -163,7 +173,10 @@ but under neither comparison with the Nadeau--Bengio correction. Learning featur
 signal therefore did not substitute for a good hand-crafted representation on this cohort, while
 using \deepGpuHours{} GPU-hours against none for every other model. As for the classical twins, these
 comparisons are imprecise (detectable difference about \eqDeepMde{}), so they show only that the deep
-networks are not dramatically better.
+networks are not dramatically better. Training EEGNet with the dropout recommended for cross-subject use
+(0.25 instead of the shared 0.5) changed little: macro-F1 \dropFOne{}~$\pm$~\dropSd{}, \dropVsOldDelta{}
+against the original EEGNet (Wilcoxon--Holm $p\dropVsOldWilP$) and still \dropVsBestDelta{} below the GCN on
+wavelet features ($p\dropVsBestWilP$; Supplementary methods).
 
 \begin{table}[t]
 \centering\small
