@@ -103,3 +103,25 @@ def test_confirmation_folds_differ_from_main_folds():
     confirm = make_folds(subjects, lab, [5, 6, 7, 8, 9], 5, 0.2)
     assert [r["seed"] for r in confirm["repeats"]] == [5, 6, 7, 8, 9]
     assert all(a["folds"][0]["test"] != b["folds"][0]["test"] for a, b in zip(main["repeats"], confirm["repeats"]))
+
+
+@pytest.mark.parametrize("arch", ["eegnet", "cnn1d"])
+def test_deep_baselines_shapes_and_training(cfg, small_cache, tmp_path, arch):
+    import json
+
+    import torch
+
+    from eegrep.models import build_model, n_params
+
+    m = build_model(1280, {**cfg["model"], "arch": arch}, 3, n_nodes=19)
+    out = m(torch.zeros(4, 19, 1280), None)
+    assert out.shape == (4, 3)
+    assert (2_000 < n_params(m) < 6_000) if arch == "eegnet" else (n_params(m) < 60_000)
+    subjects = sorted(set(small_cache.subject))
+    labels = [int(small_cache.label[small_cache.subject == s][0]) for s in subjects]
+    folds = make_folds(subjects, labels, [0], n_folds=3, val_frac=0.34)
+    store = ResultStore(tmp_path / f"{arch}.jsonl")
+    run_cell(small_cache, folds, cfg, store, pipeline="P5", edge="identity", tag=f"deep_{arch}",
+             overrides={"model.arch": arch, "train.max_epochs": 2})
+    rows = [json.loads(line) for line in open(tmp_path / f"{arch}.jsonl")]
+    assert len(rows) == 3 and all(r["n_params"] == n_params(m) for r in rows)
