@@ -1,28 +1,23 @@
-\textit{Objective.} EEG-based classification of Alzheimer's disease (AD) and frontotemporal dementia
-(FTD) on the same public dataset reports accuracies from 80\% to 99\%, but studies change the signal
-representation, graph construction, model and evaluation protocol at once. We isolated these factors
-and tested a blood--brain-barrier (BBB)-associated EEG marker.
-\textit{Approach.} Using OpenNeuro ds004504 (36 AD, 23 FTD, 29 controls), we crossed seven node-feature
-representations with three graph constructions under one fixed two-layer graph convolutional network,
-evaluated on 25 frozen subject-level cross-validation splits (\nMainRuns{} runs) and re-evaluated on 25
-independent confirmation splits, with a by-subject mixed model as the primary analysis, matched
-non-graph baselines, 16 ablations, label permutations, a leakage experiment, stopping-rule sensitivity,
-and external validation of the whole protocol on a Parkinson's disease cohort (ds004584, 149
-participants). We also characterised paroxysmal slow-wave events (PSWEs), an EEG marker linked to BBB
-dysfunction.
-\textit{Main results.} Representation dominated ($F(\mixSelRepDf,\mixSelRepDenDf)=\mixSelRepF$, replicated at
-\mixConfRepF{} on independent splits and \mixExtRepF{} externally); graph construction mattered little,
-with graph types differing by less than 0.01 in the probability assigned to the true class, in a
-direction that differed between cohorts. The best configuration (wavelet features, spatial graph)
-reached macro-F1 \confFOne{} on the confirmation splits (95\% CI \confFOneCiLo{}--\confFOneCiHi{};
-permutation $p=\cpermPThreespatialP$), not significantly better than non-graph classifiers; window-level
-splitting of the identical pipeline raised it to \cleakPThreespatialLeakySubj{}. Externally the same
-configuration reached \extSelFOne{}, leakage again inflated it (\extLeakySubj{}), but the ranking of
-representations did not transfer ($\rho=\extRepsRho$). Fixed-threshold PSWEs were more frequent in AD
-(rate ratio \psweAdjADRR{}) and FTD (\psweAdjFTDRR{}) but not in Parkinson's disease (\extPsweAdjRR{}); in
-both cohorts the rate tracked background slowing ($\rho=\psweSlowRho$ and \extPsweSlowRho{}), robustly to
-spectral zero-padding and artefact rejection.
-\textit{Significance.} The evaluation protocol and the signal representation, not the graph or the
-model, determine reported performance; representation rankings are disease-specific; and an EEG marker
-of BBB dysfunction must be defined relative to background slowing. Code, frozen folds and all raw runs
-are released.
+\textit{Objective.} EEG classification of Alzheimer's disease (AD) and frontotemporal dementia (FTD) on one
+public dataset reports accuracies from 80\% to 99\%, but studies change representation, graph, model and
+evaluation protocol at once. We isolated representation and graph construction under a fixed graph
+neural network, and tested a candidate EEG marker linked to blood--brain-barrier dysfunction.
+\textit{Approach.} On OpenNeuro ds004504 (36 AD, 23 FTD, 29 controls) we crossed seven node-feature
+representations with three graph constructions under one fixed graph convolutional network, on 25
+frozen subject-level splits (\nMainRuns{} runs) and 25 confirmation splits, with a by-subject mixed
+model, equivalence tests, matched non-graph and deep-learning baselines, 16 ablations, permutation and
+leakage experiments, and external validation on a Parkinson's disease cohort (ds004584, $n=149$). We
+also characterised paroxysmal slow-wave events (PSWEs).
+\textit{Main results.} Representation dominated ($F(\mixSelRepDf,\mixSelRepDenDf)=\mixSelRepF$; \mixConfRepF{}
+on confirmation splits; \mixExtRepF{} externally), whereas the graph constructions were equivalent within
+$\pm\eqMargin$ macro-F1. The best configuration (wavelet features, spatial graph) reached macro-F1
+\confFOne{} (95\% CI \confFOneCiLo{}--\confFOneCiHi{}; permutation $p=\cpermPThreespatialP$); non-graph and
+deep-learning baselines did not differ significantly, though differences of about \eqGvcMde{} could not be
+excluded. Window-level splitting raised macro-F1 to \cleakPThreespatialLeakySubj{}. The representation
+ranking did not transfer to Parkinson's disease ($\rho=\extRepsRho$). PSWEs were more frequent in AD (rate
+ratio \psweAdjADRR{}) and FTD (\psweAdjFTDRR{}) but not in Parkinson's disease, tracked background slowing
+($\rho=\psweSlowRho$), and showed no excess in patients whose slowing overlapped with controls, robustly
+to the event rule, spectral resolution and artefacts.
+\textit{Significance.} The evaluation protocol and the signal representation, not the graph construction,
+determine reported performance, and the best representation is disease-specific. Fixed-threshold PSWEs on
+scalp EEG mainly index background slowing. Code, frozen folds and all raw runs are released.

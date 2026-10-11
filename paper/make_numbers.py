@@ -155,6 +155,8 @@ for _, r in cabl.iterrows():
     put(k + "P", p_fmt(r.nb_p_holm)); put(k + "WilP", p_fmt(r.wilcoxon_p_holm))
 put("cablNSigNb", int((cabl.nb_p_holm < 0.05).sum()), "{:d}")
 put("cablN", len(cabl), "{:d}")
+small = cabl[cabl.ablation.isin(["A3_k3", "A3_k6", "A4_binary", "A5_depth1", "A5_depth3", "A9_unweighted"])]
+put("cablSmallMax", small.delta.abs().max(), "{:.3f}")
 put("cablNSigWil", int((cabl.wilcoxon_p_holm < 0.05).sum()), "{:d}")
 fair = pd.read_csv(ct / "fair_comparisons.csv")
 for _, r in fair.iterrows():
@@ -224,6 +226,7 @@ if es_dir.exists():
         put(t + "EdgeF", r.edge_F, "{:.2f}"); put(t + "EdgeP", p_fmt(r.edge_p)); put(t + "InterP", p_fmt(r.inter_p))
         put(t + "Rho", r.spearman_vs_main, "{:.2f}"); put(t + "EpochMedian", r.median_best_epoch, "{:.0f}")
         put(t + "GvcSig", int(r.gcn_vs_classical_n_sig_wilcoxon), "{:d}")
+    put("esGrandShiftMax", (es.grand_mean_f1 - es.grand_mean_f1.iloc[0]).abs().max(), "{:.3f}")
     esr = pd.read_csv(es_dir / "representations.csv")
     for _, r in esr[esr.rule != "patience 20 (main)"].iterrows():
         t = "es" + tag[r.rule] + r.pipeline
@@ -329,6 +332,8 @@ if (mix / "selection_summary.json").exists():
         mg = pd.read_csv(mix / f"{s}_marginal.csv")
         for _, r in mg.iterrows():
             put(f"mix{t}M{r.level}", r["mean"])
+        e_ = mg[mg.factor == "edge"]["mean"]
+        put(f"mix{t}EdgeRange", e_.max() - e_.min(), "{:.3f}")
     rows = []
     for term, label in (("representation", "Representation"), ("graph", "Graph construction"),
                         ("interaction", "Interaction")):
@@ -372,6 +377,59 @@ for ds, tag, groups in (("ds004504", "Rob", (("AD", AD), ("FTD", FTD))),
         for m, mt in (("nb_glm_adjusted", "Adj"), ("nb_glm_adjusted_slowing", "AdjSlow")):
             put(f"pswe{tag}{mt}{grp}RR", pr[m]["rate_ratio"][key], "{:.2f}")
             put(f"pswe{tag}{mt}{grp}P", p_fmt(pr[m]["p"][key]))
+
+# ---- equivalence (TOST, +/-0.05, NB-corrected) and minimum detectable effects (NB15) ----
+EQ_ROWS = GRID_ROWS = None
+eqf = REP / "equivalence" / "equivalence.csv"
+if eqf.exists():
+    eq = pd.read_csv(eqf)
+    fam = {"GCN vs non-graph twin": "Gvc", "graph construction": "Graph", "ablation": "Abl",
+           "deep baseline": "Deep", "stopping rule": "Es"}
+    for f_, tag in fam.items():
+        g = eq[eq.family == f_]
+        put(f"eq{tag}N", len(g), "{:d}"); put(f"eq{tag}NEquiv", int(g.equivalent.sum()), "{:d}")
+        put(f"eq{tag}Mde", g.mde80.median(), "{:.2f}"); put(f"eq{tag}MdeMax", g.mde80.max(), "{:.2f}")
+        put(f"eq{tag}CiMax", max(g.ci90_lo.abs().max(), g.ci90_hi.abs().max()), "{:.3f}")
+    gr = eq[eq.family == "graph construction"]
+    put("eqGraphPMax", p_fmt(gr.p_tost_holm.max()))
+    put("eqMargin", eq.margin.iloc[0], "{:.2f}")
+    lab = {"GCN vs non-graph twin": "GCN vs non-graph twin", "graph construction": "Graph types (pairwise)",
+           "ablation": "Ablations", "deep baseline": "Deep-learning baselines", "stopping rule": "Stopping rules"}
+    rows = []
+    for (f_, s_), g in eq.groupby(["family", "setting"], sort=False):
+        rows.append(f"{lab[f_]} & {s_} & {len(g)} & {int(g.equivalent.sum())} & "
+                    f"{g.delta.abs().max():.3f} & {g.mde80.median():.2f} \\\\")
+    EQ_ROWS = "\n".join(rows)
+
+# ---- PSWE A11 rule grid and collinearity of the slowing adjustment (NB15) ----
+for ds, tag, pats in (("ds004504", "", ("AD", "FTD")), ("ds004584", "Ext", ("PD",))):
+    gd = REP / "pswe_grid" / f"pswe_grid_{ds}"
+    if not (gd / "pswe_grid.csv").exists():
+        continue
+    gg = pd.read_csv(gd / "pswe_grid.csv")
+    for p_ in pats:
+        put(f"grid{tag}{p_}RrMin", gg[f"rr_adj_{p_}"].min(), "{:.2f}"); put(f"grid{tag}{p_}RrMax", gg[f"rr_adj_{p_}"].max(), "{:.2f}")
+        put(f"grid{tag}{p_}NSig", int((gg[f"p_adj_{p_}"] < 0.05).sum()), "{:d}")
+        put(f"grid{tag}{p_}SlowMax", gg[f"rr_adj_slow_{p_}"].max(), "{:.2f}")
+        put(f"grid{tag}{p_}SlowMin", gg[f"rr_adj_slow_{p_}"].min(), "{:.2f}")
+    put(f"grid{tag}N", len(gg), "{:d}")
+    put(f"grid{tag}RhoMin", gg.slowing_rho.min(), "{:.2f}"); put(f"grid{tag}RhoMax", gg.slowing_rho.max(), "{:.2f}")
+    co = json.loads((gd / "pswe_collinearity.json").read_text())
+    put(f"col{tag}Vif", co["vif_slowing"], "{:.2f}")
+    for p_ in pats:
+        key = f"C(group, Treatment('CN'))[T.{p_}]"
+        put(f"col{tag}{p_}Outside", 100 * co["slowing_outside_control_range"][p_], "{:.0f}")
+        put(f"col{tag}{p_}InSupport", co["common_support"]["n_in_support"][p_], "{:d}")
+        for m_, mt in (("adjusted", "Sup"), ("adjusted_slowing", "SupSlow")):
+            r_ = co["common_support"][m_][key]
+            put(f"col{tag}{mt}{p_}RR", r_["rate_ratio"], "{:.2f}"); put(f"col{tag}{mt}{p_}P", p_fmt(r_["p"]))
+        put(f"col{tag}Oe{p_}", co["observed_expected"][p_], "{:.2f}")
+    put(f"col{tag}OeCN", co["observed_expected"]["CN"], "{:.2f}")
+    put(f"col{tag}OeP", p_fmt(co["observed_expected_kruskal_p"]))
+    if ds == "ds004504":
+        GRID_ROWS = "\n".join(
+            f"{r.threshold_hz:.0f} & {r.min_duration_s:.0f} & {r.rr_adj_AD:.2f} & {r.rr_adj_FTD:.2f} & "
+            f"{r.rr_adj_slow_AD:.2f} & {r.rr_adj_slow_FTD:.2f} & {r.slowing_rho:.2f} \\\\" for r in gg.itertuples())
 
 # ---- A8 without ICA: fixed-threshold PSWE statistics ----
 a8 = REP / "a7_a8" / "rq6_no_ica" / "rq6_pswe_stats.json"
@@ -485,6 +543,10 @@ for regime, g in fair.groupby("training_subjects", sort=False):
                      f"{r.nb_p_holm:.2f} \\\\")
     frows.append("\\addlinespace")
 (TAB / "fair.tex").write_text("\n".join(frows[:-1]), encoding="utf-8")
+if EQ_ROWS is not None:
+    (TAB / "equivalence.tex").write_text(EQ_ROWS, encoding="utf-8")
+if GRID_ROWS is not None:
+    (TAB / "pswe_grid.tex").write_text(GRID_ROWS, encoding="utf-8")
 if MIX_ROWS is not None:
     (TAB / "mixed.tex").write_text(MIX_ROWS, encoding="utf-8")
 if EXT_ROWS is not None:

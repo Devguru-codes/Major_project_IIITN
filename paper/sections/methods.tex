@@ -136,21 +136,7 @@ trained on the flattened node features of each representation with the same fold
 subject aggregation as the GCN (a non-graph twin of every representation). The MMSE is never used as
 an input: control participants all score 30, so it is a proxy for the label.
 
-\paragraph{Deep-learning baselines.} To place the GCN against standard end-to-end EEG networks, EEGNet-8,2
-\cite{F14} (temporal convolution of 64 taps, depthwise spatial convolution, separable convolution;
-\num{3331} parameters) and a compact 1D-CNN (three temporal convolution blocks over the 19 channels,
-global average pooling; \num{47939} parameters) were trained on the same raw \SI{10}{\second} windows
-as P5, with the same 25 selection splits, optimiser, early-stopping rule, subject-equal weighting and
-subject-level aggregation as the GCN, so that every comparison is paired. EEGNet's max-norm weight
-constraints were replaced by the shared weight decay; no hyperparameter was tuned.
-
-The GCN learns its weights from the training subjects only and uses the validation subjects only to
-choose when to stop, whereas the classical models have no stopping rule. To compare models trained
-on the same subjects, we evaluate both under two regimes on the same 25 test splits:
-(i)~\emph{train only}, with the classical models fitted on the training subjects and the GCN as in the
-main grid; and (ii)~\emph{train + val}, with the classical models fitted on training and validation
-subjects and the GCN refitted on the same subjects for the number of epochs selected by early
-stopping in the corresponding main-grid run (\nRefitRuns{} refits, no validation monitoring).
+\paragraph{Deep-learning baselines.} EEGNet-8,2 \cite{F14} and a compact 1D-CNN were trained on the raw windows with the same splits, training rule and aggregation as the GCN (Supplementary methods).
 
 \paragraph{Ablations.} Run on the two best cells of the main grid, chosen automatically from the
 seed 0--4 results and evaluated on the 25 confirmation splits, each paired with the same cell's
@@ -175,11 +161,7 @@ $p$-value is $(1+\#\{\text{null}\ge\text{observed}\})/(1+N)$. The primary test u
 \permPThreespatialN{} permutations on the first selection repeat (seed 0) are reported for
 completeness.
 
-\paragraph{Stopping-rule sensitivity.} Early stopping on about 14 validation subjects often selected
-an early epoch. To test whether this shaped the conclusions, the full $7\times3$ grid was re-run on
-the 25 selection splits with patience 50 instead of 20, and with no early stopping at all (100
-epochs on the training subjects, final weights kept; validation subjects unused), each paired with
-the main grid split by split.
+\paragraph{Stopping-rule sensitivity.} The grid was re-run with patience 50 and without early stopping (Supplementary methods).
 
 \subsection{PSWE detection}\label{sec:pswe}
 Following Milikovsky et al.\ \cite{B1}, with parameters as reported in \cite{B3}, we computed the
@@ -190,29 +172,15 @@ seconds with MPF $<\SI{6}{\hertz}$. Detection is per channel and per recording, 
 For each subject we computed the PSWE rate (events per minute, averaged over channels) and the
 fraction of time spent in PSWEs.
 
-\paragraph{Background-relative PSWE (exploratory).} After observing that the fixed-threshold rate
-was strongly correlated with background slowing (Section~\ref{sec:res-pswe}), we added a
-post-hoc analysis, labelled as such throughout. Its definitions were fixed in the configuration
-before it was run on any real data. A relative PSWE is a run of at least \SI{5}{\second} in which a
-channel's MPF lies below that channel's own recording-median MPF by at least \SI{2}{\hertz}
-(primary), \SI{1.5}{\hertz} or \SI{3}{\hertz}, or by at least 2 or 3 robust standard deviations
-($1.4826\times$ median absolute deviation).
+\paragraph{Background-relative PSWE (exploratory, post hoc).} Events defined as drops below each channel's own median MPF are described in the Supplementary methods.
 
-\paragraph{Detector robustness.} Two properties of the fixed-threshold detector could bias it: with
-\SI{2}{\second} windows the MPF is quantised to \SI{0.5}{\hertz} steps, so the \SI{6}{\hertz} threshold
-falls on a bin edge; and artefacts add low-frequency power. In a pre-specified robustness analysis we
-re-detected events with each segment zero-padded to an \SI{8}{\second} FFT (MPF on a
-\SI{0.125}{\hertz} grid, window unchanged), with amplitude-based artefact rejection (a channel's
-\SI{2}{\second} segment rejected if its peak-to-peak amplitude exceeded \SI{200}{\micro\volt} or it was
-flat, SD $<\SI{0.5}{\micro\volt}$; rejected seconds break events and are removed from the exposure
-time), and with both (primary), and repeated the statistics below. The unmodified variant reproduced
-the main event counts exactly in both cohorts. The fixed-threshold statistics were also repeated on
-the recordings preprocessed without ICA (A8).
+\paragraph{Detector robustness and collinearity.} We repeated the PSWE statistics with zero-padded spectra, artefact rejection, without ICA and over a grid of event rules (A11), and examined the collinearity of the slowing adjustment (Supplementary methods).
 
 \subsection{External validation cohort}\label{sec:external}
 To test whether the conclusions depend on one cohort, the identical protocol was applied to OpenNeuro
 ds004584 \cite{ds004584}: 149 participants (100 with Parkinson's disease, 49 controls), \SIrange{2}{5}{\minute}
-of eyes-open resting EEG, 63 channels at \SI{500}{\hertz}. Only what must differ between datasets was
+of eyes-open resting EEG, 63 channels at \SI{500}{\hertz}, with patients on their usual levodopa
+\cite{ds004584src}. Only what must differ between datasets was
 changed, in a configuration overlay: the 19 electrodes of the main montage were selected in the same
 node order, the online reference (Pz), which is not stored, was restored as a flat channel before
 average re-referencing (exact, because every stored channel is referenced to it); the mains notch was
@@ -262,6 +230,15 @@ test to training subjects of the models being compared: $17.6/56.3$ for models f
 subjects only (the main grid and the ablations) and $17.6/70.4$ when validation subjects are added
 (the train + val regime).
 
+\paragraph{Equivalence.} A non-significant difference is not evidence of no difference. For every paired
+comparison read as ``no advantage'' (GCN versus its non-graph twin, graph types, ablations, deep-learning
+baselines and stopping rules) we report two one-sided tests (TOST) against a margin of $\pm0.05$
+macro-F1 --- about one additional correctly classified subject in a test fold of 17--18 --- using the
+Nadeau--Bengio corrected standard error, with Holm correction within each family, together with the
+90\% confidence interval and the minimum difference detectable with 80\% power. With the corrected
+standard error these tests are conservative: a comparison is called equivalent only if its whole
+corrected 90\% interval lies within the margin.
+
 For PSWEs, group differences were tested with Kruskal--Wallis and Dunn post-hoc tests (Holm-corrected,
 with rank-biserial effect sizes), and with negative-binomial regression of event counts using
 recording length as exposure, adjusted for age and sex and, in further models, for relative
@@ -270,10 +247,31 @@ partial (age- and sex-adjusted) rank correlations, and the relation to cognition
 correlation against MMSE within patients only. All analyses were run with SciPy, statsmodels and
 custom code that is tested against reference implementations.
 
+\subsection{Deviations from the pre-specified plan}\label{sec:deviations}
+The study plan (factorial design, preprocessing, model, training, folds, baselines, ablations A1--A12,
+permutation test, leakage experiment, deep-learning baselines, external validation and the fixed PSWE
+definition) was committed to the code repository before any data were analysed; all changes are logged
+there with dates. The following were decided after results were seen.
+(i)~\emph{Primary analysis.} The plan named the split-level repeated-measures ANOVA on macro-F1 as primary.
+After an internal review we made the by-subject mixed model primary (Section~\ref{sec:stats}); a first
+mixed-model version without subject-by-factor random effects gave implausibly small $p$-values
+(pseudo-replication) and was discarded. Both the ANOVA and the mixed model are reported.
+(ii)~\emph{Selection bias.} The confirmation folds (seeds 5--9) replaced the planned ten-repeat re-run of the
+top three cells; they were generated after the main grid was analysed and committed before any run used
+them, and ablations, leakage and permutation tests were moved onto them.
+(iii)~\emph{Matched training data.} Classical baselines were first fitted on training plus validation
+subjects; we added train-only fits and train + val GCN refits, and corrected the Nadeau--Bengio ratio.
+(iv)~\emph{Added analyses.} The background-relative PSWE definitions (Section~\ref{sec:pswe}), the
+stopping-rule sensitivity, the PSWE detector robustness and collinearity checks, and the equivalence tests
+were added after the corresponding results were known; their definitions, variants and margins were fixed
+in the configuration before they were run. A7, A8 and the A11 PSWE rule grid were planned but run late.
+(v)~\emph{Not done.} Planned explainability analyses (integrated gradients, connectome and embedding
+plots) and calibration diagrams were not carried out.
+(vi)~\emph{Implementation details.} Hjorth activity in P4 was replaced by line length (it duplicates the
+variance); PSWEs are detected per channel rather than over averaged regions, with an MPF range set by us
+(the source does not report one); EEGNet's max-norm constraints were replaced by the shared weight decay
+and its dropout kept at the shared 0.5.
+
 \subsection{Compute}
-All experiments ran on free Kaggle sessions (4 vCPUs); the only GPU use was the two deep-learning
-baselines (\deepGpuHours{} GPU-hours of training on one Kaggle GPU). The 525-run main grid
-took \cpuHoursGrid{} CPU-hours, and the \nConfirmRuns{} further runs (confirmation grid, ablations and permutations on the
-confirmation folds, and the train + val refits) took \cpuHoursConfirm{} CPU-hours. The stopping-rule sensitivity grid and the
-external cohort added 
-ExtraRuns{} runs and \cpuHoursExtra{} CPU-hours. The mixed models fit in seconds. Every run is logged with its configuration hash, code version and seed.
+All computation ran on free Kaggle sessions; resources are detailed in the Supplementary methods.
+

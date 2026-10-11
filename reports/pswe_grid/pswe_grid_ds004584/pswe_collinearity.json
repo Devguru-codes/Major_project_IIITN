@@ -1,0 +1,47 @@
+{
+ "vif_slowing": 1.0554449025515946,
+ "r2_slowing_on_group_age_sex": 0.052532256698150315,
+ "common_support": {
+  "range": [
+   0.2707293629646301,
+   0.8821187019348145
+  ],
+  "n_in_support": {
+   "PD": 95,
+   "CN": 49
+  },
+  "n_total": {
+   "PD": 100,
+   "CN": 49
+  },
+  "adjusted": {
+   "C(group, Treatment('CN'))[T.PD]": {
+    "rate_ratio": 1.200066888722982,
+    "p": 0.552900012707731,
+    "ci95": [
+     0.6570577688731016,
+     2.1918324470605226
+    ]
+   }
+  },
+  "adjusted_slowing": {
+   "C(group, Treatment('CN'))[T.PD]": {
+    "rate_ratio": 0.5826304549847451,
+    "p": 0.007456086547572136,
+    "ci95": [
+     0.39223477232573617,
+     0.8654465922613912
+    ]
+   }
+  }
+ },
+ "observed_expected": {
+  "PD": 0.4244182665130792,
+  "CN": 0.7256118371173387
+ },
+ "observed_expected_kruskal_p": 0.006703018185014782,
+ "slowing_outside_control_range": {
+  "PD": 0.05,
+  "CN": 0.0
+ }
+}
