@@ -452,5 +452,67 @@
    }
   ]
  },
+ "deep_baselines": [
+  {
+   "model": "cnn1d",
+   "n": 25,
+   "macro_f1": 0.5231,
+   "sd": 0.1132,
+   "balanced_acc": 0.5525,
+   "roc_auc": 0.7438,
+   "reference": "GCN P3 x spatial",
+   "reference_f1": 0.5861,
+   "delta": -0.063,
+   "wilcoxon_p": 0.0038,
+   "nb_p": 0.2547,
+   "wilcoxon_p_holm": 0.0151,
+   "nb_p_holm": 1.0
+  },
+  {
+   "model": "cnn1d",
+   "n": 25,
+   "macro_f1": 0.5231,
+   "sd": 0.1132,
+   "balanced_acc": 0.5525,
+   "roc_auc": 0.7438,
+   "reference": "GCN P5 x functional",
+   "reference_f1": 0.5035,
+   "delta": 0.0196,
+   "wilcoxon_p": 0.4578,
+   "nb_p": 0.8345,
+   "wilcoxon_p_holm": 0.5169,
+   "nb_p_holm": 1.0
+  },
+  {
+   "model": "eegnet",
+   "n": 25,
+   "macro_f1": 0.53,
+   "sd": 0.114,
+   "balanced_acc": 0.5501,
+   "roc_auc": 0.7541,
+   "reference": "GCN P3 x spatial",
+   "reference_f1": 0.5861,
+   "delta": -0.0561,
+   "wilcoxon_p": 0.0851,
+   "nb_p": 0.5466,
+   "wilcoxon_p_holm": 0.2554,
+   "nb_p_holm": 1.0
+  },
+  {
+   "model": "eegnet",
+   "n": 25,
+   "macro_f1": 0.53,
+   "sd": 0.114,
+   "balanced_acc": 0.5501,
+   "roc_auc": 0.7541,
+   "reference": "GCN P5 x functional",
+   "reference_f1": 0.5035,
+   "delta": 0.0264,
+   "wilcoxon_p": 0.2584,
+   "nb_p": 0.7462,
+   "wilcoxon_p_holm": 0.5169,
+   "nb_p_holm": 1.0
+  }
+ ],
  "report_errors": []
 }

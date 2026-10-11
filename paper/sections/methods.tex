@@ -136,6 +136,14 @@ trained on the flattened node features of each representation with the same fold
 subject aggregation as the GCN (a non-graph twin of every representation). The MMSE is never used as
 an input: control participants all score 30, so it is a proxy for the label.
 
+\paragraph{Deep-learning baselines.} To place the GCN against standard end-to-end EEG networks, EEGNet-8,2
+\cite{F14} (temporal convolution of 64 taps, depthwise spatial convolution, separable convolution;
+\num{3331} parameters) and a compact 1D-CNN (three temporal convolution blocks over the 19 channels,
+global average pooling; \num{47939} parameters) were trained on the same raw \SI{10}{\second} windows
+as P5, with the same 25 selection splits, optimiser, early-stopping rule, subject-equal weighting and
+subject-level aggregation as the GCN, so that every comparison is paired. EEGNet's max-norm weight
+constraints were replaced by the shared weight decay; no hyperparameter was tuned.
+
 The GCN learns its weights from the training subjects only and uses the validation subjects only to
 choose when to stop, whereas the classical models have no stopping rule. To compare models trained
 on the same subjects, we evaluate both under two regimes on the same 25 test splits:
@@ -263,7 +271,8 @@ correlation against MMSE within patients only. All analyses were run with SciPy,
 custom code that is tested against reference implementations.
 
 \subsection{Compute}
-All experiments ran on free Kaggle CPU sessions (4 vCPUs); no GPU was used. The 525-run main grid
+All experiments ran on free Kaggle sessions (4 vCPUs); the only GPU use was the two deep-learning
+baselines (\deepGpuHours{} GPU-hours of training on one Kaggle GPU). The 525-run main grid
 took \cpuHoursGrid{} CPU-hours, and the \nConfirmRuns{} further runs (confirmation grid, ablations and permutations on the
 confirmation folds, and the train + val refits) took \cpuHoursConfirm{} CPU-hours. The stopping-rule sensitivity grid and the
 external cohort added 

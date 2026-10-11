@@ -211,6 +211,16 @@ cohort. The spectral, wavelet, fused and raw representations cleared the demogra
 \demoFOne{}; the connectivity (P2), time-domain (P4) and PSWE (P7) representations scored within
 about 0.05 of it.
 
+Standard end-to-end EEG networks did no better. On the same raw windows and splits, EEGNet reached
+\deepEegnetFOne{}~$\pm$~\deepEegnetSd{} (ROC-AUC \deepEegnetAuc{}) and the 1D-CNN \deepCnnFOne{}~$\pm$~\deepCnnSd{}
+(Table~\ref{tab:baselines}; Figure~\ref{fig:deep-confusion}), slightly above the GCN given the same raw
+input (\deepEegnetVsRawDelta{} and \deepCnnVsRawDelta{}; Wilcoxon--Holm $p\deepEegnetVsRawWilP$) and below
+the GCN on wavelet features (\deepEegnetVsBestDelta{}, $p\deepEegnetVsBestWilP$; \deepCnnVsBestDelta{},
+$p\deepCnnVsBestWilP$). The latter difference was significant for the 1D-CNN under the Wilcoxon test
+but under neither comparison with the Nadeau--Bengio correction. Learning features end to end from raw
+signal therefore did not substitute for a good hand-crafted representation on this cohort, while
+using \deepGpuHours{} GPU-hours against none for every other model.
+
 \begin{table}[t]
 \centering\small
 \caption{Every representation's best GCN cell against its non-graph twins (same test splits,
