@@ -116,6 +116,16 @@ def cmd_pswe_grid(a, cfg):
     print(json.dumps(write_grid(a.preproc, a.cache, df, cfg, a.out), indent=1, default=float))
 
 
+def cmd_explain(a, cfg):
+    from .cache import FeatureCache
+    from .explain import write_explain
+    from .splits import load_folds
+
+    cache = FeatureCache(a.cache)
+    folds = load_folds(a.folds, sorted(set(cache.subject)))
+    print(write_explain(cache, folds, cfg, a.out, a.pipeline, a.edge).round(4).to_string())
+
+
 def cmd_equivalence(a, cfg):
     from .stats_equivalence import build, summarise
 
@@ -313,6 +323,9 @@ def main(argv=None):
     s = sub.add_parser("pswe-grid"); s.add_argument("--preproc", nargs="+", required=True)
     s.add_argument("--cache", required=True); s.add_argument("--participants", required=True)
     s.add_argument("--out", required=True); s.set_defaults(fn=cmd_pswe_grid)
+    s = sub.add_parser("explain"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
+    s.add_argument("--out", required=True); s.add_argument("--pipeline", default="P3"); s.add_argument("--edge", default="spatial")
+    s.set_defaults(fn=cmd_explain)
     s = sub.add_parser("equivalence"); s.add_argument("--reports", default="reports")
     s.add_argument("--out", required=True); s.set_defaults(fn=cmd_equivalence)
     s = sub.add_parser("classical");s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)

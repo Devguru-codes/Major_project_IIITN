@@ -315,6 +315,33 @@ def fig_confirmation(main_cells: pd.DataFrame, confirm_cells: pd.DataFrame, out_
     save(fig, out_dir, "figS6_confirmation")
 
 
+def fig_importance(summary: pd.DataFrame, cfg, out_dir, title: str = ""):
+    """Fig S (interpretability): occlusion importance of each electrode (scalp maps: all subjects and per true
+    class) and of each wavelet sub-band (bars, mean and subject-bootstrap 95% CI)."""
+    info = _info(cfg)
+    names = cfg["dataset"]["class_names"]
+    el = summary[summary.kind == "electrode"].set_index("unit").reindex(info.ch_names)
+    cols = ["drop"] + [f"drop_{n}" for n in names]
+    vmax = float(np.nanmax(np.abs(el[cols].to_numpy())))
+    fig = plt.figure(figsize=(9.6, 3.0), layout="constrained")
+    gs = fig.add_gridspec(1, len(cols) + 2)
+    for i, (c, lab) in enumerate(zip(cols, ["all subjects"] + names)):
+        ax = fig.add_subplot(gs[0, i])
+        im = _topo(ax, el[c].to_numpy(), info, vlim=(-vmax, vmax), cmap="RdBu_r")
+        ax.set_title(lab, fontsize=8)
+    fig.colorbar(im, ax=fig.axes, shrink=0.6, location="left", label="drop in p(true class)")
+    bx = fig.add_subplot(gs[0, len(cols):])
+    b = summary[summary.kind == "band"].sort_values("unit")
+    if len(b):
+        bx.barh(range(len(b)), b["drop"], xerr=[b["drop"] - b["ci_lo"], b["ci_hi"] - b["drop"]], color=SEQ[2],
+                capsize=2)
+        bx.set_yticks(range(len(b)), b["unit"], fontsize=7)
+        bx.axvline(0, color="grey", lw=0.8)
+        bx.set_xlabel("drop in p(true class)")
+    fig.suptitle(f"Occlusion importance, {title}", fontsize=9)
+    save(fig, out_dir, "figS10_importance")
+
+
 def fig_mixed(margins: dict, out_dir):
     """Fig 15: model-based marginal mean probability on the true class (95% CI) per representation and per graph
     type, from the subject-level mixed model, for each fold set / dataset."""

@@ -78,6 +78,8 @@ def analyse_mixed(long: pd.DataFrame, outcome: str = "p_true", with_class: bool 
     rhs = RHS if with_class else RHS.replace(" + C(true_class)", "")
     cm = subject_cell_means(long, outcome)
     fit = fit_mixed(cm, outcome, rhs)
+    from .stats_grid import rm_anova                       # cross-check: by-subject RM-ANOVA with GG correction
+    aov = rm_anova(cm.assign(unit=cm["subject"]), dv=outcome)
     k = fit.k_fe
     beta, cov = fit.fe_params.to_numpy(), fit.cov_params().iloc[:k, :k].to_numpy()
     names = list(fit.fe_params.index)
@@ -132,7 +134,7 @@ def analyse_mixed(long: pd.DataFrame, outcome: str = "p_true", with_class: bool 
     total = sum(var.values())
     return {"outcome": outcome, "n_rows": int(len(cm)), "n_scores": int(len(long)), "n_subjects": int(n_subj),
             "converged": bool(fit.converged), "seconds": time.time() - t0, "terms": pd.DataFrame(terms),
-            "marginal": pd.DataFrame(margins), "pairwise_representation": pairs,
+            "marginal": pd.DataFrame(margins), "pairwise_representation": pairs, "rm_anova": aov,
             "variance_components": {k_: {"var": v, "share": v / total} for k_, v in var.items()},
             "fixed_effects": fit.fe_params.round(6).to_dict()}
 
@@ -140,10 +142,11 @@ def analyse_mixed(long: pd.DataFrame, outcome: str = "p_true", with_class: bool 
 def write_mixed(res: dict, out_dir: str | Path, prefix: str) -> dict:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    for k in ("terms", "marginal", "pairwise_representation"):
+    for k in ("terms", "marginal", "pairwise_representation", "rm_anova"):
         res[k].to_csv(out / f"{prefix}_{k}.csv", index=False)
     summary = {k: v for k, v in res.items() if not isinstance(v, pd.DataFrame)}
     summary["terms"] = res["terms"].to_dict("records")
+    summary["rm_anova"] = res["rm_anova"].to_dict("records")
     summary["n_pairs_sig_holm"] = int((res["pairwise_representation"]["p_holm"] < 0.05).sum())
     (out / f"{prefix}_summary.json").write_text(json.dumps(summary, indent=1, default=float))
     return summary

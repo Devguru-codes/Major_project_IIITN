@@ -438,6 +438,44 @@ def main():
         kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)]
         + [f"{OWNER}/eegrep-nb02-merge-qc", f"{OWNER}/eegrep-nb11a-external-prep"])
 
+    # ---- NB16: should-fix analyses after the second internal review ----
+    t16 = ("sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_should_fix.py "
+           "tests/test_mixed.py tests/test_model_train.py', log=f'{WORK}/pytest_nb16.txt')")
+    conf16 = "{SRC}/splits/folds_ds004504_confirm.json"
+    learned = ("sh(f'{{PY}} grid --cache {{CACHE}} --folds {folds} --pipelines {p} --edges spatial --tag {tag} "
+               "--set model.arch=gcn_learned --out {{WORK}}/learned_runs.jsonl --max-hours 6', log=f'{{WORK}}/{tag}_{n}.log')")
+    mixed_extra = "\n".join(
+        f"sh(f'{{PY}} mixed --runs {runs} --tag {tag} --outcome correct --out {{WORK}}/mixed --prefix {name}_correct', "
+        f"log=f'{{WORK}}/mixed_{name}_correct.log')"
+        for name, tag, runs in (("selection", "main", "{SRC}/reports/grid/runs_s0.jsonl {SRC}/reports/grid/runs_s1.jsonl "
+                                 "{SRC}/reports/grid/runs_s2.jsonl"),
+                                ("confirmation", "confirm", "{SRC}/reports/confirm/confirm_runs_s0.jsonl "
+                                 "{SRC}/reports/confirm/confirm_runs_s1.jsonl")))
+    mixed_rm = "\n".join(
+        f"sh(f'{{PY}} mixed --runs {runs} --tag {tag} --out {{WORK}}/mixed --prefix {name}', log=f'{{WORK}}/mixed_{name}.log')"
+        for name, tag, runs in (("selection", "main", "{SRC}/reports/grid/runs_s0.jsonl {SRC}/reports/grid/runs_s1.jsonl "
+                                 "{SRC}/reports/grid/runs_s2.jsonl"),
+                                ("confirmation", "confirm", "{SRC}/reports/confirm/confirm_runs_s0.jsonl "
+                                 "{SRC}/reports/confirm/confirm_runs_s1.jsonl"),
+                                ("external", "main", "{SRC}/reports/external/ext_runs_s0.jsonl "
+                                 "{SRC}/reports/external/ext_runs_s1.jsonl")))
+    NB16 = [
+        [mixed_rm, mixed_extra,
+         "sh(f'{PY} explain --cache {CACHE} --folds {FOLDS} --out {WORK}/explain --pipeline P3 --edge spatial', "
+         "log=f'{WORK}/explain.log')"],
+        [learned.format(folds="{FOLDS}", p="P1,P2,P3,P4", tag="learned_adj", n=0)],
+        [learned.format(folds="{FOLDS}", p="P5,P6,P7", tag="learned_adj", n=1),
+         learned.format(folds=conf16, p="P3", tag="learned_adj_confirm", n=2)],
+    ]
+    for k, jobs in enumerate(NB16):
+        write_kernel(f"nb16-should-fix-s{k}", f"nb16 should fix s{k}", notebook(
+            f"NB16 — should-fix analyses, shard {k} (CPU)",
+            "Shard 0: by-subject mixed models on correct/incorrect outcomes and by-subject RM-ANOVA cross-checks; "
+            "occlusion importance of electrodes and wavelet bands for P3 x spatial. Shards 1-2: the GCN with a "
+            "learned adjacency (initialised at the spatial graph) for every representation on the selection folds, "
+            "and for P3 on the confirmation folds.",
+            [t16, find_cache] + jobs, extras="dev,stats"), kernel_sources=nb02)
+
     # ---- PSWE robustness: zero-padded MPF grid and artefact rejection (both cohorts) ----
     write_kernel("nb14-pswe-robust", "nb14 pswe robust", notebook(
         "NB14 — fixed-threshold PSWE robustness: zero-padded MPF and artefact rejection (CPU)",

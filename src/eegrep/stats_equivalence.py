@@ -107,6 +107,18 @@ def build(reports: str | Path, margin: float = MARGIN) -> pd.DataFrame:
             for p in v.columns:
                 add("stopping rule", f"{tag} - main ({p})", "selection", v[p], ref[p], RATIO_TRAIN)
 
+    # 6. learned adjacency (trainable graph initialised at the spatial graph) vs the fixed spatial graph
+    if g("learned/learned_runs_s*.jsonl"):
+        lr = load_runs(g("learned/learned_runs_s*.jsonl"))
+        for tag, ref, name in (("learned_adj", main, "selection"),
+                               ("learned_adj_confirm", sets[1][1] if len(sets) > 1 else None, "confirmation")):
+            d = lr[lr.tag == tag]
+            if ref is None or d.empty:
+                continue
+            for p in sorted(d.pipeline.unique()):
+                add("learned adjacency", f"{p}: learned - spatial", name, _cell(d, p, "spatial"),
+                    _cell(ref, p, "spatial"), RATIO_TRAIN)
+
     out = pd.DataFrame(rows)
     out["p_tost_holm"] = np.nan
     for fam, idx in out.groupby("family").groups.items():

@@ -62,7 +62,8 @@ def _softmax(z: np.ndarray) -> np.ndarray:
 def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: np.ndarray,
               idx_train: np.ndarray, idx_val: np.ndarray, idx_test: np.ndarray,
               cfg: dict, seed: int, device: str = "cpu", n_classes: int = 3,
-              covariates: np.ndarray | None = None, refit_epochs: int | None = None) -> dict:
+              covariates: np.ndarray | None = None, refit_epochs: int | None = None,
+              keep_model: bool = False) -> dict:
     """refit_epochs: if given, train on train ∪ val for exactly that many epochs (the epoch count chosen by
     early stopping on the same split) with no validation-based selection — so the GCN sees the same subjects
     as the train+val classical baselines.
@@ -154,4 +155,5 @@ def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: 
         "seconds": time.time() - t0,
         "device": device,
         "preds": {"subjects": subjects.tolist(), "y": y_subj.tolist(), "prob": np.round(subj_prob, 5).tolist()},
+        **({"_model": model, "_scale": (mu, sd)} if keep_model else {}),   # for occlusion analysis (explain.py)
     }
