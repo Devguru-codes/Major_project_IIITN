@@ -19,7 +19,9 @@ classical classifiers \cite{F10} to convolutional networks and transformers \cit
 most recently, to graph neural networks (GNNs) that treat electrodes as nodes and inter-electrode
 coupling as edges \cite{F5,F3,F4,F6,R9,R10,R12}. The public OpenNeuro dataset ds004504
 \cite{F1,ds004504}, with 88 subjects recorded on one device under one protocol, has become the
-de-facto benchmark. Reported accuracies on this single dataset span roughly 80--99\%.
+de-facto benchmark. Reported accuracies on this single dataset span roughly 50--99\%, from 54\% for the
+three-class problem under leave-subjects-out validation \cite{P_stefanou} to 99\% under segment-level splits
+\cite{R2}.
 
 That spread is implausibly wide for identical data, and it hides a methodological problem. Published
 studies change several things at once: (i) the \emph{signal representation} fed to the model,

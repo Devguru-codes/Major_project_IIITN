@@ -41,6 +41,11 @@ def p_txt_(p: float) -> str:
     return "$p<$0.001" if p < 0.001 else f"$p=${p:.3f}"
 
 
+def p_cell(p: float) -> str:
+    """p in a table column already headed p."""
+    return "$<$0.001" if p < 0.001 else f"{p:.3f}"
+
+
 # ---- main grid (NB07) ----
 nb07 = REP / "nb07"
 summ = json.loads((nb07 / "summary.json").read_text())
@@ -123,6 +128,28 @@ put("confBalAcc", sel.balanced_acc_mean); put("confAuc", sel.roc_auc_mean); put(
 cb = ccells.index[0]
 put("confBestCell", f"{cb[0]}\\,$\\times$\\,{cb[1]}"); put("confBestFOne", ccells.iloc[0].macro_f1_mean)
 put("confRankRho", conf["rank_spearman_main_vs_confirm"], "{:.2f}")
+put("confAcc", sel.accuracy_mean); put("confWinFOne", sel.window_macro_f1_mean)
+_cw = [json.loads(line) for f in sorted((REP / "confirm").glob("confirm_runs_s*.jsonl")) for line in open(f)]
+_cw = [r for r in _cw if r["tag"] == "confirm" and (r["pipeline"], r["edge"]) == (best.pipeline, best.edge)]
+put("confWinAcc", float(np.mean([r["window"]["accuracy"] for r in _cw])))
+put("confFtdSens", sel.sens_1_mean)
+
+# ---- third review: NB-adjusted omnibus F (NB19) and the common-support PSWE CIs ----
+for ds_, tg_ in (("selection", "Sel"), ("confirmation", "Conf"), ("external", "Ext")):
+    f_ = REP / "omnibus" / f"{ds_}_nb_anova.csv"
+    if f_.exists():
+        ob = pd.read_csv(f_).set_index("Source")
+        put("nbInflation", ob["nb_inflation"].iloc[0], "{:.1f}")
+        for src_, k_ in (("pipeline", "Rep"), ("edge", "Edge"), ("pipeline * edge", "Inter")):
+            put(f"nb{tg_}{k_}F", ob.loc[src_, "F_nb"], "{:.2f}"); put(f"nb{tg_}{k_}P", p_fmt(ob.loc[src_, "p_nb_GG"]))
+            put(f"nb{tg_}{k_}Fraw", ob.loc[src_, "F"], "{:.2f}")
+_cs = REP / "pswe_grid" / "pswe_grid_ds004504" / "pswe_collinearity.json"
+if _cs.exists():
+    _c = json.loads(_cs.read_text())["common_support"]["adjusted"]
+    for g_, k_ in (("AD", "AD"), ("FTD", "FTD")):
+        r_ = _c[f"C(group, Treatment('CN'))[T.{g_}]"]
+        put(f"cs{k_}RR", r_["rate_ratio"], "{:.2f}"); put(f"cs{k_}Lo", r_["ci95"][0], "{:.2f}")
+        put(f"cs{k_}Hi", r_["ci95"][1], "{:.2f}"); put(f"cs{k_}P", p_fmt(r_["p"]))
 cpw = pd.read_csv(ct / "grid_pairwise_representation.csv")
 put("cPairsWilcoxonSig", int((cpw["wilcoxon_p_holm"] < 0.05).sum()), "{:d}")
 put("cPairsNbSig", int((cpw["nb_p_holm"] < 0.05).sum()), "{:d}")
@@ -346,7 +373,7 @@ if (mix / "selection_summary.json").exists():
         cols = []
         for s, _ in sets:
             r = next(x for x in summ_mix[s]["terms"] if x["term"] == term)
-            cols.append(f"{r['F']:.2f} ({r['df']}, {r['den_df']}) & {p_txt_(r['p'])}")
+            cols.append(f"{r['F']:.2f} ({r['df']}, {r['den_df']}) & {p_cell(r['p'])}")
         rows.append(f"{label} & {' & '.join(cols)} \\\\")
     MIX_ROWS = "\n".join(rows)
 
@@ -438,7 +465,7 @@ if eqf.exists():
     eq = pd.read_csv(eqf)
     fam = {"GCN vs non-graph twin": "Gvc", "graph construction": "Graph", "ablation": "Abl",
            "deep baseline": "Deep", "stopping rule": "Es", "learned adjacency": "Learn",
-           "EEGNet dropout": "Drop"}
+           "EEGNet dropout": "Drop", "graph construction (per representation)": "GraphRep"}
     for f_, tag in fam.items():
         g = eq[eq.family == f_]
         put(f"eq{tag}N", len(g), "{:d}"); put(f"eq{tag}NEquiv", int(g.equivalent.sum()), "{:d}")
@@ -449,7 +476,8 @@ if eqf.exists():
     put("eqMargin", eq.margin.iloc[0], "{:.2f}")
     lab = {"GCN vs non-graph twin": "GCN vs non-graph twin", "graph construction": "Graph types (pairwise)",
            "ablation": "Ablations", "deep baseline": "Deep-learning baselines", "stopping rule": "Stopping rules",
-           "learned adjacency": "Learned vs fixed graph", "EEGNet dropout": "EEGNet dropout 0.25 vs 0.5"}
+           "learned adjacency": "Learned vs fixed graph", "EEGNet dropout": "EEGNet dropout 0.25 vs 0.5",
+           "graph construction (per representation)": "Graph types within each representation"}
     rows = []
     for (f_, s_), g in eq.groupby(["family", "setting"], sort=False):
         rows.append(f"{lab[f_]} & {s_} & {len(g)} & {int(g.equivalent.sum())} & "

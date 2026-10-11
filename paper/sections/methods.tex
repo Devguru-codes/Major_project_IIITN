@@ -7,7 +7,8 @@ We used OpenNeuro ds004504 \cite{F1,ds004504}: resting-state, eyes-closed scalp 
 participants recorded at AHEPA University Hospital (36 AD, 23 FTD, 29 cognitively normal controls,
 CN). All values below were read from the dataset's own BIDS files rather than from the descriptor
 paper. Recordings use 19 electrodes of the 10--20 system (Fp1, Fp2, F3, F4, C3, C4, P3, P4, O1, O2,
-F7, F8, T3, T4, T5, T6, Fz, Cz, Pz) referenced to A1--A2, sampled at \SI{500}{\hertz} on a Nihon
+F7, F8, T3, T4, T5, T6, Fz, Cz, Pz) referenced to A1--A2 according to the BIDS sidecar (the dataset README
+describes a Cz reference; we re-reference to the average, so this does not affect any analysis), sampled at \SI{500}{\hertz} on a Nihon
 Kohden EEG~2100 system, with a 0.4--\SI{50}{\hertz} acquisition filter. Recording length per subject
 ranges from \SI{307}{} to \SI{1291}{\second} (mean \SI{802}{\second}; \SI{19.6}{\hour} in total).
 Group demographics are given in Table~\ref{tab:demographics}. The data are released under CC0; the
@@ -163,11 +164,7 @@ completeness.
 
 \paragraph{Stopping-rule sensitivity.} The grid was re-run with patience 50 and without early stopping (Supplementary methods).
 
-\paragraph{Severity (added).} To ask whether the models only find advanced disease, patients were split
-at the conventional mild cut-point (MMSE $\ge$ \sevMildMin{} versus $\le$ 20; MMSE is used for analysis only).
-For P3~$\times$~spatial on both fold sets we compared, within AD and within FTD, the probability assigned to
-the true class between strata (Mann--Whitney) and its rank correlation with MMSE (Spearman), with Holm
-correction over the \sevNTests{} tests; the stratum sizes are those of the cohort and were not chosen.
+\paragraph{Severity (added).} Results stratified by MMSE (analysis only) are described in the Supplementary methods.
 
 \paragraph{Learned adjacency (added).} To test whether a graph fitted to the data would help where
 the three fixed constructions did not, the GCN was given a trainable, symmetric, non-negative
@@ -242,6 +239,16 @@ proportion of repeats in which each subject was \emph{correctly} classified --- 
 approximation to a logistic mixed model of the binary decisions, which tests the decisions a clinician
 would see rather than the model's confidence.
 
+\paragraph{Scope of inference.} The mixed model treats held-out subjects as the units: it asks whether the
+representations differ for new subjects given models trained on this cohort. It does not model the
+variability that comes from training on a different sample, and the models of different splits share
+most of their training subjects. To bound that source of optimism we also report every omnibus test on
+macro-F1 with the Nadeau--Bengio variance inflation applied to each contrast,
+$F_{\mathrm{NB}} = F/(1 + J n_\mathrm{test}/n_\mathrm{train})$ with $J=25$ splits (a factor of \nbInflation{}),
+on the same degrees of freedom with Greenhouse--Geisser correction. For two levels this is exactly the
+squared Nadeau--Bengio $t$ statistic \cite{B7}; like that test it is conservative. An effect that survives
+it, or that replicates in an independent cohort, is the stronger evidence.
+
 \paragraph{Secondary analyses on macro-F1.} The 25 test splits are the repeated-measures units. Main
 effects of representation and graph construction, and their interaction, were tested with a balanced
 two-way repeated-measures ANOVA on macro-F1, reporting partial $\eta^2$ and
@@ -278,7 +285,8 @@ custom code that is tested against reference implementations.
 The study plan (factorial design, preprocessing, model, training, folds, baselines, ablations A1--A12,
 permutation test, leakage experiment, deep-learning baselines, external validation and the fixed PSWE
 definition) was committed to the code repository before any data were analysed; all changes are logged
-there with dates. The following were decided after results were seen.
+there with dates; Table~\ref{tab:status} gives the status of every analysis. The following
+were decided after results were seen.
 (i)~\emph{Primary analysis.} The plan named the split-level repeated-measures ANOVA on macro-F1 as primary.
 After an internal review we made the by-subject mixed model primary (Section~\ref{sec:stats}); a first
 mixed-model version without subject-by-factor random effects gave implausibly small $p$-values
@@ -291,7 +299,8 @@ subjects; we added train-only fits and train + val GCN refits, and corrected the
 (iv)~\emph{Added analyses.} The background-relative PSWE definitions (Section~\ref{sec:pswe}), the
 stopping-rule sensitivity, the PSWE detector robustness and collinearity checks, the equivalence tests,
 the learned-adjacency GCN, occlusion importance, the two mixed-model cross-checks, the severity-stratified
-analysis and an EEGNet run with dropout 0.25 were added after the corresponding results were known; their definitions, variants and margins were fixed
+analysis, an EEGNet run with dropout 0.25, the Nadeau--Bengio-adjusted omnibus tests and the graph-type
+equivalence tests within representations were added after the corresponding results were known; their definitions, variants and margins were fixed
 in the configuration before they were run. A7, A8 and the A11 PSWE rule grid were planned but run late.
 (v)~\emph{Changed or not done.} Planned integrated-gradients explanations were replaced by occlusion,
 which is model-agnostic and reads directly as lost probability for the true class; the planned connectome and embedding plots and calibration
