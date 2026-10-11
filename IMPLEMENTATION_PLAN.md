@@ -531,3 +531,16 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
   - Difference from the fixed graph: −0.016 to +0.005 on the selection folds; +0.002 for P3 on the confirmation folds. Ranking vs the fixed spatial graph: ρ = 0.89.
   - TOST: 4 of 8 comparisons equivalent; the rest are inconclusive, with every CI including 0.
 - **Integrated gradients** were replaced by occlusion; this is listed under Deviations. Connectome, embedding and calibration plots were still not done.
+
+### Second internal review: could items (2026-10-11, NB18). Fixed before running.
+1. **Severity-stratified results.** Analysis only; MMSE never reaches a model.
+   - Patients (AD, FTD) split at the conventional mild cut-point: mild MMSE ≥ 21; moderate-to-severe ≤ 20. Subjects with missing MMSE are dropped and counted.
+   - Per subject, averaged over the 5 repeats: proportion correctly classified, p(true class), and the share of runs predicted CN. Computed for the best cell P3×spatial on the selection and the confirmation folds, plus descriptively for every representation (averaged over graphs, selection folds).
+   - Tests, per patient group and fold set:
+     - Mann–Whitney U on p(true) between strata;
+     - Spearman ρ of MMSE vs p(true).
+   - Holm correction across all of these tests. Severity is partly confounded with group (FTD is milder), so groups are analysed separately.
+2. **EEGNet with dropout 0.25.** This is the original paper's cross-subject setting; NB06 used the shared 0.5.
+   - Same EEGNet-8,2, splits, training rule and aggregation as NB06. GPU T4, hard cap 0.75 h. Tag `deep_eegnet_drop025`.
+   - Stored in `reports/deep_sensitivity/`, so the pre-specified NB06 deep-baseline Holm family is unchanged.
+   - Paired comparisons with EEGNet (dropout 0.5), with GCN P3×spatial, and with the best GCN P5 cell. Each uses Wilcoxon and the NB-corrected t-test, Holm-corrected within this family of 3. TOST against ±0.05 forms a separate equivalence family, "EEGNet dropout".

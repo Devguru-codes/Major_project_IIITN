@@ -119,6 +119,14 @@ def build(reports: str | Path, margin: float = MARGIN) -> pd.DataFrame:
                 add("learned adjacency", f"{p}: learned - spatial", name, _cell(d, p, "spatial"),
                     _cell(ref, p, "spatial"), RATIO_TRAIN)
 
+    # 7. EEGNet with the cross-subject dropout (0.25) vs the NB06 EEGNet (dropout 0.5); own family (could item)
+    if g("deep_sensitivity/*.jsonl") and g("deep/deep_runs_s*.jsonl"):
+        new = load_runs(g("deep_sensitivity/*.jsonl"), tag="deep_eegnet_drop025")
+        old = load_runs(g("deep/deep_runs_s*.jsonl"), tag="deep_eegnet")
+        if len(new):
+            add("EEGNet dropout", "EEGNet: dropout 0.25 - 0.5", "selection", new.set_index("unit")["macro_f1"],
+                old.set_index("unit")["macro_f1"], RATIO_TRAIN)
+
     out = pd.DataFrame(rows)
     out["p_tost_holm"] = np.nan
     for fam, idx in out.groupby("family").groups.items():
