@@ -43,11 +43,12 @@ weakened every effect but left the pattern intact: representation remained signi
 ($F=\mixSelCorrRepF$, $p\mixSelCorrRepP$; confirmation $F=\mixConfCorrRepF$, $p\mixConfCorrRepP$), with
 P3 again highest (mean proportion correct \mixSelCorrMPThree{} and \mixConfCorrMPThree{}), whereas the graph
 effect was marginal on the selection folds ($p\mixSelCorrEdgeP$, range \mixSelCorrEdgeRange{}) and absent on
-the confirmation folds ($p\mixConfCorrEdgeP$). On macro-F1, every pairwise comparison of graph types was formally equivalent within
+the confirmation folds ($p\mixConfCorrEdgeP$). On macro-F1 averaged over representations, every pairwise comparison of graph types was formally equivalent within
 $\pm\eqMargin$ on both fold sets (TOST with the Nadeau--Bengio correction, largest Holm-corrected $p\eqGraphPMax$
 after correction; all corrected 90\% intervals within $\pm$\eqGraphCiMax{}; Table~\ref{tab:equivalence}).
-This is positive evidence that the choice of graph does not matter at that resolution, not merely an
-absence of significance.
+This is positive evidence that, on average, the choice of graph does not matter at that resolution, not merely an
+absence of significance. Within single representations the same comparisons were inconclusive: none of the
+\eqGraphRepN{} was shown equivalent or different (median detectable difference \eqGraphRepMde{}).
 
 \begin{table}[t]
 \centering\small
@@ -101,8 +102,14 @@ Holm-corrected Wilcoxon tests, \nPairsWilcoxonSig{} of the \nPairs{} representat
 the selection folds and \cPairsWilcoxonSig{} on the confirmation folds; with the more conservative
 Nadeau--Bengio corrected $t$-test, \nPairsNbSig{} and \cPairsNbSig{} did. For example, P3 exceeded P4
 by \pThreeFourDiff{} macro-F1 on the selection folds (Cohen's $d=\pThreeFourD$; Wilcoxon--Holm
-$p\pThreeFourWilP$; Nadeau--Bengio--Holm $p\pThreeFourNbP$). We regard the omnibus effect and the
-ordering, which replicated, as robust, and individual pairwise differences as suggestive.
+$p\pThreeFourWilP$; Nadeau--Bengio--Holm $p\pThreeFourNbP$). The same caveat applies to the
+omnibus tests, which also treat the splits as independent: with every contrast's variance inflated by the
+Nadeau--Bengio factor, representation was not significant on either fold set ($F_\mathrm{NB}=\nbSelRepF$,
+$p\nbSelRepP$; confirmation \nbConfRepF{}, $p\nbConfRepP$), nor was graph construction or the interaction
+($p\nbSelEdgeP$ and $p\nbSelInterP$ on the selection folds). We therefore regard the existence of a representation effect as supported --- it is the
+largest effect in every analysis, its ordering replicated across fold sets ($\rho=\confRankRho$) and it survives
+the adjustment in the external cohort (Section~\ref{sec:res-external}) --- but the size of individual
+pairwise differences as not established.
 
 \begin{figure}[t]
 \centering
@@ -122,15 +129,7 @@ often taken for controls (Figure~\ref{fig:confusion}). The ROC and precision--re
 curves show the same ordering (Figure~\ref{fig:roc}). The models were poorly calibrated (expected
 calibration error \bestEce{}), so their probabilities should not be read as clinical risks.
 
-\paragraph{Severity.} Mild patients were not detectably harder to classify. For \bestCell{}, mild AD
-(MMSE $\ge$ \sevMildMin{}, $n=\sevSelADMildN$) was classified correctly in \sevSelADMildCorrect{} of runs on the
-selection folds and \sevConfADMildCorrect{} on the confirmation folds, against \sevSelADModCorrect{} and
-\sevConfADModCorrect{} for moderate-to-severe AD ($n=\sevSelADModN$); FTD showed the opposite, small difference
-(\sevSelFTDMildCorrect{} mild, $n=\sevSelFTDMildN$, against \sevSelFTDModCorrect{}, $n=\sevSelFTDModN$;
-Table~\ref{tab:severity}). None of the \sevNTests{} tests was significant (smallest uncorrected $p\sevPRawMin$),
-and within patients the true-class probability was unrelated to MMSE ($|\rho|\le\sevRhoMaxAbs$). Mild AD was
-less often correct than moderate-to-severe AD for \sevRepADNMildWorse{} of \sevRepADNReps{} representations,
-so a modest disadvantage for early AD is plausible, but with only \sevSelADMildN{} mild AD patients it cannot be estimated.
+\paragraph{Severity.} Mild patients (MMSE $\ge$ \sevMildMin{}) were not detectably harder to classify than moderate-to-severe patients (none of \sevNTests{} tests significant; Supplementary results and Table~\ref{tab:severity}).
 
 \paragraph{What the best model relies on.} Occluding one wavelet sub-band on every electrode cost
 far more than occluding any single electrode (Figure~\ref{fig:importance}). The theta sub-band
@@ -178,24 +177,6 @@ networks are not dramatically better. Training EEGNet with the dropout recommend
 against the original EEGNet (Wilcoxon--Holm $p\dropVsOldWilP$) and still \dropVsBestDelta{} below the GCN on
 wavelet features ($p\dropVsBestWilP$; Supplementary methods).
 
-\begin{table}[t]
-\centering\small
-\caption{Every representation's best GCN cell against its non-graph twins (same test splits,
-weighting and subject aggregation) under both training regimes, and the demographic floor.
-Macro-F1, mean $\pm$ SD over the 25 selection splits. Train only: models fitted on the training
-subjects (the GCN early-stopped on the validation subjects). Train + val: models fitted on training
-and validation subjects (the GCN refitted for its early-stopped epoch count). GCN graph type: best
-in each regime.}
-\label{tab:baselines}
-\begin{tabular}{llcc}
-\toprule
-Representation & Model & Train only & Train + val \\
-\midrule
-\inputtab{generated/tab/baselines.tex}
-\bottomrule
-\end{tabular}
-\end{table}
-
 \subsection{Ablations}\label{sec:res-ablations}
 Table~\ref{tab:ablations} and Figure~\ref{fig:forest} report each ablation on the confirmation folds
 as a paired difference from the same cell's confirmation-grid run. No ablation reached significance
@@ -237,19 +218,7 @@ but reached $\pm$\eqLearnCiMax{}, and were inconclusive rather than different
 (Table~\ref{tab:equivalence}). A data-driven graph therefore did not
 recover information that the fixed constructions missed.
 
-\subsection{The stopping rule does not drive the results}\label{sec:res-es}
-Early stopping selected a median of epoch \bestEpochMedian{}. Re-running the whole grid with patience
-50 (median epoch \esPFiftyEpochMedian{}) or with no early stopping (100 epochs, final weights) left the
-conclusions unchanged (Table~\ref{tab:es}, Figure~\ref{fig:es}): \bestCell{} remained the best cell
-under every rule (\esPFiftyBestFOne{} and \esFixedBestFOne{}), the mean over all cells moved by at most
-\esGrandShiftMax{}, cell rankings were preserved (Spearman $\rho=\esPFiftyRho$ and \esFixedRho{} against the main
-grid), representation stayed significant, and no representation's score changed significantly under
-either rule (\esNSigWil{} of 14 Holm-corrected Wilcoxon tests). Raw windows (P5), the configuration
-with most parameters, did not benefit from longer training (\esPFiftyPFiveDelta{} and
-\esFixedPFiveDelta{}), and no GCN-versus-classical comparison became significant. Formal equivalence
-within $\pm\eqMargin$ was shown for \eqEsNEquiv{} of the \eqEsN{} representation-level comparisons, all
-for patience 50; training without early stopping changed scores too variably for equivalence to be
-shown.
+\paragraph{Stopping rule.} Re-running the whole grid with patience 50 or without early stopping left every conclusion unchanged: \bestCell{} remained the best cell, cell rankings were preserved (Spearman $\rho=\esPFiftyRho$ and \esFixedRho{}) and no representation's score changed significantly (Supplementary results).\label{sec:res-es}
 
 \begin{table}[t]
 \centering\scriptsize
@@ -268,7 +237,7 @@ Ablation & $\Delta$ [95\% CI] & $p_\mathrm{Holm}$ & $\Delta$ [95\% CI] & $p_\mat
 \end{tabular}
 \end{table}
 
-\subsection{Leakage inflates results to the published range}\label{sec:res-leak}
+\subsection{Leakage inflates results to the top of the published range}\label{sec:res-leak}
 Re-running the two best cells on the confirmation folds with window-level splitting --- identical
 data, features, graph, model and hyperparameters --- raised subject-level macro-F1 from
 \cleakPThreespatialCorrectSubj{} to \cleakPThreespatialLeakySubj{} (spatial) and from
@@ -276,7 +245,8 @@ data, features, graph, model and hyperparameters --- raised subject-level macro-
 metric most often reported, rose to \cleakPThreespatialLeakyWin{} and \cleakPThreehybridLeakyWin{}
 (Figure~\ref{fig:leak}). The selection folds gave almost identical values (\leakPThreespatialCorrectSubj{}
 to \leakPThreespatialLeakySubj{} for the spatial cell). The leaky protocol thus reproduces the
-95--99\% figures reported on this benchmark with a model that, evaluated correctly, scores about 0.6.
+95--99\% figures reported with segment-level splits on this benchmark. It does not explain every published
+subject-wise result, which range from 54\% to 84\% for the three-class problem (Section~\ref{sec:disc-bench}).
 
 \begin{figure}[t]
 \centering
@@ -309,8 +279,9 @@ was added to the model, the AD rate ratio fell below one, to \psweAdjSlowADRR{}
 variance inflation of the slowing covariate given group, age and sex was only \colVif{} --- but it does
 rest on extrapolation: \colADOutside\% of AD and \colFTDOutside\% of FTD patients were more slowed than
 any control. Restricted to the \colADInSupport{} AD and \colFTDInSupport{} FTD patients whose slowing lay
-within the control range, there was no PSWE excess even before adjusting for slowing (rate ratios
-\colSupADRR{}, $p\colSupADP$, and \colSupFTDRR{}, $p\colSupFTDP$). Relative to the events that their
+within the control range, no PSWE excess was detectable even before adjusting for slowing (rate ratios
+\colSupADRR{}, 95\% CI \csADLo{}--\csADHi{}, $p\colSupADP$, and \colSupFTDRR{}, \csFTDLo{}--\csFTDHi{},
+$p\colSupFTDP$); these intervals are wide and do not exclude a moderate excess. Relative to the events that their
 slowing predicts --- the slowing--PSWE relation estimated in controls only --- patients had fewer events
 than controls (median observed/expected \colOeAD{} for AD and \colOeFTD{} for FTD versus \colOeCN{};
 Kruskal--Wallis $p\colOeP$). The PSWE rate was not
@@ -354,7 +325,8 @@ separated, whereas graph construction was small (marginal means \mixExtMspatial{
 \mixExtMfunctional{} functional, \mixExtMhybrid{} hybrid; $p\mixExtEdgeP$) and favoured a different graph
 type than on ds004504; on macro-F1 with splits as units, representation was significant
 ($F=\extAnovaRepF$, $p\extAnovaRepP$, partial $\eta^2=\extAnovaRepEta$) and graph construction was not
-($p\extAnovaEdgeP$). The GCN was not significantly better than non-graph classifiers trained on the
+($p\extAnovaEdgeP$). Unlike on ds004504, the representation effect survived the Nadeau--Bengio adjustment
+for overlapping training sets ($F_\mathrm{NB}=\nbExtRepF$, $p\nbExtRepP$). The GCN was not significantly better than non-graph classifiers trained on the
 same subjects (differences \extGvcDeltaMin{} to \extGvcDeltaMax{}, none significant after Holm correction).
 Window-level splitting of the configuration selected on ds004504 inflated subject-level macro-F1 from
 \extSelFOne{} to \extLeakySubj{} (window-level \extLeakyWin{}), in line with an independent audit of the

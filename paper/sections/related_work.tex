@@ -6,7 +6,7 @@ markers \cite{R3,F2,R15}. Time-domain and complexity features (Hjorth parameters
 cheap and interpretable \cite{R15,R14}. Time--frequency transforms such as the continuous or
 discrete wavelet transform retain non-stationary structure that a power spectrum averages away
 \cite{R2,R16}, and several recent studies encode EEG as images for convolutional networks
-\cite{R2,R6,R10}. Representation choice is thus treated as a first-class question --- but almost
+\cite{R2,R10}. Representation choice is thus treated as a first-class question --- but almost
 always with convolutional models, and without varying the spatial structure the model sees.
 
 \paragraph{Graph neural networks for EEG.}
@@ -30,27 +30,18 @@ question we test directly.
 
 \paragraph{Evaluation protocol and leakage.}
 Leakage --- information from test data reaching training --- is a general failure mode of
-machine-learning-based science \cite{F8}, and has been shown to inflate prediction performance in
-connectome-based neuroimaging models \cite{L5}. Saeb et al.\ showed that when the use case is
-prediction for new individuals, record-wise cross-validation, which lets one person's records appear
-in both training and test sets, greatly overestimates accuracy relative to subject-wise
-cross-validation \cite{L1}. In EEG the problem takes a specific form: windows cut from one recording
-are highly correlated, so splitting \emph{windows} rather than \emph{subjects} lets a model recognise
-individuals instead of disease. Individual differences and non-stationarity make the partitioning
-decision consequential for cross-participant EEG models, whose error rates improper partitioning can
-understate severalfold \cite{L4}. Brookshire et al.\ found that segment-based holdout strongly
-overestimated performance on unseen subjects in an Alzheimer's and an epilepsy dataset, and that most
-translational deep-learning EEG studies they surveyed used it \cite{L2}; a recent audit across ADHD
-and Parkinson's cohorts --- the latter the same cohort we use for external validation --- reproduced
-the inflation in both \cite{L3}. In connectome-based neuroimaging models, leakage through repeated
-subjects drastically inflated prediction performance, and more so in small datasets \cite{L5}. The
-2026 scoping review of ds004504 attributes the upper end of reported accuracies on this benchmark to
-the same effect \cite{R1}, and a recent representation comparison on an 88-subject AD/FTD/control
-cohort reported 98.8\% accuracy with random splitting but 84.3\% with subject-wise splitting for the
-same model \cite{R2}. Best-practice guidance for prediction studies \cite{L7} and the large
-error bars of cross-validation in small samples \cite{L6} add a separate caution for cohorts of our
-size. We measure the leakage effect directly on one pipeline in both cohorts, and report
-subject-level confidence intervals throughout.
+machine-learning-based science \cite{F8} and inflates prediction in connectome-based neuroimaging, more so in
+small datasets \cite{L5}. When the use case is prediction for new individuals, record-wise cross-validation
+greatly overestimates accuracy \cite{L1}. In EEG, windows cut from one recording are highly correlated, so
+splitting \emph{windows} rather than \emph{subjects} lets a model recognise individuals instead of disease;
+improper partitioning can understate cross-participant error rates severalfold \cite{L4}, segment-based holdout
+overestimated performance in an Alzheimer's dataset and was used by most translational deep-learning EEG studies
+surveyed \cite{L2}, and an audit of ADHD and Parkinson's cohorts --- the latter our external cohort ---
+reproduced the inflation \cite{L3}. The 2026 scoping review of ds004504 attributes the upper end of reported
+accuracies to the same effect \cite{R1}; one study on an 88-subject AD/FTD/control cohort reported 98.8\%
+segment-level accuracy with random splitting and 84.3\% with subject-wise splitting \cite{R2}. Best-practice
+guidance \cite{L7} and the large error bars of cross-validation in small samples \cite{L6} add a separate
+caution for cohorts of our size.
 
 \paragraph{EEG and the blood--brain barrier.}
 BBB breakdown precedes and predicts cognitive decline \cite{B5,B8}. Milikovsky et al.\ proposed

@@ -576,3 +576,21 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
   - references (ICLR versions, the JNNP version of [58], title casing), Table 3 formatting, the 0.18 vs 0.25 slip;
   - an analysis-status table;
   - moving the stopping-rule and severity material to the supplement.
+
+**Third-review results (NB19; 2026-10-12).** Pytest: 13 passed.
+- **NB-adjusted omnibus (inflation 8.8).**
+  - Representation: F_NB = 1.34, p = 0.258 (selection); 1.54, p = 0.188 (confirmation); 2.63, p = 0.031 (external).
+  - Graph and interaction: p ≥ 0.63 everywhere.
+  - Consequence: the representation effect is supported by replication (ρ = 0.86 across fold sets) and by the external cohort. Individual pairwise differences are not established. The abstract, Results, Discussion and Conclusion are reworded to say so.
+- **Graph TOST within representations:** 0 of 42 equivalent (median MDE 0.11–0.12), so these comparisons are inconclusive. The "graph types equivalent" claim is now scoped to the average over representations.
+- **M1 text.**
+  - A published-results table (Discussion; table "published") built from the verified full texts.
+  - Introduction range changed from 80–99% to 50–99%.
+  - Leakage claims scoped to the 95–99% segment-split figures.
+  - Our per-segment accuracy under subject splits is 0.544, below our per-subject accuracy of 0.623.
+- **Should items.**
+  - PSWE common-support CIs (AD 0.30–1.28, FTD 0.54–2.33): "confined to" became "not detectable".
+  - References: ICLR versions of GCN and GAT; JNNP 2023 version of the ds004584 source; Stam et al. dated 2007; title casing protected; emotion-recognition citation dropped. DOIs logged.
+  - Table 3 p cells fixed.
+  - New text: MDE stated as 0.18–0.25; clinical framing; medication/subtype/biomarker limitation; BIDS A1–A2 vs README Cz note; analysis-status table (Table S).
+  - Stopping-rule results, severity and the baselines table moved to the supplement. The main text stays about 24 pages despite the additions.

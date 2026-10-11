@@ -21,6 +21,12 @@ main grid; and (ii)~\emph{train + val}, with the classical models fitted on trai
 subjects and the GCN refitted on the same subjects for the number of epochs selected by early
 stopping in the corresponding main-grid run (\nRefitRuns{} refits, no validation monitoring).
 
+\paragraph{Severity stratification.} To ask whether the models only find advanced disease, patients were split
+at the conventional mild cut-point (MMSE $\ge$ \sevMildMin{} versus $\le$ 20; MMSE is used for analysis only).
+For P3~$\times$~spatial on both fold sets we compared, within AD and within FTD, the probability assigned to
+the true class between strata (Mann--Whitney) and its rank correlation with MMSE (Spearman), with Holm
+correction over the \sevNTests{} tests; the stratum sizes are those of the cohort and were not chosen.
+
 \paragraph{Stopping-rule sensitivity.} Early stopping on about 14 validation subjects often selected
 an early epoch. To test whether this shaped the conclusions, the full $7\times3$ grid was re-run on
 the 25 selection splits with patience 50 instead of 20, and with no early stopping at all (100
@@ -64,6 +70,29 @@ external cohort added \nExtraRuns{} runs and \cpuHoursExtra{} CPU-hours, and the
 \learnNRuns{} runs and \cpuHoursLearned{} CPU-hours. The mixed models fit in seconds. Every run is logged with its configuration hash, code version and seed.
 
 \subsection*{Supplementary results}
+\paragraph{Stopping-rule sensitivity.} Early stopping selected a median of epoch \bestEpochMedian{}. Re-running the whole grid with patience
+50 (median epoch \esPFiftyEpochMedian{}) or with no early stopping (100 epochs, final weights) left the
+conclusions unchanged (Table~\ref{tab:es}, Figure~\ref{fig:es}): \bestCell{} remained the best cell
+under every rule (\esPFiftyBestFOne{} and \esFixedBestFOne{}), the mean over all cells moved by at most
+\esGrandShiftMax{}, cell rankings were preserved (Spearman $\rho=\esPFiftyRho$ and \esFixedRho{} against the main
+grid), representation stayed significant, and no representation's score changed significantly under
+either rule (\esNSigWil{} of 14 Holm-corrected Wilcoxon tests). Raw windows (P5), the configuration
+with most parameters, did not benefit from longer training (\esPFiftyPFiveDelta{} and
+\esFixedPFiveDelta{}), and no GCN-versus-classical comparison became significant. Formal equivalence
+within $\pm\eqMargin$ was shown for \eqEsNEquiv{} of the \eqEsN{} representation-level comparisons, all
+for patience 50; training without early stopping changed scores too variably for equivalence to be
+shown.
+
+\paragraph{Severity.} Mild patients were not detectably harder to classify. For \bestCell{}, mild AD
+(MMSE $\ge$ \sevMildMin{}, $n=\sevSelADMildN$) was classified correctly in \sevSelADMildCorrect{} of runs on the
+selection folds and \sevConfADMildCorrect{} on the confirmation folds, against \sevSelADModCorrect{} and
+\sevConfADModCorrect{} for moderate-to-severe AD ($n=\sevSelADModN$); FTD showed the opposite, small difference
+(\sevSelFTDMildCorrect{} mild, $n=\sevSelFTDMildN$, against \sevSelFTDModCorrect{}, $n=\sevSelFTDModN$;
+Table~\ref{tab:severity}). None of the \sevNTests{} tests was significant (smallest uncorrected $p\sevPRawMin$),
+and within patients the true-class probability was unrelated to MMSE ($|\rho|\le\sevRhoMaxAbs$). Mild AD was
+less often correct than moderate-to-severe AD for \sevRepADNMildWorse{} of \sevRepADNReps{} representations,
+so a modest disadvantage for early AD is plausible, but with only \sevSelADMildN{} mild AD patients it cannot be estimated.
+
 \paragraph{Background-relative PSWEs (exploratory).} Defining PSWEs relative to each channel's own
 background reversed the group pattern. With the primary definition (a drop of at least \SI{2}{\hertz}
 below the channel median), AD showed \emph{fewer} transient slowing events than controls (rate ratio
@@ -78,6 +107,43 @@ patients with dementia had fewer, not more, transient slowing events.
 
 \renewcommand{\thefigure}{S\arabic{figure}}\setcounter{figure}{0}
 \renewcommand{\thetable}{S\arabic{table}}\setcounter{table}{0}
+
+\begin{table}[h]
+\centering\scriptsize
+\caption{Status of every analysis. Planned: in the study plan committed before any data were analysed.
+Added: decided after the corresponding results were known, with definitions, variants and margins fixed in
+the configuration before the analysis was run. Exploratory: post hoc, labelled as such in the text.}
+\label{tab:status}
+\begin{tabular}{p{4.2cm}p{9.6cm}}
+\toprule
+Status & Analyses \\
+\midrule
+Primary (changed after review) & By-subject mixed model of representation $\times$ graph construction; the planned split-level ANOVA became secondary (Deviations) \\
+Planned & Split-level ANOVA, pairwise Wilcoxon and Nadeau--Bengio tests, Friedman/Nemenyi; demographic, classical and deep-learning baselines; ablations A1--A12; leakage; permutation test; external validation; PSWE group, slowing and MMSE analyses (RQ6) and incremental value (RQ7) \\
+Added & Confirmation folds; train + val regime; equivalence tests; Nadeau--Bengio-adjusted omnibus tests; graph-type equivalence within representations; stopping-rule sensitivity; PSWE detector robustness, rule grid and collinearity checks; learned adjacency; occlusion importance; mixed-model cross-checks (RM-ANOVA, correct/incorrect outcome); severity stratification; EEGNet with dropout 0.25 \\
+Exploratory & Background-relative PSWE definitions \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering\small
+\caption{Every representation's best GCN cell against its non-graph twins (same test splits,
+weighting and subject aggregation) under both training regimes, and the demographic floor.
+Macro-F1, mean $\pm$ SD over the 25 selection splits. Train only: models fitted on the training
+subjects (the GCN early-stopped on the validation subjects). Train + val: models fitted on training
+and validation subjects (the GCN refitted for its early-stopped epoch count). GCN graph type: best
+in each regime.}
+\label{tab:baselines}
+\begin{tabular}{llcc}
+\toprule
+Representation & Model & Train only & Train + val \\
+\midrule
+\inputtab{generated/tab/baselines.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
 
 \begin{figure}[h]
 \centering
