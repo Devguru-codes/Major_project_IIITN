@@ -76,6 +76,7 @@ def test_severity_null_has_no_effect(rng):
 def test_dropout_sensitivity_pairs_and_holm(rng):
     part = _participants(rng)
     main = _runs(rng, part, pipelines=("P3", "P5"), edges=("spatial", "hybrid"))
+    main.loc[(main.pipeline == "P3") & (main.edge == "spatial"), "macro_f1"] += 0.1   # P3 x spatial best, as in data
     old = main[(main.pipeline == "P5") & (main.edge == "spatial")].assign(tag="deep_eegnet", edge="identity")
     new = old.assign(tag="deep_eegnet_drop025", macro_f1=old.macro_f1 + 0.02)
     tab = dropout_sensitivity(main, old, new)
