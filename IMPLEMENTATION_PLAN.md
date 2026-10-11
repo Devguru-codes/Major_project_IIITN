@@ -555,3 +555,24 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
   - Macro-F1 0.551 ± 0.116: +0.021 vs dropout 0.5 (p = 0.77) and −0.035 vs GCN P3×spatial (p = 0.71).
   - TOST is not equivalent (MDE 0.20). Training cost 0.23 GPU-h, so total GPU use for the study is now ≈ 0.57 h.
 - Other equivalence families are unchanged byte-for-byte.
+
+### Third internal review (five reviewers, 2026-10-12): must and should fixes (NB19). Fixed before running.
+- **M1. Published subject-wise results.**
+  - Full texts were checked through Europe PMC.
+  - Yıldız & Zan 2026: 3-class, subject-wise 10-fold, segment-level, 84.3% accuracy and macro-F1 0.836, on ds006036.
+  - Chen et al. 2023: 3-class 80.2%, 10-fold with the split unit not stated; the final decision combines EEG output with MMSE.
+  - Stefanou et al. 2025: leave-N-subjects-out, 3-class 54.3% accuracy and macro-F1 0.49.
+  - Kang et al. 2025: leave-N-subjects-out, AD/CN 74.2%.
+  - DICE-Net: leave-one-subject-out, AD/CN 83.3% and FTD/CN 75.0%.
+  - Leakage claims are reworded: leakage explains the gap to the 95–99% figures from segment-level splits, not to every published subject-wise figure.
+- **M2. Nadeau–Bengio-adjusted omnibus F.**
+  - Formula: F_NB = F / (1 + J·n_test/n_train) on the same df (with GG), for representation, graph and the interaction. For k = 2 it equals the squared NB t (tested).
+  - Applied to the selection, confirmation and external grids.
+  - The Methods now states the scope of inference of the by-subject mixed model.
+- **S1.** Graph-type TOST within each representation: a new family "graph construction (per representation)"; family 2 is unchanged.
+- Remaining should items are text only:
+  - the PSWE abstract and conclusion wording, with the common-support CI;
+  - clinical framing and the cohort limitations (no medication, FTD-subtype or biomarker information in ds004504);
+  - references (ICLR versions, the JNNP version of [58], title casing), Table 3 formatting, the 0.18 vs 0.25 slip;
+  - an analysis-status table;
+  - moving the stopping-rule and severity material to the supplement.

@@ -76,6 +76,14 @@ def build(reports: str | Path, margin: float = MARGIN) -> pd.DataFrame:
         for a, b in (("spatial", "functional"), ("spatial", "hybrid"), ("functional", "hybrid")):
             add("graph construction", f"{a} - {b}", name, marg[a], marg[b], RATIO_TRAIN)
 
+    # 2b. graph construction within each representation (second review: averaging over representations
+    # shrinks the variance of the marginal comparison); a separate family, so family 2 is unchanged
+    for name, df in sets:
+        for p in sorted(df.pipeline.unique()):
+            for a, b in (("spatial", "functional"), ("spatial", "hybrid"), ("functional", "hybrid")):
+                add("graph construction (per representation)", f"{p}: {a} - {b}", name, _cell(df, p, a),
+                    _cell(df, p, b), RATIO_TRAIN)
+
     # 3. ablations on the confirmation folds (paired with the same cell's confirmation-grid run)
     if len(sets) > 1 and g("confirm/ablations_confirm_*.jsonl"):
         conf = sets[1][1]
