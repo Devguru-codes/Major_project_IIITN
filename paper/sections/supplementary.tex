@@ -67,7 +67,10 @@ dropout sensitivity run). The 525-run main grid
 took \cpuHoursGrid{} CPU-hours, and the \nConfirmRuns{} further runs (confirmation grid, ablations and permutations on the
 confirmation folds, and the train + val refits) took \cpuHoursConfirm{} CPU-hours. The stopping-rule sensitivity grid and the
 external cohort added \nExtraRuns{} runs and \cpuHoursExtra{} CPU-hours, and the learned-adjacency GCN
-\learnNRuns{} runs and \cpuHoursLearned{} CPU-hours. The mixed models fit in seconds. Every run is logged with its configuration hash, code version and seed.
+\learnNRuns{} runs and \cpuHoursLearned{} CPU-hours. Re-fitting the best cell for the occlusion analysis and
+for its reproducibility check took 50 further training runs (about \cpuHoursOcc{} CPU-hours, estimated from the
+main-grid run times of that cell). The mixed models, equivalence and adjusted omnibus tests, severity
+analysis and calibration simulation (NB13--NB20) are statistical computations that took minutes each. Every run is logged with its configuration hash, code version and seed.
 
 \subsection*{Supplementary results}
 \paragraph{Stopping-rule sensitivity.} Early stopping selected a median of epoch \bestEpochMedian{}. Re-running the whole grid with patience
@@ -75,7 +78,8 @@ external cohort added \nExtraRuns{} runs and \cpuHoursExtra{} CPU-hours, and the
 conclusions unchanged (Table~\ref{tab:es}, Figure~\ref{fig:es}): \bestCell{} remained the best cell
 under every rule (\esPFiftyBestFOne{} and \esFixedBestFOne{}), the mean over all cells moved by at most
 \esGrandShiftMax{}, cell rankings were preserved (Spearman $\rho=\esPFiftyRho$ and \esFixedRho{} against the main
-grid), representation stayed significant, and no representation's score changed significantly under
+grid), representation stayed significant in the uncorrected analysis, and no representation's score
+changed significantly under
 either rule (\esNSigWil{} of 14 Holm-corrected Wilcoxon tests). Raw windows (P5), the configuration
 with most parameters, did not benefit from longer training (\esPFiftyPFiveDelta{} and
 \esFixedPFiveDelta{}), and no GCN-versus-classical comparison became significant. Formal equivalence
