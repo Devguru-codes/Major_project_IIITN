@@ -493,3 +493,21 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
 **Text corrections:**
 - Intro: R2 used three pretrained CNNs, not one. Its graph remark is "may improve on it", not "remain unexplored". Both quoted passages were checked verbatim.
 - Related work: R2's random-vs-subject-wise split result added as independent leakage evidence.
+
+### Second internal review: must-fix analyses (2026-10-11, NB15). Fixed before running.
+1. **Equivalence for the null claims.**
+   - Method: TOST against ±0.05 macro-F1 (about one more correct subject in a test fold of 17–18), using the Nadeau–Bengio corrected SE, Holm-corrected within each family. Also reported: the 90% CI and the minimum detectable effect at 80% power.
+   - Families:
+     - GCN vs its non-graph twin (both training regimes);
+     - graph-type pairs (selection and confirmation);
+     - ablations (confirmation);
+     - deep baselines;
+     - stopping rules.
+   - The margin was chosen before computing.
+2. **PSWE A11 rule grid.**
+   - The planned A11, run now: thresholds of 5/6/7 Hz × minimum durations of 3/5/8 s, in both cohorts.
+   - Reported per cell: the group rate ratios with and without the slowing adjustment, and the correlation with slowing.
+3. **Collinearity of the slowing adjustment.** Three checks:
+   - the VIF of δ+θ given group, age and sex;
+   - a common-support refit, restricted to subjects whose slowing lies within the controls' range;
+   - observed/expected events, where the expectation comes from a model of slowing → PSWE fitted in controls only.

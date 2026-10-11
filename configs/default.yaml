@@ -75,8 +75,12 @@ pswe_robust:                   # ROBUSTNESS (added after internal review, fixed 
     reject: {pad: false, reject: true}
     pad_reject: {pad: true, reject: true}
 
+pswe_grid:                     # A11 (planned; run after internal review): fixed-threshold rule sensitivity
+  thresholds_hz: [5.0, 6.0, 7.0]
+  min_durations_s: [3.0, 5.0, 8.0]
+
 graph:
-  edge: hybrid                 # spatial | functional | hybrid | pswe | identity | random
+  edge: hybrid                # spatial | functional | hybrid | pswe | identity | random
   functional_band: alpha
   knn_k: 4
   binarize: false

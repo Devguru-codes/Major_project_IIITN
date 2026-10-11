@@ -228,3 +228,97 @@ def write_rq6(cache_dir, participants, class_names, out_dir) -> dict:
     res = rq6(df, class_names)
     (out / "rq6_pswe_stats.json").write_text(json.dumps(res, indent=1))
     return res
+
+
+def grid_tables(pre_dirs: list[str | Path], subjects: list[str], cfg: dict) -> dict[tuple, pd.DataFrame]:
+    """A11: per-subject fixed-threshold PSWE burden for every (threshold, minimum duration) in config pswe_grid.
+    MPF is computed once per subject with the main detector settings; only the event rule changes."""
+    from .preprocess import iter_preprocessed
+    from .pswe import events_below, median_power_frequency
+
+    pc, gc = cfg["pswe"], cfg["pswe_grid"]
+    channels = cfg["dataset"]["channels"]
+    where = {f.stem: d for d in map(Path, pre_dirs) for f in d.glob("sub-*.npz")}
+    combos = [(float(t), float(d)) for t in gc["thresholds_hz"] for d in gc["min_durations_s"]]
+    rows = {c: [] for c in combos}
+    for s in subjects:
+        _, data, sfreq = next(iter_preprocessed(where[s], [s]))
+        duration = data.shape[-1] / sfreq
+        mpf, _ = median_power_frequency(data, sfreq, pc["win_s"], pc["step_s"], pc["fmin"], pc["fmax"])
+        for thr, dur in combos:
+            ev, mask = events_below(mpf, np.full(len(channels), thr), pc["step_s"], dur, channels)
+            rows[(thr, dur)].append({"subject": s, "n_events": len(ev), "duration_s": duration,
+                                     "rate_per_min": len(ev) / len(channels) / (duration / 60.0),
+                                     "time_fraction": float(mask.mean())})
+    return {c: pd.DataFrame(r).set_index("subject") for c, r in rows.items()}
+
+
+def collinearity(df: pd.DataFrame, class_names: list[str]) -> dict:
+    """Is the slowing-adjusted PSWE result interpretable? (1) variance inflation of the slowing covariate given
+    group, age and sex; (2) common support: refit on subjects whose slowing lies inside the range shared by
+    patients and controls; (3) PSWE burden relative to what slowing predicts, with the slowing-PSWE relation
+    estimated in controls only (observed/expected events)."""
+    import statsmodels.api as sm
+    import statsmodels.formula.api as smf
+
+    names = dict(enumerate(class_names))
+    cn = class_names.index("CN")
+    d = df.assign(group=pd.Categorical(df["label"].map(names), categories=class_names),
+                  log_dur_min=np.log(df["duration_s"] / 60.0))
+    out = {}
+    X = pd.get_dummies(d[["group"]], drop_first=True).astype(float).assign(age=d["age"], sex_male=d["sex_male"])
+    r2 = sm.OLS(d["rel_delta_theta"], sm.add_constant(X)).fit().rsquared
+    out["vif_slowing"] = float(1.0 / (1.0 - r2))
+    out["r2_slowing_on_group_age_sex"] = float(r2)
+    lo, hi = d.loc[d.label == cn, "rel_delta_theta"].agg(["min", "max"])
+    support = d[(d.rel_delta_theta >= lo) & (d.rel_delta_theta <= hi)]
+    out["common_support"] = {"range": [float(lo), float(hi)],
+                             "n_in_support": {names[c]: int((support.label == c).sum()) for c in names},
+                             "n_total": {names[c]: int((d.label == c).sum()) for c in names}}
+    base = "n_events ~ C(group, Treatment('CN')) + age + sex_male"
+    for name, formula in (("adjusted", base), ("adjusted_slowing", base + " + rel_delta_theta")):
+        try:
+            fit = smf.negativebinomial(formula, data=support, exposure=np.exp(support["log_dur_min"])).fit(
+                disp=0, maxiter=500)
+            out["common_support"][name] = {k: {"rate_ratio": float(np.exp(fit.params[k])), "p": float(fit.pvalues[k]),
+                                               "ci95": [float(np.exp(a)) for a in fit.conf_int().loc[k]]}
+                                           for k in fit.params.index if k.startswith("C(group")}
+        except Exception as exc:                          # too few patients in support
+            out["common_support"][name] = {"error": str(exc)[:200]}
+    ctrl = d[d.label == cn]
+    fit = smf.negativebinomial("n_events ~ rel_delta_theta + age + sex_male", data=ctrl,
+                               exposure=np.exp(ctrl["log_dur_min"])).fit(disp=0, maxiter=500)
+    exp_ = fit.predict(d, exposure=np.exp(d["log_dur_min"]))
+    oe = (d["n_events"] + 0.5) / (exp_ + 0.5)
+    out["observed_expected"] = {names[c]: float(np.median(oe[d.label == c])) for c in names}
+    out["observed_expected_kruskal_p"] = float(stats.kruskal(*[oe[d.label == c] for c in names]).pvalue)
+    out["slowing_outside_control_range"] = {names[c]: float(((d.label == c) & ~d.index.isin(support.index)).sum()
+                                                            / max(1, (d.label == c).sum())) for c in names}
+    return out
+
+
+def write_grid(pre_dirs, cache_dir, participants, cfg, out_dir) -> dict:
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    names = cfg["dataset"]["class_names"]
+    base = subject_table(cache_dir, participants)
+    patients = [c for c in names if c != "CN"]
+    rows = []
+    for (thr, dur), t in grid_tables(pre_dirs, list(base.index), cfg).items():
+        df = t.join(base[["rel_delta_theta", "group", "label", "age", "sex_male", "mmse"]])
+        res = rq6(df, names)
+        row = {"threshold_hz": thr, "min_duration_s": dur,
+               "slowing_rho": res["pswe_vs_slowing_spearman"]["rho"],
+               **{f"median_rate_{g}": res["descriptives"]["rate_per_min"][g]["median"] for g in names}}
+        for g in patients:
+            key = f"C(group, Treatment('CN'))[T.{g}]"
+            for m, tag in (("nb_glm_adjusted", "adj"), ("nb_glm_adjusted_slowing", "adj_slow")):
+                r = res.get(m, {})
+                row[f"rr_{tag}_{g}"] = r.get("rate_ratio", {}).get(key, np.nan)
+                row[f"p_{tag}_{g}"] = r.get("p", {}).get(key, np.nan)
+        rows.append(row)
+    grid = pd.DataFrame(rows)
+    grid.to_csv(out / "pswe_grid.csv", index=False)
+    col = collinearity(base.reset_index().set_index("subject"), names)
+    (out / "pswe_collinearity.json").write_text(json.dumps(col, indent=1))
+    return {"grid": grid.round(3).to_dict("records"), "collinearity": col}
