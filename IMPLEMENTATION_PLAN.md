@@ -511,3 +511,8 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
    - the VIF of δ+θ given group, age and sex;
    - a common-support refit, restricted to subjects whose slowing lies within the controls' range;
    - observed/expected events, where the expectation comes from a model of slowing → PSWE fitted in controls only.
+
+### Second internal review: should-fix analyses (2026-10-11, NB16)
+1. **By-subject mixed model on correct/incorrect predictions** (per-subject accuracy over repeats). This separates discrimination from calibration. A by-subject RM-ANOVA with Greenhouse–Geisser correction is reported beside every mixed model.
+2. **Occlusion importance for P3×spatial**, on held-out subjects of the 25 selection splits, with models retrained using the main-grid seeds. Each electrode and each DWT sub-band (A5, D5–D2) is set to its training mean. The quantity is the drop in the probability assigned to the true class, averaged per subject and then per class, with a subject-bootstrap CI.
+3. **Learned adjacency.** The same GCN with a trainable symmetric non-negative graph, initialised at the spatial graph. It is run for all 7 representations on the selection folds, and for P3 on the confirmation folds. Compared with the fixed spatial graph by paired difference and TOST (±0.05).

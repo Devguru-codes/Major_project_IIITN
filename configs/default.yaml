@@ -86,7 +86,7 @@ graph:
   binarize: false
 
 model:
-  arch: gcn                    # gcn | gat | eegnet | cnn1d (deep baselines, NB06)
+  arch: gcn                    # gcn | gat | gcn_learned | eegnet | cnn1d (deep baselines, NB06)
   hidden: [64, 32]
   dropout: 0.5
   batchnorm: true

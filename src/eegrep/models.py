@@ -112,12 +112,40 @@ class CNN1D(nn.Module):
         return self.head(self.dropout(self.features(x).mean(dim=-1)))
 
 
+class LearnedAdjGCN(GraphClassifier):
+    """Should-fix after review: the same GCN, but the graph is a trainable symmetric non-negative matrix shared
+    across samples, initialised at the supplied (spatial) adjacency on the first forward pass and renormalised
+    as D^-1/2 W D^-1/2 at every step. Tests whether a graph learned for the task beats a fixed one."""
+
+    def __init__(self, n_nodes: int, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.adj_logit = nn.Parameter(torch.zeros(n_nodes, n_nodes))
+        self.register_buffer("initialised", torch.zeros((), dtype=torch.bool))
+
+    def learned_adjacency(self, a=None):
+        if not bool(self.initialised):
+            assert a is not None and a.dim() == 2, "learned adjacency is initialised from a fixed (2-D) graph"
+            with torch.no_grad():
+                self.adj_logit.copy_(torch.log(torch.expm1(a.clamp_min(1e-4))))   # inverse softplus
+                self.initialised.fill_(True)
+        w = F.softplus(self.adj_logit)
+        w = (w + w.T) / 2
+        d = w.sum(1).clamp_min(1e-6).rsqrt()
+        return d[:, None] * w * d[None, :]
+
+    def forward(self, x, a):
+        return self.head(self.embed(x, self.learned_adjacency(a)))
+
+
 def build_model(in_dim: int, model_cfg: dict, n_classes: int = 3, n_nodes: int = 19) -> nn.Module:
     """in_dim = node-feature size F (for the raw-window baselines: the number of samples per window)."""
     if model_cfg["arch"] == "eegnet":
         return EEGNet(n_nodes, in_dim, n_classes, model_cfg["dropout"])
     if model_cfg["arch"] == "cnn1d":
         return CNN1D(n_nodes, in_dim, n_classes, model_cfg["dropout"])
+    if model_cfg["arch"] == "gcn_learned":
+        return LearnedAdjGCN(n_nodes, in_dim, tuple(model_cfg["hidden"]), n_classes, model_cfg["dropout"],
+                             model_cfg["batchnorm"], "gcn")
     return GraphClassifier(in_dim, tuple(model_cfg["hidden"]), n_classes, model_cfg["dropout"],
                            model_cfg["batchnorm"], model_cfg["arch"])
 
