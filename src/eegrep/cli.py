@@ -108,6 +108,25 @@ def cmd_pswe_robust(a, cfg):
                       for v in cfg["pswe_robust"]["variants"]}, indent=1))
 
 
+def cmd_pswe_grid(a, cfg):
+    from .data.participants import load_participants
+    from .stats_pswe import write_grid
+
+    df = load_participants(a.participants, cfg["dataset"]["group_to_label"], cfg["dataset"]["participant_columns"])
+    print(json.dumps(write_grid(a.preproc, a.cache, df, cfg, a.out), indent=1, default=float))
+
+
+def cmd_equivalence(a, cfg):
+    from .stats_equivalence import build, summarise
+
+    tab = build(a.reports)
+    Path(a.out).mkdir(parents=True, exist_ok=True)
+    tab.to_csv(Path(a.out) / "equivalence.csv", index=False)
+    s = summarise(tab)
+    s.to_csv(Path(a.out) / "equivalence_summary.csv", index=False)
+    print(s.round(3).to_string())
+
+
 def cmd_classical(a, cfg):
     import pandas as pd
 
@@ -291,6 +310,11 @@ def main(argv=None):
     s = sub.add_parser("pswe-robust"); s.add_argument("--preproc", nargs="+", required=True)
     s.add_argument("--cache", required=True); s.add_argument("--participants", required=True)
     s.add_argument("--out", required=True); s.set_defaults(fn=cmd_pswe_robust)
+    s = sub.add_parser("pswe-grid"); s.add_argument("--preproc", nargs="+", required=True)
+    s.add_argument("--cache", required=True); s.add_argument("--participants", required=True)
+    s.add_argument("--out", required=True); s.set_defaults(fn=cmd_pswe_grid)
+    s = sub.add_parser("equivalence"); s.add_argument("--reports", default="reports")
+    s.add_argument("--out", required=True); s.set_defaults(fn=cmd_equivalence)
     s = sub.add_parser("classical");s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
     s.add_argument("--pipelines", default="P1,P2,P3,P4,P6,P7"); s.add_argument("--out", required=True)
     s.add_argument("--fit-on", choices=["train", "trainval"], default="trainval")

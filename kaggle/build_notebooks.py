@@ -413,6 +413,31 @@ def main():
          "--tag main --out {WORK}/mixed --prefix external', log=f'{WORK}/mixed_external.log')"],
         extras="dev,stats"))
 
+    # ---- NB15: must-fix analyses after the second internal review ----
+    write_kernel("nb15-equivalence-pswe-grid", "nb15 equivalence pswe grid", notebook(
+        "NB15 — equivalence tests for the null claims; PSWE threshold/duration grid (A11) and collinearity (CPU)",
+        "TOST (+/-0.05 macro-F1, Nadeau-Bengio corrected) and minimum detectable effects for every 'no difference' "
+        "comparison, from the committed runs; the planned A11 PSWE rule grid (5/6/7 Hz x 3/5/8 s) and a "
+        "collinearity analysis of the slowing adjustment, in both cohorts.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_equivalence.py tests/test_pswe.py "
+         "tests/test_stats.py', log=f'{WORK}/pytest_nb15.txt')",
+         "sh(f'{PY} equivalence --reports {SRC}/reports --out {WORK}/equivalence', log=f'{WORK}/equivalence.log')",
+         "import glob\n"
+         "pre = [d for d in glob.glob('/kaggle/input/**/preproc', recursive=True) if glob.glob(f'{d}/sub-*.npz')]\n"
+         "caches = [d for d in glob.glob('/kaggle/input/**/cache', recursive=True) if os.path.exists(f'{d}/index.npz')]\n"
+         "parts = glob.glob('/kaggle/input/**/participants.tsv', recursive=True)\n"
+         "PRE04 = sorted(d for d in pre if 'nb01' in d); PRE84 = [d for d in pre if 'nb11a' in d]\n"
+         "CACHE04 = [d for d in caches if 'nb02' in d][0]; CACHE84 = [d for d in caches if 'nb11a' in d][0]\n"
+         "PART04 = [p for p in parts if 'nb02' in p][0]; PART84 = [p for p in parts if 'nb11a' in p][0]\n"
+         "assert len(PRE04) == 3 and len(PRE84) == 1",
+         "sh(f'{PY} pswe-grid --preproc {\" \".join(PRE04)} --cache {CACHE04} --participants {PART04} "
+         "--out {WORK}/pswe_grid_ds004504', log=f'{WORK}/pswe_grid_ds004504.log')",
+         "sh(f'{PY} --config configs/ds004584.yaml pswe-grid --preproc {PRE84[0]} --cache {CACHE84} "
+         "--participants {PART84} --out {WORK}/pswe_grid_ds004584', log=f'{WORK}/pswe_grid_ds004584.log')"],
+        extras="dev,stats"),
+        kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)]
+        + [f"{OWNER}/eegrep-nb02-merge-qc", f"{OWNER}/eegrep-nb11a-external-prep"])
+
     # ---- PSWE robustness: zero-padded MPF grid and artefact rejection (both cohorts) ----
     write_kernel("nb14-pswe-robust", "nb14 pswe robust", notebook(
         "NB14 — fixed-threshold PSWE robustness: zero-padded MPF and artefact rejection (CPU)",
