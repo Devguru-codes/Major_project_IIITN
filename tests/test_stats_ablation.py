@@ -97,3 +97,18 @@ def test_es_sensitivity_pairs_variants_with_main(rng):
     r = res["representations"].set_index(["rule", "pipeline"])
     assert r.loc[("fixed 100 epochs", "P3"), "delta_vs_main"] == pytest.approx(0.05, abs=0.02)
     assert r.loc[(MAIN_RULE, "P3"), "delta_vs_main"] == 0 and len(res["gcn_vs_classical"]) == 6
+
+
+def test_deep_baselines_paired_against_best_and_raw_gcn(rng):
+    from eegrep.stats_ablation import deep_baselines
+
+    main = pd.concat([_runs(rng, "main", "P3", "spatial", 0.59), _runs(rng, "main", "P5", "spatial", 0.47),
+                      _runs(rng, "main", "P5", "hybrid", 0.49)])
+    for d in (main,):
+        d["balanced_acc"] = d["roc_auc"] = d["macro_f1"]
+    deep = pd.concat([_runs(rng, "deep_eegnet", "P5", "identity", 0.52), _runs(rng, "deep_cnn1d", "P5", "identity", 0.45)])
+    deep["balanced_acc"] = deep["roc_auc"] = deep["macro_f1"]
+    t = deep_baselines(main, deep).set_index(["model", "reference"])
+    assert set(t.index.get_level_values("reference")) == {"GCN P3 x spatial", "GCN P5 x hybrid"}
+    assert t.loc[("eegnet", "GCN P3 x spatial"), "delta"] == pytest.approx(-0.07, abs=0.02)
+    assert len(t) == 4 and (t["wilcoxon_p_holm"] >= t["wilcoxon_p"]).all()

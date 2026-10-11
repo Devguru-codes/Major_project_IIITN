@@ -87,7 +87,7 @@ def train_one(X: np.ndarray, A: np.ndarray, win_subject: np.ndarray, win_label: 
         window_weights(win_subject[idx_train], win_label[idx_train], n_classes, tc["subject_equal_weighting"]),
         device=device)
 
-    model = build_model(X.shape[-1], cfg["model"], n_classes).to(device)
+    model = build_model(X.shape[-1], cfg["model"], n_classes, n_nodes=X.shape[1]).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=tc["lr"], weight_decay=tc["weight_decay"])
 
     def adj(idx):

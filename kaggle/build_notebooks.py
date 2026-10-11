@@ -331,6 +331,22 @@ def main():
              find_cache + "\n" + ext + f"assert os.path.exists(f'{ext_folds}'), 'commit the NB11a folds first'"] + jobs,
             extras="dev"), kernel_sources=[f"{OWNER}/eegrep-nb11a-external-prep"])
 
+    # ---- NB06: deep-learning baselines (the only GPU notebook; budget <= 2.5 GPU-h, expected < 1 h) ----
+    deep = ("sh(f'{{PY}} grid --cache {{CACHE}} --folds {{FOLDS}} --pipelines P5 --edges identity --tag deep_{arch} "
+            "--set model.arch={arch} --device cuda --out {{WORK}}/deep_runs.jsonl --max-hours 1.25', "
+            "log=f'{{WORK}}/deep_{arch}.log')")
+    write_kernel("nb06-deep-baselines", "nb06 deep baselines", notebook(
+        "NB06 — deep-learning baselines: EEGNet and 1D-CNN on raw windows (GPU)",
+        "EEGNet-8,2 and a compact 1D-CNN on the same raw 10-s windows as P5, the same 25 selection splits, "
+        "training rule, subject-equal weighting and subject aggregation as the GCN grid, so every comparison is "
+        "paired. The only GPU notebook of the study: hard cap 1.25 h per model.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_model_train.py "
+         "tests/test_stats_ablation.py', log=f'{WORK}/pytest_deep.txt')",
+         find_cache + "\nimport torch\nassert torch.cuda.is_available(), 'no GPU attached: refusing to run on CPU'\n"
+         "print(torch.cuda.get_device_name(0))",
+         deep.format(arch="eegnet"), deep.format(arch="cnn1d")],
+        extras="dev"), gpu=True, kernel_sources=nb02)
+
     # ---- ablations A7 (window length) and A8 (ICA off): new caches, confirmation folds, both reference cells ----
     confirm_folds = "{SRC}/splits/folds_ds004504_confirm.json"
 

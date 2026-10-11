@@ -5,7 +5,8 @@ DenseGCN (Kipf & Welling 2017) on 19-node graphs with dense normalised adjacency
     H2 = ReLU(Â H1 W1)                W1: 64×32
     g  = mean over nodes -> Linear(32→3)
 ≈2.8k parameters for F=7. DenseGAT (single head) is the A6 sensitivity check.
-Identity adjacency turns either model into a per-node MLP (ablation A1).
+Identity adjacency turns either model into a per-node MLP (ablation A1). EEGNet and a 1D-CNN on the raw
+window are the deep-learning baselines (NB06; arch "eegnet" | "cnn1d").
 """
 from __future__ import annotations
 
@@ -67,7 +68,56 @@ class GraphClassifier(nn.Module):
         return self.head(self.embed(x, a))
 
 
-def build_model(in_dim: int, model_cfg: dict, n_classes: int = 3) -> GraphClassifier:
+class EEGNet(nn.Module):
+    """Deep-learning baseline (NB06): EEGNet-8,2 (Lawhern et al. 2018) on the raw window (B, C, T); the graph is
+    ignored. Temporal conv (64 taps = 0.5 s at 128 Hz) -> depthwise spatial conv (D=2) -> separable conv ->
+    linear. Max-norm weight constraints of the original are omitted (AdamW weight decay instead)."""
+
+    def __init__(self, n_channels: int, n_times: int, n_classes: int = 3, dropout: float = 0.5,
+                 f1: int = 8, d: int = 2, f2: int = 16, kern: int = 64):
+        super().__init__()
+        self.block1 = nn.Sequential(
+            nn.Conv2d(1, f1, (1, kern), padding="same", bias=False), nn.BatchNorm2d(f1),
+            nn.Conv2d(f1, f1 * d, (n_channels, 1), groups=f1, bias=False), nn.BatchNorm2d(f1 * d), nn.ELU(),
+            nn.AvgPool2d((1, 4)), nn.Dropout(dropout))
+        self.block2 = nn.Sequential(
+            nn.Conv2d(f1 * d, f1 * d, (1, 16), padding="same", groups=f1 * d, bias=False),
+            nn.Conv2d(f1 * d, f2, 1, bias=False), nn.BatchNorm2d(f2), nn.ELU(),
+            nn.AvgPool2d((1, 8)), nn.Dropout(dropout))
+        self.head = nn.Linear(f2 * (n_times // 32), n_classes)
+
+    def forward(self, x, a=None):
+        h = self.block2(self.block1(x.unsqueeze(1)))
+        return self.head(h.flatten(1))
+
+
+class CNN1D(nn.Module):
+    """Deep-learning baseline (NB06): three temporal conv blocks over channels-as-features, global average
+    pooling, linear head; the graph is ignored."""
+
+    def __init__(self, n_channels: int, n_times: int, n_classes: int = 3, dropout: float = 0.5,
+                 widths=(32, 64, 64), kern: int = 7):
+        super().__init__()
+        layers, c = [], n_channels
+        for i, w in enumerate(widths):
+            layers += [nn.Conv1d(c, w, kern, padding=kern // 2), nn.BatchNorm1d(w), nn.ReLU()]
+            if i < len(widths) - 1:
+                layers.append(nn.MaxPool1d(4))
+            c = w
+        self.features = nn.Sequential(*layers)
+        self.dropout = nn.Dropout(dropout)
+        self.head = nn.Linear(c, n_classes)
+
+    def forward(self, x, a=None):
+        return self.head(self.dropout(self.features(x).mean(dim=-1)))
+
+
+def build_model(in_dim: int, model_cfg: dict, n_classes: int = 3, n_nodes: int = 19) -> nn.Module:
+    """in_dim = node-feature size F (for the raw-window baselines: the number of samples per window)."""
+    if model_cfg["arch"] == "eegnet":
+        return EEGNet(n_nodes, in_dim, n_classes, model_cfg["dropout"])
+    if model_cfg["arch"] == "cnn1d":
+        return CNN1D(n_nodes, in_dim, n_classes, model_cfg["dropout"])
     return GraphClassifier(in_dim, tuple(model_cfg["hidden"]), n_classes, model_cfg["dropout"],
                            model_cfg["batchnorm"], model_cfg["arch"])
 

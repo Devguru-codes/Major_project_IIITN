@@ -145,3 +145,29 @@ def write_all(main, abl, classical, demographics, out_dir) -> dict:
     res["permutation"] = permutation_test(main, abl)
     (out / "permutation.json").write_text(json.dumps(res["permutation"], indent=1))
     return res
+
+
+def deep_baselines(main: pd.DataFrame, deep: pd.DataFrame, test_train_ratio: float = RATIO_TRAIN) -> pd.DataFrame:
+    """NB06: EEGNet and 1D-CNN on raw windows vs (a) the best GCN cell and (b) the best GCN cell on the same raw
+    windows (P5), paired over the 25 selection splits; all models train on the same subjects (train only,
+    early-stopped on val). Holm across all comparisons."""
+    cell = main.groupby(["pipeline", "edge"])["macro_f1"].mean()
+    best = cell.idxmax()
+    p5 = cell.loc["P5"].idxmax()
+    refs = {f"GCN {best[0]} x {best[1]}": main[(main.pipeline == best[0]) & (main.edge == best[1])],
+            f"GCN P5 x {p5}": main[(main.pipeline == "P5") & (main.edge == p5)]}
+    rows = []
+    for tag, g in deep.groupby("tag"):
+        a = g.set_index("unit")["macro_f1"]
+        for ref_name, ref in refs.items():
+            b = ref.set_index("unit")["macro_f1"].reindex(a.index)
+            d = (a - b).to_numpy()
+            rows.append({"model": tag.replace("deep_", ""), "n": len(a), "macro_f1": a.mean(), "sd": a.std(),
+                         "balanced_acc": g["balanced_acc"].mean(), "roc_auc": g["roc_auc"].mean(),
+                         "reference": ref_name, "reference_f1": b.mean(), "delta": d.mean(),
+                         "wilcoxon_p": stats.wilcoxon(d, zero_method="zsplit").pvalue,
+                         "nb_p": nadeau_bengio(d, test_train_ratio)[1]})
+    out = pd.DataFrame(rows)
+    out["wilcoxon_p_holm"] = holm(out["wilcoxon_p"].tolist())
+    out["nb_p_holm"] = holm(out["nb_p"].tolist())
+    return out

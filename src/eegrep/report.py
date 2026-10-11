@@ -127,6 +127,19 @@ def build_report(reports: str | Path, cache_dir: str | Path, preproc_dirs: list[
     else:
         confirmation_summary = None
 
+    # ---- deep-learning baselines (NB06; present once reports/deep/ is committed) ----
+    deep_summary = None
+    if glob.glob(str(rep / "deep" / "deep_runs_s*.jsonl")):
+        from .stats_ablation import deep_baselines
+
+        deep = load_runs(sorted(glob.glob(str(rep / "deep" / "deep_runs_s*.jsonl"))))
+        dtab = deep_baselines(main, deep)
+        (tabs / "deep").mkdir(parents=True, exist_ok=True)
+        dtab.to_csv(tabs / "deep" / "deep_baselines.csv", index=False)
+        deep_summary = dtab.round(4).to_dict("records")
+        step("figS9 deep baselines confusion", lambda: F.fig_confusions(
+            deep.assign(pipeline=deep["tag"].str.replace("deep_", "")), names, figs, name="figS9_deep_confusion"))
+
     # ---- by-subject mixed model (NB13; present once reports/mixed/ is committed) ----
     if (rep / "mixed" / "selection_marginal.csv").exists():
         step("fig15 mixed model", lambda: F.fig_mixed(
@@ -181,6 +194,7 @@ def build_report(reports: str | Path, cache_dir: str | Path, preproc_dirs: list[
         "confirmation": confirmation_summary,
         "es_sensitivity": es_summary,
         "external": ext_summary,
+        "deep_baselines": deep_summary,
         "report_errors": errors,
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=1, default=float))
