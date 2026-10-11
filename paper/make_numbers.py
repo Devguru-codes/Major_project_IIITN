@@ -339,6 +339,23 @@ if (mix / "selection_summary.json").exists():
         rows.append(f"{label} & {' & '.join(cols)} \\\\")
     MIX_ROWS = "\n".join(rows)
 
+# ---- deep-learning baselines (NB06 -> NB07) ----
+DEEP = None
+if (nb07 / "tables" / "deep" / "deep_baselines.csv").exists():
+    DEEP = pd.read_csv(nb07 / "tables" / "deep" / "deep_baselines.csv")
+    for model, tag in (("eegnet", "Eegnet"), ("cnn1d", "Cnn")):
+        g = DEEP[DEEP.model == model]
+        put(f"deep{tag}FOne", g.macro_f1.iloc[0]); put(f"deep{tag}Sd", g.sd.iloc[0])
+        put(f"deep{tag}BalAcc", g.balanced_acc.iloc[0]); put(f"deep{tag}Auc", g.roc_auc.iloc[0])
+        for _, r in g.iterrows():
+            k = f"deep{tag}Vs{'Raw' if r.reference.startswith('GCN P5') else 'Best'}"
+            put(k + "Delta", r.delta, "{:+.3f}"); put(k + "P", p_fmt(r.nb_p_holm)); put(k + "WilP", p_fmt(r.wilcoxon_p_holm))
+            put(k + "RefFOne", r.reference_f1)
+    put("deepNSigWil", int((DEEP.wilcoxon_p_holm < 0.05).sum()), "{:d}")
+    put("deepNSigNb", int((DEEP.nb_p_holm < 0.05).sum()), "{:d}")
+    sec = sum(json.loads(line)["seconds"] for f in sorted((REP / "deep").glob("deep_runs_s*.jsonl")) for line in open(f))
+    put("deepGpuHours", sec / 3600, "{:.2f}")
+
 # ---- PSWE robustness: zero-padded MPF + artefact rejection (NB14) ----
 for ds, tag, groups in (("ds004504", "Rob", (("AD", AD), ("FTD", FTD))),
                         ("ds004584", "ExtRob", (("PD", "C(group, Treatment('CN'))[T.PD]"),))):
@@ -413,6 +430,10 @@ for p in sorted(REPN):
         b = ctv[(ctv.pipeline == p) & (ctv.model == m)]["macro_f1"]
         if len(a) or len(b):
             rows.append(f" & {mname[m]} & {ms(a) if len(a) else '--'} & {ms(b) if len(b) else '--'} \\\\")
+    if p == "P5" and DEEP is not None:                       # deep-learning baselines on the same raw windows
+        for model, label in (("eegnet", "EEGNet"), ("cnn1d", "1D-CNN")):
+            r_ = DEEP[DEEP.model == model].iloc[0]
+            rows.append(f" & {label} & {r_.macro_f1:.3f} $\\pm$ {r_.sd:.3f} & -- \\\\")
     rows.append("\\addlinespace")
 d = pd.read_csv(REP / "nb03a_demographics.csv")
 rows.append(f"Age + sex & Logistic regression & -- & {ms(d[d.model == 'demographics_lr'].macro_f1)} \\\\")

@@ -1,0 +1,29 @@
+[runner] deep_eegnet|P5|identity|0|0|39970c7146  macroF1=0.626  epochs=29  32.5s
+[runner] deep_eegnet|P5|identity|0|1|39970c7146  macroF1=0.597  epochs=36  39.2s
+[runner] deep_eegnet|P5|identity|0|2|39970c7146  macroF1=0.654  epochs=40  46.4s
+[runner] deep_eegnet|P5|identity|0|3|39970c7146  macroF1=0.646  epochs=25  30.0s
+[runner] deep_eegnet|P5|identity|0|4|39970c7146  macroF1=0.463  epochs=27  32.2s
+[runner] deep_eegnet|P5|identity|1|0|39970c7146  macroF1=0.599  epochs=32  37.5s
+[runner] deep_eegnet|P5|identity|1|1|39970c7146  macroF1=0.395  epochs=38  44.6s
+[runner] deep_eegnet|P5|identity|1|2|39970c7146  macroF1=0.325  epochs=28  33.0s
+[runner] deep_eegnet|P5|identity|1|3|39970c7146  macroF1=0.411  epochs=21  25.1s
+[runner] deep_eegnet|P5|identity|1|4|39970c7146  macroF1=0.491  epochs=28  33.5s
+[runner] deep_eegnet|P5|identity|2|0|39970c7146  macroF1=0.560  epochs=29  33.9s
+[runner] deep_eegnet|P5|identity|2|1|39970c7146  macroF1=0.643  epochs=35  41.3s
+[runner] deep_eegnet|P5|identity|2|2|39970c7146  macroF1=0.458  epochs=41  47.4s
+[runner] deep_eegnet|P5|identity|2|3|39970c7146  macroF1=0.615  epochs=23  27.9s
+[runner] deep_eegnet|P5|identity|2|4|39970c7146  macroF1=0.431  epochs=22  26.4s
+[runner] deep_eegnet|P5|identity|3|0|39970c7146  macroF1=0.432  epochs=41  47.9s
+[runner] deep_eegnet|P5|identity|3|1|39970c7146  macroF1=0.648  epochs=29  34.8s
+[runner] deep_eegnet|P5|identity|3|2|39970c7146  macroF1=0.546  epochs=31  36.8s
+[runner] deep_eegnet|P5|identity|3|3|39970c7146  macroF1=0.343  epochs=29  34.3s
+[runner] deep_eegnet|P5|identity|3|4|39970c7146  macroF1=0.531  epochs=44  50.9s
+[runner] deep_eegnet|P5|identity|4|0|39970c7146  macroF1=0.574  epochs=32  38.1s
+[runner] deep_eegnet|P5|identity|4|1|39970c7146  macroF1=0.342  epochs=33  38.7s
+[runner] deep_eegnet|P5|identity|4|2|39970c7146  macroF1=0.537  epochs=23  27.7s
+[runner] deep_eegnet|P5|identity|4|3|39970c7146  macroF1=0.683  epochs=30  35.5s
+[runner] deep_eegnet|P5|identity|4|4|39970c7146  macroF1=0.699  epochs=34  39.9s
+{"runs_done": 25}
+
+/usr/local/lib/python3.13/dist-packages/torch/nn/modules/conv.py:548: UserWarning: Using padding='same' with even kernel lengths and odd dilation may require a zero-padded copy of the input be created (Triggered internally at /pytorch/aten/src/ATen/native/Convolution.cpp:1024.)
+  return F.conv2d(

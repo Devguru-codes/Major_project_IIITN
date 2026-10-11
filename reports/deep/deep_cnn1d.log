@@ -1,0 +1,27 @@
+[runner] deep_cnn1d|P5|identity|0|0|9a8dc24e6e  macroF1=0.536  epochs=28  12.2s
+[runner] deep_cnn1d|P5|identity|0|1|9a8dc24e6e  macroF1=0.339  epochs=28  10.6s
+[runner] deep_cnn1d|P5|identity|0|2|9a8dc24e6e  macroF1=0.552  epochs=32  12.1s
+[runner] deep_cnn1d|P5|identity|0|3|9a8dc24e6e  macroF1=0.641  epochs=27  10.2s
+[runner] deep_cnn1d|P5|identity|0|4|9a8dc24e6e  macroF1=0.329  epochs=29  10.9s
+[runner] deep_cnn1d|P5|identity|1|0|9a8dc24e6e  macroF1=0.434  epochs=39  14.1s
+[runner] deep_cnn1d|P5|identity|1|1|9a8dc24e6e  macroF1=0.419  epochs=40  14.5s
+[runner] deep_cnn1d|P5|identity|1|2|9a8dc24e6e  macroF1=0.493  epochs=75  26.1s
+[runner] deep_cnn1d|P5|identity|1|3|9a8dc24e6e  macroF1=0.581  epochs=29  10.7s
+[runner] deep_cnn1d|P5|identity|1|4|9a8dc24e6e  macroF1=0.486  epochs=22  8.5s
+[runner] deep_cnn1d|P5|identity|2|0|9a8dc24e6e  macroF1=0.595  epochs=21  8.0s
+[runner] deep_cnn1d|P5|identity|2|1|9a8dc24e6e  macroF1=0.615  epochs=49  17.5s
+[runner] deep_cnn1d|P5|identity|2|2|9a8dc24e6e  macroF1=0.655  epochs=37  13.3s
+[runner] deep_cnn1d|P5|identity|2|3|9a8dc24e6e  macroF1=0.462  epochs=57  20.6s
+[runner] deep_cnn1d|P5|identity|2|4|9a8dc24e6e  macroF1=0.570  epochs=28  10.5s
+[runner] deep_cnn1d|P5|identity|3|0|9a8dc24e6e  macroF1=0.458  epochs=22  8.5s
+[runner] deep_cnn1d|P5|identity|3|1|9a8dc24e6e  macroF1=0.357  epochs=29  10.9s
+[runner] deep_cnn1d|P5|identity|3|2|9a8dc24e6e  macroF1=0.695  epochs=21  8.2s
+[runner] deep_cnn1d|P5|identity|3|3|9a8dc24e6e  macroF1=0.529  epochs=21  8.1s
+[runner] deep_cnn1d|P5|identity|3|4|9a8dc24e6e  macroF1=0.627  epochs=37  13.4s
+[runner] deep_cnn1d|P5|identity|4|0|9a8dc24e6e  macroF1=0.536  epochs=48  17.4s
+[runner] deep_cnn1d|P5|identity|4|1|9a8dc24e6e  macroF1=0.499  epochs=25  9.5s
+[runner] deep_cnn1d|P5|identity|4|2|9a8dc24e6e  macroF1=0.323  epochs=22  8.6s
+[runner] deep_cnn1d|P5|identity|4|3|9a8dc24e6e  macroF1=0.707  epochs=21  8.1s
+[runner] deep_cnn1d|P5|identity|4|4|9a8dc24e6e  macroF1=0.638  epochs=33  12.1s
+{"runs_done": 50}
+

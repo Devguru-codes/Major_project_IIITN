@@ -1,0 +1,8 @@
+{
+ "git_sha": "1b32dd9",
+ "python": "3.13.15",
+ "torch": "2.11.0+cu128",
+ "cuda": true,
+ "cpu_count": 4,
+ "kaggle_image": "gcr.io/kaggle-gpu-images/python@sha256:2757e0c7d1e0a9cb43da657b97e223c321a98f5014bdf64f44f2f6b083ad2b2f"
+}
