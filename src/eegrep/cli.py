@@ -165,6 +165,14 @@ def cmd_deep_dropout(a, cfg):
     print(tab.round(4).to_string())
 
 
+def cmd_omnibus(a, cfg):
+    from .stats_grid import load_runs
+    from .stats_omnibus import write_omnibus
+
+    tab = write_omnibus(load_runs(a.runs, tag=a.tag), a.out, a.prefix)
+    print(tab.round(4).to_string())
+
+
 def cmd_classical(a, cfg):
     import pandas as pd
 
@@ -354,6 +362,9 @@ def main(argv=None):
     s = sub.add_parser("explain"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
     s.add_argument("--out", required=True); s.add_argument("--pipeline", default="P3"); s.add_argument("--edge", default="spatial")
     s.set_defaults(fn=cmd_explain)
+    s = sub.add_parser("omnibus"); s.add_argument("--runs", nargs="+", required=True)
+    s.add_argument("--tag", default="main"); s.add_argument("--out", required=True)
+    s.add_argument("--prefix", required=True); s.set_defaults(fn=cmd_omnibus)
     s = sub.add_parser("severity"); s.add_argument("--participants", required=True)
     s.add_argument("--runs", nargs="+", required=True); s.add_argument("--confirm-runs", nargs="*")
     s.add_argument("--pipeline", default="P3"); s.add_argument("--edge", default="spatial")

@@ -510,6 +510,23 @@ def main():
          "--out {WORK}/severity', log=f'{WORK}/severity.log')"],
         extras="dev,stats"), kernel_sources=nb02)
 
+    # ---- NB19: second-review fixes. NB-adjusted omnibus F (M2) and per-representation graph TOST (CPU) ----
+    conf_runs = "{SRC}/reports/confirm/confirm_runs_s0.jsonl {SRC}/reports/confirm/confirm_runs_s1.jsonl"
+    ext_runs = "{SRC}/reports/external/ext_runs_s0.jsonl {SRC}/reports/external/ext_runs_s1.jsonl"
+    write_kernel("nb19-review2", "nb19 review2", notebook(
+        "NB19 — second-review fixes: Nadeau-Bengio-adjusted omnibus tests and per-representation graph equivalence (CPU)",
+        "Split-level repeated-measures ANOVA with every contrast's variance inflated by the Nadeau-Bengio factor "
+        "(1 + J n_test/n_train), on the selection and confirmation folds and the external cohort; the equivalence "
+        "table rerun with graph-type TOST within each representation as a separate family.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_review2.py "
+         "tests/test_equivalence.py tests/test_stats.py', log=f'{WORK}/pytest_nb19.txt')"]
+        + [f"sh(f'{{PY}} omnibus --runs {runs} --tag {tag} --out {{WORK}}/omnibus --prefix {name}', "
+           f"log=f'{{WORK}}/omnibus_{name}.log')"
+           for name, tag, runs in (("selection", "main", grid_runs), ("confirmation", "confirm", conf_runs),
+                                   ("external", "main", ext_runs))]
+        + ["sh(f'{PY} equivalence --reports {SRC}/reports --out {WORK}/equivalence', log=f'{WORK}/equivalence.log')"],
+        extras="dev,stats"))
+
     # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
     write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(
         "NB17 — equivalence tests including the learned-adjacency family (CPU)",
