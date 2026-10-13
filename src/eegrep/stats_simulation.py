@@ -39,11 +39,15 @@ def oneway_rm(wide: np.ndarray, ratio: float = RATIO_TRAIN) -> dict:
             "F_nb": f_nb, "p_nb_gg": float(stats.f.sf(f_nb, df1 * eps, df2 * eps))}
 
 
-def _dataset(rng, k: int, noise: np.ndarray, separation: float, dim: int = 10):
+def _dataset(rng, k: int, noise: np.ndarray, separation: float, dim: int = 10, corr: float = 0.0):
+    """corr: correlation between the views' noise (real representations are transforms of the same EEG, so
+    their errors are correlated); each view's noise variance is unchanged."""
     y = np.repeat(np.arange(3), CLASS_SIZES)
     centres = rng.normal(0, separation, (3, dim))
     latent = centres[y] + rng.normal(0, 1, (len(y), dim))          # subject-level signal shared by all views
-    views = [latent + rng.normal(0, noise[r], latent.shape) for r in range(k)]
+    common = rng.normal(0, 1, latent.shape)
+    views = [latent + noise[r] * (np.sqrt(corr) * common + np.sqrt(1 - corr) * rng.normal(0, 1, latent.shape))
+             for r in range(k)]
     return views, y
 
 
@@ -83,7 +87,8 @@ def cv_scores_subject(views, y, seeds=range(5), n_folds: int = 5, val_frac: floa
 
 
 def simulate(n_sim: int = 300, k: int = 7, separation: float = 0.35, base_noise: float = 1.5,
-             spread: float = 0.0, seed: int = 0, ratio: float = RATIO_TRAIN, subject_level: bool = False) -> pd.DataFrame:
+             spread: float = 0.0, seed: int = 0, ratio: float = RATIO_TRAIN, subject_level: bool = False,
+             corr: float = 0.0) -> pd.DataFrame:
     """spread = 0: null (equal noise); spread > 0: noise levels base_noise * linspace(1 - spread, 1 + spread).
     subject_level: also test the by-subject repeated-measures F on the averaged true-class probabilities (for a
     balanced design the by-subject mixed model reduces to it)."""
@@ -91,14 +96,14 @@ def simulate(n_sim: int = 300, k: int = 7, separation: float = 0.35, base_noise:
     noise = base_noise * np.linspace(1 - spread, 1 + spread, k)
     rows = []
     for i in range(n_sim):
-        views, y = _dataset(rng, k, noise, separation)
+        views, y = _dataset(rng, k, noise, separation, corr=corr)
         if subject_level:
             wide, subj = cv_scores_subject(views, y)
             s = oneway_rm(subj)
             extra = {"F_subj": s["F"], "p_subj_gg": s["p_gg"]}
         else:
             wide, extra = cv_scores(views, y), {}
-        rows.append({"sim": i, "k": k, "spread": spread, "mean_f1": wide.mean(),
+        rows.append({"sim": i, "k": k, "spread": spread, "corr": corr, "mean_f1": wide.mean(),
                      "range_f1": np.ptp(wide.mean(0)), **oneway_rm(wide, ratio), **extra})
     return pd.DataFrame(rows)
 
@@ -109,4 +114,5 @@ def summarise(sims: pd.DataFrame, alpha: float = 0.05) -> pd.DataFrame:
                reject_nb=("p_nb_gg", lambda p: float((p < alpha).mean())))
     if "p_subj_gg" in sims:
         agg["reject_subject"] = ("p_subj_gg", lambda p: float((p < alpha).mean()))
-    return sims.groupby(["k", "spread"]).agg(**agg).reset_index()
+    keys = ["k", "spread"] + (["corr"] if "corr" in sims else [])
+    return sims.groupby(keys).agg(**agg).reset_index()

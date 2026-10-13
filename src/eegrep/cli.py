@@ -180,8 +180,9 @@ def cmd_simulate_omnibus(a, cfg):
 
     settings = ([tuple(float(x) for x in s.split(":")) for s in a.settings.split(",")] if a.settings
                 else [(7, 0.0), (2, 0.0), (7, 0.25), (7, 0.5)])
-    sims = pd.concat([simulate(a.n_sim, k=int(k), spread=s, seed=a.seed + 10 * i, subject_level=a.subject_level)
-                      for i, (k, s) in enumerate(settings)], ignore_index=True)
+    settings = [t if len(t) == 3 else (*t, 0.0) for t in settings]           # k:spread[:corr]
+    sims = pd.concat([simulate(a.n_sim, k=int(k), spread=s, seed=a.seed + 10 * i, subject_level=a.subject_level,
+                               corr=c) for i, (k, s, c) in enumerate(settings)], ignore_index=True)
     Path(a.out).mkdir(parents=True, exist_ok=True)
     sims.to_csv(Path(a.out) / "omnibus_simulation.csv", index=False)
     summ = summarise(sims)
@@ -395,7 +396,7 @@ def main(argv=None):
     s.add_argument("--out", required=True); s.add_argument("--pipeline", default="P3"); s.add_argument("--edge", default="spatial")
     s.set_defaults(fn=cmd_explain)
     s = sub.add_parser("simulate-omnibus"); s.add_argument("--n-sim", type=int, default=300)
-    s.add_argument("--settings", help="k:spread,... (default 7:0,2:0,7:0.25,7:0.5)")
+    s.add_argument("--settings", help="k:spread[:corr],... (default 7:0,2:0,7:0.25,7:0.5)")
     s.add_argument("--seed", type=int, default=0); s.add_argument("--subject-level", action="store_true")
     s.add_argument("--out", required=True); s.set_defaults(fn=cmd_simulate_omnibus)
     s = sub.add_parser("refit-check"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
