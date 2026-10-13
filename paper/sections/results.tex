@@ -12,7 +12,7 @@ for a stratified random classifier. Demographics therefore carry some group info
 with the sex imbalance between groups (Table~\ref{tab:demographics}). We use \demoFOne{}, not 1/3, as
 the floor that EEG-based models must clear.
 
-\subsection{Representation matters; graph construction barely does}\label{sec:res-grid}
+\subsection{Representation versus graph construction}\label{sec:res-grid}
 Across the 21 cells on the selection folds (\nMainRuns{} runs; Table~\ref{tab:cells}), the best
 configuration was \bestCell{}, with subject-level macro-F1 \bestFOne{}~$\pm$~\bestFOneSd{}
 (subject-bootstrap 95\% CI \bestFOneCiLo{}--\bestFOneCiHi{}). Because this cell was chosen as the
@@ -106,10 +106,18 @@ $p\pThreeFourWilP$; Nadeau--Bengio--Holm $p\pThreeFourNbP$). The same caveat app
 omnibus tests, which also treat the splits as independent: with every contrast's variance inflated by the
 Nadeau--Bengio factor, representation was not significant on either fold set ($F_\mathrm{NB}=\nbSelRepF$,
 $p\nbSelRepP$; confirmation \nbConfRepF{}, $p\nbConfRepP$), nor was graph construction or the interaction
-($p\nbSelEdgeP$ and $p\nbSelInterP$ on the selection folds). We therefore regard the existence of a representation effect as supported --- it is the
-largest effect in every analysis, its ordering replicated across fold sets ($\rho=\confRankRho$) and it survives
-the adjustment in the external cohort (Section~\ref{sec:res-external}) --- but the size of individual
-pairwise differences as not established.
+($p\nbSelEdgeP$ and $p\nbSelInterP$ on the selection folds). The calibration simulation shows which of these tests can be trusted. When seven representations were
+equally informative in the population, the uncorrected split-level test declared a difference in
+\simNullUncorr\% of simulated datasets and the by-subject test in \simNullSubj\%, because a representation
+that happens to suit this sample keeps its advantage under every re-split of the same subjects; the
+adjusted test did so in \simNullNb\%. The spread of representation means under that null, \simNullRange{}
+macro-F1, is about the spread we observed (\obsRepRange{}). The price of the adjustment is power: for
+true spreads of \simAltRangeLo--\simAltRangeHi{} it detected a difference in only \simAltNbLo--\simAltNbHi\% of
+datasets. The significant subject-level and uncorrected tests above, and the replication of the ordering
+across fold sets of the same subjects ($\rho=\confRankRho$), therefore describe this cohort and do not by
+themselves establish a population difference; on ds004504 the representation effect is not established,
+and the calibrated evidence that representation matters comes from the external cohort, where the
+adjusted test was significant (Section~\ref{sec:res-external}).
 
 \begin{figure}[t]
 \centering

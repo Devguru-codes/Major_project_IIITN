@@ -4,11 +4,11 @@ from how the signal is represented, how the brain graph is built, or the model. 
 88-subject benchmark, with a compact, untuned model, the data and the evaluation protocol held fixed and seven
 representations crossed with three graph constructions over 25 paired subject-level splits, the
 representation had by far the larger effect: wavelet and spectral node features led, graph construction
-had a detectable but negligible effect, and the GCN did not outperform non-graph classifiers on the same features. The
-ordering of representations replicated on independent splits of the same subjects, and a representation
-effect was present in an external Parkinson's disease cohort even after allowing for overlapping training
-sets, although which representation works best did not transfer between diseases and, on ds004504 alone,
-individual differences between representations are not established under that conservative correction.
+had a detectable but negligible effect, and the GCN did not outperform non-graph classifiers on the same features. Once the
+overlap between training sets is accounted for --- uncorrected tests, a simulation showed, find
+differences between equally informative representations in most datasets --- the representation effect
+is established in an external Parkinson's disease cohort but not on ds004504, and which representation
+works best did not transfer between diseases.
 The best configuration, chosen on one set of splits and re-evaluated on an independent set, reached a
 three-class macro-F1 of \confFOne{}, clearly above chance ($p=\cpermPThreespatialP$). Window-level splitting
 inflated it to \cleakPThreespatialLeakySubj{} on the same pipeline, reproducing the upper end of published

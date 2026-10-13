@@ -608,3 +608,11 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
   - M2: the planned analysis gets equal weight in the abstract.
   - The Figure 3 caption is corrected.
   - Smaller fixes: abstract ≤ 300 words, Table 5 typesetting, the data/code statement, compute hours, "(uncorrected)" in the supplement, the Introduction wording, a footnote on the README MMSE SD, and "suggest" in Section 5.4.
+
+**NB20a–d results (2026-10-13; old account, CPU).**
+- **Calibration simulation, null with 7 representations.** False-positive rates: uncorrected split-level F 80–83%; by-subject F (what the primary mixed model reduces to) 40%; NB-adjusted 0%. With k = 2: 39% uncorrected vs 1.7% adjusted. The null spread of representation means is 0.13, the same as observed (0.13).
+- **Calibration simulation, alternatives** (spread 0.22–0.23): NB-adjusted power 20–35%; by-subject 94–97%.
+- **Consequence.** On ds004504 the representation effect is not established. The only calibrated evidence is external: PD, p = 0.031. Replication across fold sets of the same subjects is not evidence of a population effect. The abstract, Results 4.2, Discussion and Conclusion are reworded. The title is left for the author to decide.
+- **Re-fit check.**
+  - On the original NB02 cache, 25 of 25 splits were reproduced exactly (max probability diff 0), so occlusion is valid.
+  - On a cache rebuilt from OpenNeuro in the current Kaggle image, per-split macro-F1 differed by 0.065 on average (0.571 vs 0.586) and 87% of decisions agreed. This preprocessing environment sensitivity is now in Limitations.

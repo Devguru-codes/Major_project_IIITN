@@ -134,6 +134,39 @@ _cw = [r for r in _cw if r["tag"] == "confirm" and (r["pipeline"], r["edge"]) ==
 put("confWinAcc", float(np.mean([r["window"]["accuracy"] for r in _cw])))
 put("confFtdSens", sel.sens_1_mean)
 
+# ---- fourth review: calibration simulation (NB20a, NB20d) and re-fit checks (NB20b, NB20c) ----
+_rv = REP / "review3"
+if (_rv / "omnibus_simulation_summary.csv").exists():
+    _a = pd.read_csv(_rv / "omnibus_simulation_summary.csv").set_index(["k", "spread"])
+    pct = lambda v: f"{100 * v:.0f}"
+    put("simNullTwoUncorr", pct(_a.loc[(2, 0.0), "reject_uncorrected"]))
+    put("simNullTwoNb", f"{100 * _a.loc[(2, 0.0), 'reject_nb']:.1f}")
+    put("simNullSevenUncorrA", pct(_a.loc[(7, 0.0), "reject_uncorrected"]))
+    put("simNSim", int(_a.loc[(7, 0.0), "n"]), "{:d}")
+if (_rv / "omnibus_simulation_subject_summary.csv").exists():
+    _d = pd.read_csv(_rv / "omnibus_simulation_subject_summary.csv").set_index(["k", "spread"])
+    pct = lambda v: f"{100 * v:.0f}"
+    nul = _d.loc[(7, 0.0)]
+    put("simNullUncorr", pct(nul.reject_uncorrected)); put("simNullSubj", pct(nul.reject_subject))
+    put("simNullNb", pct(nul.reject_nb)); put("simNullRange", nul.mean_range, "{:.2f}")
+    put("simNullMeanFOne", nul.mean_f1, "{:.2f}")
+    alt = _d.drop(index=(7, 0.0))
+    put("simAltRangeLo", alt.mean_range.min(), "{:.2f}"); put("simAltRangeHi", alt.mean_range.max(), "{:.2f}")
+    put("simAltNbLo", pct(alt.reject_nb.min())); put("simAltNbHi", pct(alt.reject_nb.max()))
+    put("simAltSubjLo", pct(alt.reject_subject.min())); put("simAltSubjHi", pct(alt.reject_subject.max()))
+    put("simNSimSubj", int(nul.n), "{:d}")
+if (_rv / "refit_check_original_cache.csv").exists():
+    _o = pd.read_csv(_rv / "refit_check_original_cache.csv")
+    put("refitOrigMaxDiff", _o.max_abs_prob_diff.max(), "{:.1g}")
+    put("refitOrigAgree", int((_o.argmax_agreement == 1).sum()), "{:d}"); put("refitOrigN", len(_o), "{:d}")
+    _b = pd.read_csv(_rv / "refit_check_rebuilt_cache.csv")
+    put("refitRebuiltAgree", 100 * _b.argmax_agreement.mean(), "{:.0f}")
+    put("refitRebuiltAbsDiff", (_b.macro_f1_refit - _b.macro_f1_stored).abs().mean(), "{:.3f}")
+    put("refitRebuiltFOne", _b.macro_f1_refit.mean()); put("refitStoredFOne", _b.macro_f1_stored.mean())
+# observed spread of representation means on ds004504 (split-level, averaged over graph types)
+_cm = pd.read_csv(nb07 / "tables" / "grid_cells.csv").groupby("pipeline")["macro_f1_mean"].mean()
+put("obsRepRange", _cm.max() - _cm.min(), "{:.2f}")
+
 # ---- third review: NB-adjusted omnibus F (NB19) and the common-support PSWE CIs ----
 for ds_, tg_ in (("selection", "Sel"), ("confirmation", "Conf"), ("external", "Ext")):
     f_ = REP / "omnibus" / f"{ds_}_nb_anova.csv"

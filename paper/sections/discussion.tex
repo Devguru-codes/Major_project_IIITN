@@ -5,10 +5,11 @@ Holding the model, data and evaluation protocol fixed, we found four things. Fir
 representation had the largest effect on three-class AD/FTD/control classification, with subjects as the unit
 of inference ($F=\mixSelRepF$ and \mixConfRepF{} on two fold sets of the same subjects) and on split-level
 macro-F1 (partial $\eta^2=\anovaRepEta$ and \canovaRepEta{}), with wavelet, spectral and fused features
-leading and the ordering replicated across fold sets. These tests do not allow for the overlap between
-training sets; with the conservative Nadeau--Bengio-type adjustment the effect was not significant on
-ds004504 ($p\nbSelRepP$ and $p\nbConfRepP$) but was in the external cohort ($p\nbExtRepP$), so the existence
-of a representation effect is supported while the size of individual differences is not established.
+leading. These tests do not allow for the overlap between training sets, and in simulation they declared a
+difference between equally informative representations in \simNullSubj--\simNullUncorr\% of datasets; the
+calibrated adjustment was not significant on ds004504 ($p\nbSelRepP$ and $p\nbConfRepP$) but was in the
+external cohort ($p\nbExtRepP$). A representation effect is therefore established in Parkinson's disease, not
+in this dementia cohort, where 88 subjects cannot distinguish the observed spread from sampling variation.
 Second, how the graph is built had a detectable but negligible effect: with subjects as units it was
 statistically significant but spans at most \mixSelEdgeRange{} in the probability assigned to the true class,
 it changes direction between cohorts and does not survive the adjustment for overlapping training sets,
@@ -27,9 +28,10 @@ excess is explained by continuous background slowing; defined relative to each p
 transient slowing events are, if anything, less frequent in dementia.
 
 \subsection{Representation matters more than topology}
-The size and consistency of the representation effect, against a small and non-interacting graph
-effect, indicate that the information a GNN can use on this benchmark lives mostly in the node
-features. Several observations point the same way. Spatial graphs --- which are identical for every
+On effect sizes, representation outweighed graph construction in every analysis (partial $\eta^2$
+\anovaRepEta{} against \anovaEdgeEta{}; adjusted $F$ \nbSelRepF{} against \nbSelEdgeF{}), and the external cohort
+confirms that representation can matter; on ds004504 neither effect is statistically established. Within
+that limit, the information a GNN can use on this benchmark lives mostly in the node features. Several observations point the same way. Spatial graphs --- which are identical for every
 subject and therefore carry no diagnostic information of their own --- did at least as well as
 functional and hybrid graphs, and averaged over representations the three graph types were formally
 equivalent; within single representations the design could only have detected differences of about
@@ -168,7 +170,11 @@ median \bestEpochPOne{} for P1 and \bestEpochPThree{} for P3), so many models ar
 training longer (patience 50, or 100 epochs without early stopping) changed no conclusion and did not
 help the highest-capacity configuration (raw windows, about 84k parameters), and refitting on training
 plus validation subjects for the selected epoch count changed macro-F1 by only \refitMeanGain{} on
-average. Calibration was poor. Graphs are
+average. Calibration was poor. Results are reproducible exactly from the committed feature caches, but rebuilding
+the caches from the raw recordings in a later Kaggle environment changed per-split macro-F1 by
+\refitRebuiltAbsDiff{} on average (mean \refitRebuiltFOne{} against \refitStoredFOne{} for the best cell;
+\refitRebuiltAgree\% of subject decisions unchanged), a reminder that preprocessing libraries are part of
+the pipeline. Graphs are
 defined on electrodes rather than cortical sources. The demographic floor (\demoFOne) shows residual
 age and sex information, which residualisation reduced but did not remove. For PSWEs, the MPF
 frequency range was not reported in the source and was set by us (zero-padding the spectrum and
