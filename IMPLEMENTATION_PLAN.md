@@ -616,3 +616,8 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
 - **Re-fit check.**
   - On the original NB02 cache, 25 of 25 splits were reproduced exactly (max probability diff 0), so occlusion is valid.
   - On a cache rebuilt from OpenNeuro in the current Kaggle image, per-split macro-F1 differed by 0.065 on average (0.571 vs 0.586) and 87% of decisions agreed. This preprocessing environment sensitivity is now in Limitations.
+
+### Fifth internal review (2026-10-13): must fixes and NB21
+- **M1.** The primary analysis is again the planned split-level ANOVA, now with the NB adjustment; pairwise comparisons use the NB t (Holm). The by-subject mixed model, the unadjusted ANOVA, Wilcoxon and Friedman/Nemenyi are relabelled descriptive. Updated: Table 3 caption, Deviations (i), Table S1, contribution 1, Results 4.2 opening.
+- **M2.** The mixed model's "nominal false-positive rate" is now scoped to the within-cohort null (simulated subject-level data). For claims about new samples it is miscalibrated; that comes from the calibration simulation.
+- **NB21 (CPU, launched).** Correlated representations (noise correlation 0.5 and 0.8): null and the ±90% alternative, subject-level statistic included, 200 datasets per setting.

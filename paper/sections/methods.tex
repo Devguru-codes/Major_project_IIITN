@@ -220,8 +220,18 @@ datasets differ in site, device, disease, eyes-open versus eyes-closed recording
 so absolute scores are not compared.
 
 \subsection{Statistical analysis}\label{sec:stats}
-\paragraph{Primary inference: by-subject mixed model.} A diagnostic claim is about new subjects, so
-the primary test of the factorial treats the held-out subject as the unit of inference. For every run
+\paragraph{Primary inference.} The planned unit of analysis is the test split. The primary test of each
+factor (representation, graph construction and their interaction) is the two-way repeated-measures ANOVA
+on macro-F1 over the 25 splits, with the Nadeau--Bengio variance inflation applied to each contrast to
+allow for the overlap between training sets,
+$F_{\mathrm{NB}} = F/(1 + J n_\mathrm{test}/n_\mathrm{train})$ with $J=25$ (a factor of \nbInflation{}), on the
+same degrees of freedom with Greenhouse--Geisser correction. For two levels this is exactly the squared
+Nadeau--Bengio $t$ statistic \cite{B7}, which is also used for every pairwise comparison (Holm-corrected).
+Tests that treat splits, or held-out subjects, as independent describe this cohort rather than the
+population; the adjustment bounds that optimism, and its calibration was checked by simulation.
+
+\paragraph{By-subject mixed model (descriptive).} To describe how individual subjects respond to each
+factor, we also treat the held-out subject as the unit. For every run
 we take the probability the model assigns to each test subject's true class and average it over the
 five repeats (each from a different partition), giving one value per subject and cell
 (\mixSelNRows{} values from \mixSelNScores{} subject-level predictions for ds004504). These were modelled
@@ -233,23 +243,17 @@ and graph type, so omitting them treats thousands of correlated predictions as i
 version without them gave implausibly small $p$-values and was discarded). Each term is tested with a
 Wald $F$ test against its own subject-level stratum (containment degrees of freedom); for balanced data
 the model reduces to a by-subject repeated-measures ANOVA, which our implementation reproduces
-exactly in tests, and its false-positive rate is nominal in simulations with subject-by-representation
-variation. We report model-based marginal means with 95\% confidence intervals and Holm-corrected
+exactly in tests. Its false-positive rate is nominal when the representations do not differ within this
+cohort (simulated subject-level data with subject-by-representation variation), but it treats the trained
+models as fixed: a representation that happens to suit this particular sample counts as a real difference.
+The calibration simulation below shows that, for claims about new samples, it then declares differences far
+too often, so we report it descriptively. We report model-based marginal means with 95\% confidence intervals and Holm-corrected
 pairwise contrasts between representations. The same model was fitted to the confirmation folds and to
 the external cohort. Two cross-checks were added after review: a by-subject repeated-measures ANOVA on
 the same subject-by-cell values (Greenhouse--Geisser corrected), and the same mixed model fitted to the
 proportion of repeats in which each subject was \emph{correctly} classified --- a linear-probability
 approximation to a logistic mixed model of the binary decisions, which tests the decisions a clinician
 would see rather than the model's confidence.
-
-\paragraph{Scope of inference.} The mixed model treats held-out subjects as the units: it asks whether the
-representations differ for new subjects given models trained on this cohort. It does not model the
-variability that comes from training on a different sample, and the models of different splits share
-most of their training subjects. To bound that source of optimism we also report every omnibus test on
-macro-F1 with the Nadeau--Bengio variance inflation applied to each contrast,
-$F_{\mathrm{NB}} = F/(1 + J n_\mathrm{test}/n_\mathrm{train})$ with $J=25$ splits (a factor of \nbInflation{}),
-on the same degrees of freedom with Greenhouse--Geisser correction. For two levels this is exactly the
-squared Nadeau--Bengio $t$ statistic \cite{B7}.
 
 \paragraph{Calibration of the tests (added).} Because the adjusted $F$ is our generalisation, we checked
 every test by simulation under the study's own resampling: 88 simulated subjects in the cohort's class
@@ -260,10 +264,9 @@ levels differ. For each of \simNSimSubj--\simNSim{} simulated datasets per setti
 repeated-measures $F$ (uncorrected and adjusted) and the by-subject repeated-measures $F$ on averaged
 true-class probabilities, to which the by-subject mixed model reduces for a balanced design.
 
-\paragraph{Secondary analyses on macro-F1.} The 25 test splits are the repeated-measures units. Main
-effects of representation and graph construction, and their interaction, were tested with a balanced
-two-way repeated-measures ANOVA on macro-F1, reporting partial $\eta^2$ and
-Greenhouse--Geisser-corrected $p$-values. Because
+\paragraph{Descriptive analyses on macro-F1.} For comparability with the literature we also report the
+unadjusted two-way repeated-measures ANOVA on macro-F1 (partial $\eta^2$, Greenhouse--Geisser-corrected
+$p$-values), which shares the mixed model's limitation. Because
 cross-validation scores share training data and are therefore not independent, every pairwise
 comparison is reported with both the Wilcoxon signed-rank test and the Nadeau--Bengio corrected
 resampled $t$-test \cite{B7}, with Holm correction \cite{holm} within
@@ -298,10 +301,12 @@ permutation test, leakage experiment, deep-learning baselines, external validati
 definition) was committed to the code repository before any data were analysed; all changes are logged
 there with dates; Table~\ref{tab:status} gives the status of every analysis. The following
 were decided after results were seen.
-(i)~\emph{Primary analysis.} The plan named the split-level repeated-measures ANOVA on macro-F1 as primary.
-After an internal review we made the by-subject mixed model primary (Section~\ref{sec:stats}); a first
-mixed-model version without subject-by-factor random effects gave implausibly small $p$-values
-(pseudo-replication) and was discarded. Both the ANOVA and the mixed model are reported.
+(i)~\emph{Primary analysis.} The plan named the split-level repeated-measures ANOVA on macro-F1 as primary;
+it remains primary, with the Nadeau--Bengio adjustment for overlapping training sets added after review.
+An internal review first made a by-subject mixed model primary (a version without subject-by-factor
+random effects gave implausibly small $p$-values and was discarded); when the calibration simulation showed
+that this model, like the unadjusted ANOVA, does not control false positives for claims about new samples,
+it was reported descriptively instead (Section~\ref{sec:stats}).
 (ii)~\emph{Selection bias.} The confirmation folds (seeds 5--9) replaced the planned ten-repeat re-run of the
 top three cells; they were generated after the main grid was analysed and committed before any run used
 them, and ablations, leakage and permutation tests were moved onto them.
