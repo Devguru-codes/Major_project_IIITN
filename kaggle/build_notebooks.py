@@ -593,6 +593,20 @@ def main():
          "--out {WORK}/simulation', log=f'{WORK}/simulation.log')"],
         extras="dev,stats"))
 
+    # ---- NB21 (first account, CPU): calibration with correlated representations (fifth review, S2). Real
+    # representations are transforms of the same EEG, so their errors are correlated; null and alternative at
+    # noise correlations 0.5 and 0.8 ----
+    write_kernel("nb21-simulation-correlated", "nb21 simulation correlated", notebook(
+        "NB21 — calibration simulation with correlated representations (CPU, no data)",
+        "As NB20d, with the seven representations' noise correlated at 0.5 or 0.8: false-positive rate under the "
+        "null and power under the +/-90% alternative, for the uncorrected and Nadeau-Bengio-adjusted split-level F "
+        "and the by-subject F. 200 datasets per setting.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_review3.py', "
+         "log=f'{WORK}/pytest_nb21.txt')",
+         "sh(f'{PY} simulate-omnibus --n-sim 200 --settings 7:0:0.5,7:0:0.8,7:0.9:0.5,7:0.9:0.8 --seed 200 "
+         "--subject-level --out {WORK}/simulation', log=f'{WORK}/simulation.log')"],
+        extras="dev,stats"))
+
     # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
     write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(
         "NB17 — equivalence tests including the learned-adjacency family (CPU)",

@@ -39,6 +39,18 @@ def test_simulation_subject_level_statistic():
     assert "reject_subject" in summarise(sims).columns
 
 
+def test_correlated_views_keep_variance_and_correlate():
+    from eegrep.stats_simulation import _dataset
+
+    rng = np.random.default_rng(0)
+    views, y = _dataset(rng, 3, np.full(3, 1.5), 0.35, dim=2000, corr=0.8)
+    # views differ only by noise: Var(v0 - v1) = 2 * 1.5^2 * (1 - corr) = 0.9 (4.5 if independent)
+    assert np.var(views[0] - views[1]) == pytest.approx(0.9, rel=0.05)
+    assert np.var(views[0]) == pytest.approx(np.var(views[1]), rel=0.05)
+    s = simulate(n_sim=2, k=3, spread=0.0, seed=3, corr=0.8)
+    assert (s["corr"] == 0.8).all() and "corr" in summarise(s).columns
+
+
 def test_refit_reproduces_stored_run(cfg, small_cache, tmp_path):
     from eegrep.explain import refit_check
     from eegrep.runner import ResultStore, run_cell
