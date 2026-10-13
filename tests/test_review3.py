@@ -33,6 +33,12 @@ def test_simulation_runs_and_reports_rejection_rates():
     assert (sims.p_nb_gg >= sims.p_gg - 1e-12).all()
 
 
+def test_simulation_subject_level_statistic():
+    sims = simulate(n_sim=2, k=3, spread=0.0, seed=2, subject_level=True)
+    assert {"F_subj", "p_subj_gg"} <= set(sims.columns) and sims.p_subj_gg.between(0, 1).all()
+    assert "reject_subject" in summarise(sims).columns
+
+
 def test_refit_reproduces_stored_run(cfg, small_cache, tmp_path):
     from eegrep.explain import refit_check
     from eegrep.runner import ResultStore, run_cell

@@ -1,0 +1,16 @@
+{
+  "id": "dev123123456/eegrep-nb20c-refit-original",
+  "title": "eegrep nb20c refit original",
+  "code_file": "nb20c_refit_original.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": [
+    "dev123123456/eegrep-nb02-merge-qc"
+  ]
+}

@@ -62,22 +62,51 @@ def cv_scores(views, y, seeds=range(5), n_folds: int = 5, val_frac: float = 0.2)
     return np.asarray(out)
 
 
+def cv_scores_subject(views, y, seeds=range(5), n_folds: int = 5, val_frac: float = 0.2):
+    """As cv_scores, plus each subject's probability of its true class averaged over the repeats (subjects x k),
+    the quantity the by-subject mixed model analyses."""
+    n, k = len(y), len(views)
+    split_scores, p_true, counts = [], np.zeros((n, k)), np.zeros(n)
+    for seed in seeds:
+        skf = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=seed)
+        for f, (trv, te) in enumerate(skf.split(views[0], y)):
+            tr, _ = train_test_split(trv, test_size=val_frac, stratify=y[trv], random_state=seed * 1000 + f)
+            row = []
+            for r, v in enumerate(views):
+                clf = LogisticRegression(max_iter=500, C=0.5).fit(v[tr], y[tr])
+                prob = clf.predict_proba(v[te])
+                row.append(f1_score(y[te], prob.argmax(1), average="macro"))
+                p_true[te, r] += prob[np.arange(len(te)), y[te]]
+            counts[te] += 1
+            split_scores.append(row)
+    return np.asarray(split_scores), p_true / counts[:, None]
+
+
 def simulate(n_sim: int = 300, k: int = 7, separation: float = 0.35, base_noise: float = 1.5,
-             spread: float = 0.0, seed: int = 0, ratio: float = RATIO_TRAIN) -> pd.DataFrame:
-    """spread = 0: null (equal noise); spread > 0: noise levels base_noise * linspace(1 - spread, 1 + spread)."""
+             spread: float = 0.0, seed: int = 0, ratio: float = RATIO_TRAIN, subject_level: bool = False) -> pd.DataFrame:
+    """spread = 0: null (equal noise); spread > 0: noise levels base_noise * linspace(1 - spread, 1 + spread).
+    subject_level: also test the by-subject repeated-measures F on the averaged true-class probabilities (for a
+    balanced design the by-subject mixed model reduces to it)."""
     rng = np.random.default_rng(seed)
     noise = base_noise * np.linspace(1 - spread, 1 + spread, k)
     rows = []
     for i in range(n_sim):
         views, y = _dataset(rng, k, noise, separation)
-        wide = cv_scores(views, y)
+        if subject_level:
+            wide, subj = cv_scores_subject(views, y)
+            s = oneway_rm(subj)
+            extra = {"F_subj": s["F"], "p_subj_gg": s["p_gg"]}
+        else:
+            wide, extra = cv_scores(views, y), {}
         rows.append({"sim": i, "k": k, "spread": spread, "mean_f1": wide.mean(),
-                     "range_f1": np.ptp(wide.mean(0)), **oneway_rm(wide, ratio)})
+                     "range_f1": np.ptp(wide.mean(0)), **oneway_rm(wide, ratio), **extra})
     return pd.DataFrame(rows)
 
 
 def summarise(sims: pd.DataFrame, alpha: float = 0.05) -> pd.DataFrame:
-    return sims.groupby(["k", "spread"]).agg(
-        n=("sim", "size"), mean_f1=("mean_f1", "mean"), mean_range=("range_f1", "mean"),
-        reject_uncorrected=("p_gg", lambda p: float((p < alpha).mean())),
-        reject_nb=("p_nb_gg", lambda p: float((p < alpha).mean()))).reset_index()
+    agg = dict(n=("sim", "size"), mean_f1=("mean_f1", "mean"), mean_range=("range_f1", "mean"),
+               reject_uncorrected=("p_gg", lambda p: float((p < alpha).mean())),
+               reject_nb=("p_nb_gg", lambda p: float((p < alpha).mean())))
+    if "p_subj_gg" in sims:
+        agg["reject_subject"] = ("p_subj_gg", lambda p: float((p < alpha).mean()))
+    return sims.groupby(["k", "spread"]).agg(**agg).reset_index()

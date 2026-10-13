@@ -568,6 +568,31 @@ def main():
          f"--tag main --pipeline P3 --edge spatial --out {{WORK}}/refit', log=f'{{WORK}}/refit.log')"],
         extras="preprocess,dev,stats"), owner=ALT_OWNER)
 
+    # ---- NB20c/d (first account, CPU): NB20b re-fitted on a cache rebuilt from OpenNeuro and did not reproduce the
+    # stored runs. NB20c re-fits on the ORIGINAL NB02 cache (as the occlusion analysis did) to separate training
+    # reproducibility from preprocessing drift. NB20d adds the by-subject statistic and stronger alternatives to the
+    # calibration simulation ----
+    write_kernel("nb20c-refit-original", "nb20c refit original", notebook(
+        "NB20c — re-fit check on the original NB02 cache (CPU)",
+        "Re-fits P3 x spatial on the 25 selection splits with the main-grid seeds, using the same NB02 feature cache "
+        "as the main grid and the occlusion analysis, and compares the predictions with the stored runs.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_review3.py', "
+         "log=f'{WORK}/pytest_nb20c.txt')",
+         find_cache,
+         f"sh(f'{{PY}} refit-check --cache {{CACHE}} --folds {{FOLDS}} --runs {grid_runs} --tag main "
+         f"--pipeline P3 --edge spatial --out {{WORK}}/refit', log=f'{{WORK}}/refit.log')"],
+        extras="dev,stats"), kernel_sources=nb02)
+    write_kernel("nb20d-simulation-subject", "nb20d simulation subject", notebook(
+        "NB20d — calibration simulation: by-subject statistic and stronger alternatives (CPU, no data)",
+        "Null and two stronger alternatives (noise spread +/-75% and +/-90%), 200 datasets each, with the split-level "
+        "F (uncorrected and Nadeau-Bengio-adjusted) and the by-subject repeated-measures F on averaged true-class "
+        "probabilities (what the by-subject mixed model reduces to for a balanced design).",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_review3.py', "
+         "log=f'{WORK}/pytest_nb20d.txt')",
+         "sh(f'{PY} simulate-omnibus --n-sim 200 --settings 7:0,7:0.75,7:0.9 --seed 100 --subject-level "
+         "--out {WORK}/simulation', log=f'{WORK}/simulation.log')"],
+        extras="dev,stats"))
+
     # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
     write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(
         "NB17 — equivalence tests including the learned-adjacency family (CPU)",
