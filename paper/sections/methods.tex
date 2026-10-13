@@ -182,7 +182,9 @@ every electrode; the model was not retrained for each occlusion. Importance is t
 probability assigned to each test subject's true class, averaged within subject over the five repeats
 and then over the \occNSubjects{} subjects, with a subject-bootstrap 95\% confidence interval, and also
 within each class. Occlusion measures what a trained model relies on, not
-where the disease is.
+where the disease is. Re-fitting on the original feature cache reproduced the stored predictions of all
+\refitOrigN{} splits exactly (largest probability difference \refitOrigMaxDiff{}), so the occluded models are the
+models of the main grid.
 
 \subsection{PSWE detection}\label{sec:pswe}
 Following Milikovsky et al.\ \cite{B1}, with parameters as reported in \cite{B3}, we computed the
@@ -247,8 +249,16 @@ most of their training subjects. To bound that source of optimism we also report
 macro-F1 with the Nadeau--Bengio variance inflation applied to each contrast,
 $F_{\mathrm{NB}} = F/(1 + J n_\mathrm{test}/n_\mathrm{train})$ with $J=25$ splits (a factor of \nbInflation{}),
 on the same degrees of freedom with Greenhouse--Geisser correction. For two levels this is exactly the
-squared Nadeau--Bengio $t$ statistic \cite{B7}; like that test it is conservative. An effect that survives
-it, or that replicates in an independent cohort, is the stronger evidence.
+squared Nadeau--Bengio $t$ statistic \cite{B7}.
+
+\paragraph{Calibration of the tests (added).} Because the adjusted $F$ is our generalisation, we checked
+every test by simulation under the study's own resampling: 88 simulated subjects in the cohort's class
+sizes, $5\times5$ subject-level cross-validation with 20\% of each training set held out, and seven
+`representations' that are noisy views of one latent class signal, classified by logistic regression.
+Under the null all seven are equally informative in the population; under the alternatives their noise
+levels differ. For each of \simNSimSubj--\simNSim{} simulated datasets per setting we applied the split-level
+repeated-measures $F$ (uncorrected and adjusted) and the by-subject repeated-measures $F$ on averaged
+true-class probabilities, to which the by-subject mixed model reduces for a balanced design.
 
 \paragraph{Secondary analyses on macro-F1.} The 25 test splits are the repeated-measures units. Main
 effects of representation and graph construction, and their interaction, were tested with a balanced
@@ -300,8 +310,8 @@ subjects; we added train-only fits and train + val GCN refits, and corrected the
 (iv)~\emph{Added analyses.} The background-relative PSWE definitions (Section~\ref{sec:pswe}), the
 stopping-rule sensitivity, the PSWE detector robustness and collinearity checks, the equivalence tests,
 the learned-adjacency GCN, occlusion importance, the two mixed-model cross-checks, the severity-stratified
-analysis, an EEGNet run with dropout 0.25, the Nadeau--Bengio-adjusted omnibus tests and the graph-type
-equivalence tests within representations were added after the corresponding results were known; their definitions, variants and margins were fixed
+analysis, an EEGNet run with dropout 0.25, the Nadeau--Bengio-adjusted omnibus tests, the graph-type
+equivalence tests within representations, the calibration simulation and the re-fit checks were added after the corresponding results were known; their definitions, variants and margins were fixed
 in the configuration before they were run. A7, A8 and the A11 PSWE rule grid were planned but run late.
 (v)~\emph{Changed or not done.} Planned integrated-gradients explanations were replaced by occlusion,
 which is model-agnostic and reads directly as lost probability for the true class; the planned connectome and embedding plots and calibration
