@@ -23,7 +23,11 @@ ranked first of 21. The ordering of all cells was largely preserved (Spearman $\
 between the two fold sets; Figure~\ref{fig:confirm}). We therefore take \confFOne{} as the
 selection-free estimate for the best configuration.
 
-In the primary, by-subject mixed model (Table~\ref{tab:mixed}, Figure~\ref{fig:mixed}), representation
+In the primary analysis --- the split-level test adjusted for overlapping training sets --- neither
+representation ($F_\mathrm{NB}=\nbSelRepF$, $p\nbSelRepP$; confirmation \nbConfRepF{}, $p\nbConfRepP$) nor graph
+construction ($p\nbSelEdgeP$) nor their interaction ($p\nbSelInterP$) was significant; the calibration of
+this and the other tests is examined at the end of this section. Descriptively, in the by-subject mixed
+model (Table~\ref{tab:mixed}, Figure~\ref{fig:mixed}), representation
 had a strong effect on both fold sets (selection $F(\mixSelRepDf,\mixSelRepDenDf)=\mixSelRepF$,
 $p\mixSelRepP$; confirmation $F=\mixConfRepF$, $p\mixConfRepP$). The marginal mean probability assigned
 to a subject's true class ranged from \mixSelMPTwo{} (P2) and \mixSelMPFour{} (P4) to \mixSelMPSix{} (P6)
@@ -52,7 +56,8 @@ absence of significance. Within single representations the same comparisons were
 
 \begin{table}[t]
 \centering\small
-\caption{By-subject linear mixed model (primary analysis) of the probability assigned to each
+\caption{By-subject linear mixed model (descriptive; it does not allow for overlapping training sets and
+is not calibrated for claims about new samples) of the probability assigned to each
 subject's true class: Wald $F$ (numerator, denominator df) and $p$ for each fixed-effect term, on the
 selection and confirmation folds of ds004504 and on the external cohort ds004584.}
 \label{tab:mixed}
@@ -79,7 +84,8 @@ intervals can still be detected.}
 \label{fig:mixed}
 \end{figure}
 
-On macro-F1 with the 25 splits as units (secondary analysis), representation had a large effect on both fold sets (Table~\ref{tab:anova}; selection:
+On macro-F1 with the 25 splits as units and without the adjustment (descriptive), representation had a
+large effect on both fold sets (Table~\ref{tab:anova}; selection:
 $F(\anovaRepDfOne,\anovaRepDfTwo)=\anovaRepF$, Greenhouse--Geisser $p\anovaRepP$, partial
 $\eta^2=\anovaRepEta$; confirmation: $F=\canovaRepF$, $p\canovaRepP$, $\eta^2=\canovaRepEta$).
 Averaged over graph types, the wavelet (P3, \repPThree{}; confirmation \crepPThree{}), spectral
@@ -103,10 +109,8 @@ the selection folds and \cPairsWilcoxonSig{} on the confirmation folds; with the
 Nadeau--Bengio corrected $t$-test, \nPairsNbSig{} and \cPairsNbSig{} did. For example, P3 exceeded P4
 by \pThreeFourDiff{} macro-F1 on the selection folds (Cohen's $d=\pThreeFourD$; Wilcoxon--Holm
 $p\pThreeFourWilP$; Nadeau--Bengio--Holm $p\pThreeFourNbP$). The same caveat applies to the
-omnibus tests, which also treat the splits as independent: with every contrast's variance inflated by the
-Nadeau--Bengio factor, representation was not significant on either fold set ($F_\mathrm{NB}=\nbSelRepF$,
-$p\nbSelRepP$; confirmation \nbConfRepF{}, $p\nbConfRepP$), nor was graph construction or the interaction
-($p\nbSelEdgeP$ and $p\nbSelInterP$ on the selection folds). The calibration simulation shows which of these tests can be trusted. When seven representations were
+unadjusted omnibus tests, which also treat the splits as independent; with the adjustment (the primary
+analysis) no factor was significant. The calibration simulation shows which of these tests can be trusted. When seven representations were
 equally informative in the population, the uncorrected split-level test declared a difference in
 \simNullUncorr\% of simulated datasets and the by-subject test in \simNullSubj\%, because a representation
 that happens to suit this sample keeps its advantage under every re-split of the same subjects; the
