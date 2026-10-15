@@ -116,3 +116,54 @@ def summarise(sims: pd.DataFrame, alpha: float = 0.05) -> pd.DataFrame:
         agg["reject_subject"] = ("p_subj_gg", lambda p: float((p < alpha).mean()))
     keys = ["k", "spread"] + (["corr"] if "corr" in sims else [])
     return sims.groupby(keys).agg(**agg).reset_index()
+
+
+# ---- sixth review, M1: a null simulation matched to the observed data ----
+
+def split_stats(wide: np.ndarray) -> dict:
+    """wide: splits x representations. The summaries a null simulation must reproduce."""
+    c = np.corrcoef(wide, rowvar=False)
+    return {"mean_f1": float(wide.mean()), "split_sd": float(wide.std(0, ddof=1).mean()),
+            "rep_corr": float(c[np.triu_indices_from(c, 1)].mean()), "range_f1": float(np.ptp(wide.mean(0)))}
+
+
+def observed_targets(runs: pd.DataFrame) -> dict:
+    """runs: load_runs rows of the main grid. Per split, each representation's macro-F1 averaged over graphs."""
+    wide = runs.groupby(["unit", "pipeline"])["macro_f1"].mean().unstack().to_numpy()
+    return split_stats(wide)
+
+
+def calibrate(targets: dict, separations=(0.35, 0.5, 0.65, 0.8, 1.0), noises=(0.5, 1.0, 1.5, 2.0),
+              corrs=(0.0, 0.4, 0.7, 0.9), n_sim: int = 6, k: int = 7, seed: int = 0) -> pd.DataFrame:
+    """Grid over the null simulation's free parameters; distance to the observed mean macro-F1, split-to-split
+    SD and between-representation correlation of split scores (scaled by rough tolerances)."""
+    rng = np.random.default_rng(seed)
+    rows = []
+    for sep in separations:
+        for nz in noises:
+            for c in corrs:
+                st = [split_stats(cv_scores(*_dataset(rng, k, np.full(k, nz), sep, corr=c))) for _ in range(n_sim)]
+                m = {key: float(np.mean([s[key] for s in st])) for key in ("mean_f1", "split_sd", "rep_corr")}
+                d = (((m["mean_f1"] - targets["mean_f1"]) / 0.02) ** 2 + ((m["split_sd"] - targets["split_sd"]) / 0.01) ** 2
+                     + ((m["rep_corr"] - targets["rep_corr"]) / 0.05) ** 2)
+                rows.append({"separation": sep, "noise": nz, "corr": c, **m, "distance": float(d)})
+    return pd.DataFrame(rows).sort_values("distance").reset_index(drop=True)
+
+
+def calibrated_null(targets: dict, separation: float, noise: float, corr: float, n_sim: int = 300, k: int = 7,
+                    seed: int = 1, ratio: float = RATIO_TRAIN) -> tuple[pd.DataFrame, dict]:
+    """Null datasets with the calibrated parameters; where does the observed spread fall?"""
+    rng = np.random.default_rng(seed)
+    rows = []
+    for i in range(n_sim):
+        wide = cv_scores(*_dataset(rng, k, np.full(k, noise), separation, corr=corr))
+        rows.append({"sim": i, **split_stats(wide), **oneway_rm(wide, ratio)})
+    sims = pd.DataFrame(rows)
+    obs = targets["range_f1"]
+    summary = {"n_sim": n_sim, "observed_range": obs, "null_range_mean": float(sims.range_f1.mean()),
+               "null_range_q95": float(sims.range_f1.quantile(0.95)),
+               "p_range": float((1 + (sims.range_f1 >= obs).sum()) / (1 + n_sim)),
+               "null_mean_f1": float(sims.mean_f1.mean()), "null_split_sd": float(sims.split_sd.mean()),
+               "null_rep_corr": float(sims.rep_corr.mean()),
+               "reject_uncorrected": float((sims.p_gg < 0.05).mean()), "reject_nb": float((sims.p_nb_gg < 0.05).mean())}
+    return sims, summary

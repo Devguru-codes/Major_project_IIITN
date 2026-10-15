@@ -607,6 +607,31 @@ def main():
          "--subject-level --out {WORK}/simulation', log=f'{WORK}/simulation.log')"],
         extras="dev,stats"))
 
+    # ---- NB22 (first account, CPU): sixth review. a: null simulation matched to the observed data (M1);
+    # b-e: out-of-bootstrap comparison of the seven representations with retraining (spatial graph, 200
+    # replicates in four shards) ----
+    t22 = ("sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_review6.py "
+           "tests/test_review3.py', log=f'{WORK}/pytest_nb22.txt')")
+    write_kernel("nb22a-calibrated-null", "nb22a calibrated null", notebook(
+        "NB22a — null simulation matched to the observed data (CPU, no data)",
+        "Targets from the committed main grid: mean macro-F1, split-to-split SD and between-representation "
+        "correlation of split scores. A grid search picks the simulation parameters that reproduce them; 300 null "
+        "datasets then give the null distribution of the spread of representation means, and where the observed "
+        "spread falls in it.",
+        [t22, f"sh(f'{{PY}} simulate-calibrated --runs {grid_runs} --tag main --n-sim 300 --n-cal 6 "
+              f"--out {{WORK}}/calibrated', log=f'{{WORK}}/calibrated.log')"],
+        extras="dev,stats"))
+    for k, (b0, b1) in enumerate([(0, 50), (50, 100), (100, 150), (150, 200)]):
+        write_kernel(f"nb22-bootstrap-s{k}", f"nb22 bootstrap s{k}", notebook(
+            f"NB22 bootstrap shard {k} — out-of-bootstrap comparison of representations (CPU)",
+            "Replicates b = {b0}..{b1}: stratified bootstrap of subjects, the GCN (spatial graph) trained on the "
+            "distinct drawn subjects with 20% held out for early stopping, scored on the never-drawn subjects, for "
+            "all seven representations on the same replicate.".format(b0=b0, b1=b1 - 1),
+            [t22, find_cache,
+             f"sh(f'{{PY}} bootstrap-reps --cache {{CACHE}} --b-start {b0} --b-end {b1} "
+             f"--out {{WORK}}/bootstrap_s{k}.jsonl', log=f'{{WORK}}/bootstrap_s{k}.log')"],
+            extras="dev,stats"), kernel_sources=nb02)
+
     # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
     write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(
         "NB17 — equivalence tests including the learned-adjacency family (CPU)",
