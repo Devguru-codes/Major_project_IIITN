@@ -73,6 +73,28 @@ main-grid run times of that cell). The mixed models, equivalence and adjusted om
 analysis and calibration simulation (NB13--NB20) are statistical computations that took minutes each. Every run is logged with its configuration hash, code version and seed.
 
 \subsection*{Supplementary results}
+\paragraph{By-subject mixed model (descriptive).} In the by-subject mixed model (Table~\ref{tab:mixed}, Figure~\ref{fig:mixed}), representation
+had a strong effect on both fold sets (selection $F(\mixSelRepDf,\mixSelRepDenDf)=\mixSelRepF$,
+$p\mixSelRepP$; confirmation $F=\mixConfRepF$, $p\mixConfRepP$). The marginal mean probability assigned
+to a subject's true class ranged from \mixSelMPTwo{} (P2) and \mixSelMPFour{} (P4) to \mixSelMPSix{} (P6)
+and \mixSelMPThree{} (P3), and \mixSelNPairsSig{} of the 21 representation pairs differed after Holm
+correction on each fold set. Graph construction and its interaction with representation were also
+detectable at the subject level (selection: graph $F(\mixSelEdgeDf,\mixSelEdgeDenDf)=\mixSelEdgeF$,
+$p\mixSelEdgeP$; interaction $F(\mixSelInterDf,\mixSelInterDenDf)=\mixSelInterF$, $p\mixSelInterP$;
+confirmation: $p\mixConfEdgeP$ and $p\mixConfInterP$) but negligible in size: the three graph types'
+marginal means spanned only \mixSelEdgeRange{} (\mixSelMspatial{} spatial, \mixSelMfunctional{} functional,
+\mixSelMhybrid{} hybrid). Subjects accounted for \mixSelShareSubject\% of the variance and
+subject~$\times$~representation for \mixSelShareSubjectxrepresentation\%, while subject~$\times$~graph
+variance was estimated at zero: individuals differ in which representation suits them, not in which
+graph does. A by-subject repeated-measures ANOVA on the same values gave essentially the same statistics
+(representation $F=\mixSelAovRepF$, graph $F=\mixSelAovEdgeF$; Greenhouse--Geisser $p\mixSelAovRepP$ and
+$p\mixSelAovEdgeP$). Modelling whether each subject was correctly classified, rather than the probability,
+weakened every effect but left the pattern intact: representation remained significant on both fold sets
+($F=\mixSelCorrRepF$, $p\mixSelCorrRepP$; confirmation $F=\mixConfCorrRepF$, $p\mixConfCorrRepP$), with
+P3 again highest (mean proportion correct \mixSelCorrMPThree{} and \mixConfCorrMPThree{}), whereas the graph
+effect was marginal on the selection folds ($p\mixSelCorrEdgeP$, range \mixSelCorrEdgeRange{}) and absent on
+the confirmation folds ($p\mixConfCorrEdgeP$).
+
 \paragraph{Stopping-rule sensitivity.} Early stopping selected a median of epoch \bestEpochMedian{}. Re-running the whole grid with patience
 50 (median epoch \esPFiftyEpochMedian{}) or with no early stopping (100 epochs, final weights) left the
 conclusions unchanged (Table~\ref{tab:es}, Figure~\ref{fig:es}): \bestCell{} remained the best cell
@@ -130,6 +152,37 @@ Exploratory & Background-relative PSWE definitions \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{table}[h]
+\centering\small
+\caption{By-subject linear mixed model (descriptive; it does not allow for overlapping training sets and
+is not calibrated for claims about new samples) of the probability assigned to each
+subject's true class: Wald $F$ (numerator, denominator df) and $p$ for each fixed-effect term, on the
+selection and confirmation folds of ds004504 and on the external cohort ds004584.}
+\label{tab:mixed}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lcccccc}
+\toprule
+ & \multicolumn{2}{c}{Selection} & \multicolumn{2}{c}{Confirmation} & \multicolumn{2}{c}{ds004584} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+Term & $F$ (df) & $p$ & $F$ (df) & $p$ & $F$ (df) & $p$ \\
+\midrule
+\inputtab{generated/tab/mixed.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\linewidth]{fig15_mixed_model}
+\caption{Model-based marginal mean probability on the true class (95\% CI) for each representation
+(left, averaged over graph types) and each graph type (right), from the by-subject mixed model, on the
+selection and confirmation folds. The intervals include between-subject variation; the tests in
+Table~\ref{tab:mixed} compare levels within subjects, which is why a difference much smaller than these
+intervals can still be detected.}
+\label{fig:mixed}
+\end{figure}
+
 
 \begin{table}[h]
 \centering\small
