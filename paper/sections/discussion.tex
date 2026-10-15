@@ -1,7 +1,11 @@
 \section{Discussion}\label{sec:discussion}
 
 \subsection{Principal findings}
-Holding the model, data and evaluation protocol fixed, we found four things. First, the node-feature
+Holding the model, data and evaluation protocol fixed, the factors we varied differ widely in how far
+they move macro-F1: splitting windows instead of subjects by \leakGain{}, the choice of
+representation by up to \obsRepRange{} (averaged over graph types), and the choice of graph by up to
+\obsEdgeRange{}. The title's `not' therefore means `far less than', not `zero'. In detail we found four
+things. First, the node-feature
 representation had the largest effect on three-class AD/FTD/control classification, with subjects as the unit
 of inference ($F=\mixSelRepF$ and \mixConfRepF{} on two fold sets of the same subjects) and on split-level
 macro-F1 (partial $\eta^2=\anovaRepEta$ and \canovaRepEta{}), with wavelet, spectral and fused features
@@ -137,7 +141,8 @@ This study & AD/FTD/CN & subject-level $5\times5$ CV, confirmation folds & subje
 
 \subsection{What the external cohort adds}
 Applying the identical protocol to Parkinson's disease, a different site, device and recording state,
-reproduced the protocol-level findings --- a dominant representation effect, a negligible graph
+reproduced the protocol-level findings --- a representation effect (established there after the
+adjustment for overlapping training sets), a negligible graph
 effect, no advantage of the GCN over non-graph twins, inflation under window-level splitting, and a
 fixed-threshold PSWE rate that tracks slowing --- but not the detailed ranking of representations
 ($\rho=\extRepsRho$). The configuration chosen on dementia generalised reasonably (\extSelFOne{},
