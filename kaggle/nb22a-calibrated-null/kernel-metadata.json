@@ -1,0 +1,14 @@
+{
+  "id": "dev123123456/eegrep-nb22a-calibrated-null",
+  "title": "eegrep nb22a calibrated null",
+  "code_file": "nb22a_calibrated_null.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}

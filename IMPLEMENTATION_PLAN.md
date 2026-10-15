@@ -632,3 +632,12 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
   - R2.2: contribution 2 is reworded and a new "Statistical" contribution is added (calibration simulation).
   - S3: GPU caveat (0.57 GPU-h) added to the contributions and the data statement; Discussion 5.6 says the effect is established in the external cohort after adjustment.
   - S4: keywords "cross-validation" and "statistical inference" added.
+
+### Sixth internal review (2026-10-15): fix all (NB22). Fixed before running.
+- **M1. Null simulation matched to the observed data (NB22a).**
+  - Targets, computed in the kernel from the committed main grid, per split averaged over graphs: mean macro-F1, split-to-split SD, and between-representation correlation of split scores.
+  - Grid search: separation {0.35, 0.5, 0.65, 0.8, 1.0} × noise {0.5, 1, 1.5, 2} × noise correlation {0, 0.4, 0.7, 0.9}, 6 datasets each. Distance = squared standardised differences with tolerances 0.02 / 0.01 / 0.05.
+  - The best setting gives 300 null datasets. Reported: the empirical p of the observed representation spread, (1 + #{null ≥ obs}) / (1 + N), and the false-positive rates at the matched setting.
+- **Could item: out-of-bootstrap comparison with retraining (NB22 shards s0–s3, 200 replicates).**
+  - Each replicate: a stratified bootstrap of subjects. The GCN (spatial graph) is trained on the distinct drawn subjects, with 20% held out for early stopping, and scored on the never-drawn subjects. All 7 representations use the same replicate.
+  - Pairwise differences: bootstrap-SE z test, Holm-corrected over 21 pairs, plus percentile intervals.

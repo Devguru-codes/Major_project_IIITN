@@ -190,6 +190,41 @@ def cmd_simulate_omnibus(a, cfg):
     print(summ.round(3).to_string())
 
 
+def cmd_simulate_calibrated(a, cfg):
+    from .stats_grid import load_runs
+    from .stats_simulation import calibrate, calibrated_null, observed_targets
+
+    targets = observed_targets(load_runs(a.runs, tag=a.tag))
+    grid = calibrate(targets, n_sim=a.n_cal)
+    best = grid.iloc[0]
+    sims, summ = calibrated_null(targets, best.separation, best.noise, best["corr"], n_sim=a.n_sim)
+    out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    grid.to_csv(out / "calibration_grid.csv", index=False)
+    sims.to_csv(out / "calibrated_null.csv", index=False)
+    summ.update({"targets": targets, "params": {k: float(best[k]) for k in ("separation", "noise", "corr")}})
+    (out / "calibrated_null_summary.json").write_text(json.dumps(summ, indent=1), encoding="utf-8")
+    print(grid.head(5).round(4).to_string()); print(json.dumps(summ, indent=1))
+
+
+def cmd_bootstrap_reps(a, cfg):
+    from .cache import FeatureCache
+    from .stats_bootstrap import run_bootstrap
+
+    run_bootstrap(FeatureCache(a.cache), cfg, a.pipelines.split(","), a.edge, range(a.b_start, a.b_end), a.out)
+
+
+def cmd_bootstrap_summary(a, cfg):
+    import pandas as pd
+
+    from .stats_bootstrap import summarise
+
+    rows = pd.DataFrame([json.loads(line) for f in a.runs for line in open(f) if line.strip()])
+    reps, pairs = summarise(rows)
+    out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    reps.to_csv(out / "bootstrap_representations.csv", index=False); pairs.to_csv(out / "bootstrap_pairs.csv", index=False)
+    print(reps.round(4).to_string()); print(pairs.round(4).to_string())
+
+
 def cmd_refit_check(a, cfg):
     from .cache import FeatureCache
     from .explain import refit_check
@@ -399,6 +434,16 @@ def main(argv=None):
     s.add_argument("--settings", help="k:spread[:corr],... (default 7:0,2:0,7:0.25,7:0.5)")
     s.add_argument("--seed", type=int, default=0); s.add_argument("--subject-level", action="store_true")
     s.add_argument("--out", required=True); s.set_defaults(fn=cmd_simulate_omnibus)
+    s = sub.add_parser("simulate-calibrated"); s.add_argument("--runs", nargs="+", required=True)
+    s.add_argument("--tag", default="main"); s.add_argument("--n-sim", type=int, default=300)
+    s.add_argument("--n-cal", type=int, default=6); s.add_argument("--out", required=True)
+    s.set_defaults(fn=cmd_simulate_calibrated)
+    s = sub.add_parser("bootstrap-reps"); s.add_argument("--cache", required=True); s.add_argument("--out", required=True)
+    s.add_argument("--pipelines", default="P1,P2,P3,P4,P5,P6,P7"); s.add_argument("--edge", default="spatial")
+    s.add_argument("--b-start", type=int, required=True); s.add_argument("--b-end", type=int, required=True)
+    s.set_defaults(fn=cmd_bootstrap_reps)
+    s = sub.add_parser("bootstrap-summary"); s.add_argument("--runs", nargs="+", required=True)
+    s.add_argument("--out", required=True); s.set_defaults(fn=cmd_bootstrap_summary)
     s = sub.add_parser("refit-check"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)
     s.add_argument("--runs", nargs="+", required=True); s.add_argument("--tag", default="main")
     s.add_argument("--pipeline", default="P3"); s.add_argument("--edge", default="spatial")
