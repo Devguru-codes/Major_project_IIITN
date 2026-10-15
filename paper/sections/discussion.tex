@@ -4,15 +4,13 @@
 Holding the model, data and evaluation protocol fixed, the factors we varied differ widely in how far
 they move macro-F1: splitting windows instead of subjects by \leakGain{}, the choice of
 representation by up to \obsRepRange{} (averaged over graph types), and the choice of graph by up to
-\obsEdgeRange{}. The title's `not' therefore means `far less than', not `zero'. In detail we found four
-things. First, the node-feature
-representation had the largest effect on three-class AD/FTD/control classification, with subjects as the unit
-of inference ($F=\mixSelRepF$ and \mixConfRepF{} on two fold sets of the same subjects) and on split-level
-macro-F1 (partial $\eta^2=\anovaRepEta$ and \canovaRepEta{}), with wavelet, spectral and fused features
-leading. These tests do not allow for the overlap between training sets, and in simulation they declared a
-difference between equally informative representations in \simCorrSubjLo--\simNullUncorr\% of datasets; the
-calibrated adjustment was not significant on ds004504 ($p\nbSelRepP$ and $p\nbConfRepP$) but was in the
-external cohort ($p\nbExtRepP$). A representation effect is therefore established in Parkinson's disease, not
+\obsEdgeRange{}. The title's `not' therefore means `far less than', not `zero'. In detail we found four things. First, in the primary,
+overlap-adjusted test the representation effect was not significant on ds004504 ($p\nbSelRepP$ and
+$p\nbConfRepP$) but was in the external cohort ($p\nbExtRepP$). Descriptively, representation had the
+largest effect on three-class AD/FTD/control classification (by-subject $F=\mixSelRepF$ and \mixConfRepF{};
+split-level partial $\eta^2=\anovaRepEta$ and \canovaRepEta{}), with wavelet, spectral and fused features
+leading, but in simulation these unadjusted tests declared a difference between equally informative
+representations in \simCorrSubjLo--\simNullUncorr\% of datasets. A representation effect is therefore established in Parkinson's disease, not
 in this dementia cohort, where 88 subjects cannot distinguish the observed spread from sampling variation.
 Second, how the graph is built had a detectable but negligible effect: with subjects as units it was
 statistically significant but spans at most \mixSelEdgeRange{} in the probability assigned to the true class,
@@ -60,10 +58,11 @@ mattered most to the best model), attention over time, source-space nodes or muc
 remains open.
 
 \subsection{Neurophysiological interpretation}
-Representations that describe each electrode's own spectrum (P1, P3) outperformed one built only from
-inter-electrode phase coupling (P2), and the functional graph did not improve on the spatial one.
-Within the limits of scalp EEG, this favours local oscillatory slowing over altered large-scale
-coupling as the dominant discriminative signal, consistent with spectral slowing being the most
+Representations that describe each electrode's own spectrum (P1, P3) scored higher than one built only
+from inter-electrode phase coupling (P2), and the functional graph did not improve on the spatial one.
+These differences are descriptive --- none survived the adjustment for overlapping training sets --- so
+they are consistent with, rather than evidence for, local oscillatory slowing being a stronger
+discriminative signal than altered large-scale coupling, a reading in line with spectral slowing being the most
 replicated EEG marker of AD \cite{R3,R15} and with the posterior-alpha-to-diffuse-theta shift visible
 in our data (Figure~\ref{fig:topo}). Occlusion of the best model points the same way: it relied
 mainly on the 4--8 and 8--16 Hz wavelet bands, recognised controls chiefly through theta, and
@@ -111,7 +110,10 @@ segments rather than subjects, uses OpenNeuro ds006036 rather than ds004504, and
 configuration chosen among 15 in earlier experiments \cite{R2}; per-segment accuracy is not comparable to our
 per-subject macro-F1, although our own per-segment accuracy under subject-level splits (\confWinAcc{}) is lower,
 not higher, than our per-subject accuracy. From the published descriptions we cannot tell whether
-preprocessing or normalisation fitted across subjects also contributes. Our design compares conditions
+preprocessing or normalisation fitted across subjects also contributes. Each of these differences --- what is scored,
+what enters the decision, which recordings are used, how the configuration was chosen --- is itself a choice of
+evaluation protocol, so the spread of subject-wise figures is further evidence for the paper's title rather
+than an exception to it. Our design compares conditions
 under one compact, untuned model; it is not a search for the best classifier, and a tuned or pretrained
 model could well score higher under the same protocol. At the level reached here (FTD sensitivity
 \bestSensFTD{}, expected calibration error \bestEce{}), EEG classifiers of this kind are research benchmarks,
@@ -129,11 +131,11 @@ leave-one-subject-out. Results are not directly comparable: tasks, scored units 
 \toprule
 Study & Task & Validation & Scored unit & Result \\
 \midrule
-Miltiadous et al.\ \cite{F2} & AD/CN; FTD/CN & LOSO & -- & 83.3\%; 75.0\% \\
-Kang et al.\ \cite{P_kang} & AD/CN & LNSO & -- & 74.2\% \\
-Stefanou et al.\ \cite{P_stefanou} & AD/FTD/CN & LNSO (five subsets per group) & -- & 54.3\% (macro-F1 0.49) \\
-Chen et al.\ \cite{P_chen} & AD/FTD/CN & 10-fold, split unit not stated; decision combined with MMSE & subject & 80.2\% \\
-Y{\i}ld{\i}z and Zan \cite{R2} & AD/FTD/CN & subject-wise 10-fold; ds006036 & 20-s segment (50\% overlap) & 84.3\% (macro-F1 0.84) \\
+Miltiadous \cite{F2} & AD/CN; FTD/CN & LOSO & -- & 83.3\%; 75.0\% \\
+Kang \cite{P_kang} & AD/CN & LNSO & -- & 74.2\% \\
+Stefanou \cite{P_stefanou} & AD/FTD/CN & LNSO (five subsets per group) & -- & 54.3\% (macro-F1 0.49) \\
+Chen \cite{P_chen} & AD/FTD/CN & 10-fold, split unit not stated; decision combined with MMSE & subject & 80.2\% \\
+Y{\i}ld{\i}z \cite{R2} & AD/FTD/CN & subject-wise 10-fold; ds006036 & 20-s segment (50\% overlap) & 84.3\% (macro-F1 0.84) \\
 This study & AD/FTD/CN & subject-level $5\times5$ CV, confirmation folds & subject & macro-F1 \confFOne{}; accuracy \confAcc{} \\
 \bottomrule
 \end{tabular}

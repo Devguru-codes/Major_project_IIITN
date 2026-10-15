@@ -389,6 +389,22 @@ if (ext_dir / "external_summary.json").exists():
     EXT_ROWS = "\n".join(rows)
 
 # ---- subject-level mixed model (NB13; primary inference) ----
+# ---- sixth review: one table of every test of the factorial, primary first (replaces the mixed-model table) ----
+TESTS_ROWS = None
+if (REP / "omnibus" / "selection_nb_anova.csv").exists():
+    rows = []
+    for ds_, lab_ in (("selection", "ds004504, selection"), ("confirmation", "ds004504, confirmation"),
+                      ("external", "ds004584")):
+        ob = pd.read_csv(REP / "omnibus" / f"{ds_}_nb_anova.csv").set_index("Source")
+        mt = pd.read_csv(REP / "mixed" / f"{ds_}_terms.csv").set_index("term")
+        for src_, term_, mterm in (("pipeline", "Representation", "representation"), ("edge", "Graph", "graph"),
+                                    ("pipeline * edge", "Interaction", "interaction")):
+            r = ob.loc[src_]
+            rows.append(f"{lab_ if src_ == 'pipeline' else ''} & {term_} & {r.F_nb:.2f} ({int(r.ddof1)}, {int(r.ddof2)}) & "
+                        f"{p_cell(r.p_nb_GG)} & {p_cell(r['p-GG-corr'])} & {p_cell(mt.loc[mterm, 'p'])} \\\\")
+        rows.append("\\addlinespace")
+    TESTS_ROWS = "\n".join(rows[:-1])
+
 MIX_ROWS = None
 mix = REP / "mixed"
 if (mix / "selection_summary.json").exists():
@@ -738,6 +754,8 @@ if SEV_ROWS is not None:
     (TAB / "severity.tex").write_text(SEV_ROWS, encoding="utf-8")
 if MIX_ROWS is not None:
     (TAB / "mixed.tex").write_text(MIX_ROWS, encoding="utf-8")
+if TESTS_ROWS is not None:
+    (TAB / "tests.tex").write_text(TESTS_ROWS, encoding="utf-8")
 if EXT_ROWS is not None:
     (TAB / "external.tex").write_text(EXT_ROWS, encoding="utf-8")
 if ES_ROWS is not None:
