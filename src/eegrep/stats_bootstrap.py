@@ -33,7 +33,9 @@ def bootstrap_split(subjects: np.ndarray, labels: np.ndarray, b: int, val_frac: 
     oob = np.setdiff1d(subjects, inbag)
     lab = dict(zip(subjects, labels))
     y_in = [lab[s] for s in inbag]
-    can_stratify = min(np.unique(y_in, return_counts=True)[1]) >= 2     # always true on the real cohort
+    n_cls, n_val = len(np.unique(labels)), int(np.ceil(val_frac * len(inbag)))
+    can_stratify = (len(np.unique(y_in)) == n_cls and min(np.unique(y_in, return_counts=True)[1]) >= 2
+                    and n_val >= n_cls and len(inbag) - n_val >= n_cls)     # always true on the real cohort
     tr, va = train_test_split(inbag, test_size=val_frac, stratify=y_in if can_stratify else None, random_state=b)
     return sorted(tr), sorted(va), sorted(oob)
 
