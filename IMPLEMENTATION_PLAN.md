@@ -621,3 +621,8 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
 - **M1.** The primary analysis is again the planned split-level ANOVA, now with the NB adjustment; pairwise comparisons use the NB t (Holm). The by-subject mixed model, the unadjusted ANOVA, Wilcoxon and Friedman/Nemenyi are relabelled descriptive. Updated: Table 3 caption, Deviations (i), Table S1, contribution 1, Results 4.2 opening.
 - **M2.** The mixed model's "nominal false-positive rate" is now scoped to the within-cohort null (simulated subject-level data). For claims about new samples it is miscalibrated; that comes from the calibration simulation.
 - **NB21 (CPU, launched).** Correlated representations (noise correlation 0.5 and 0.8): null and the ±90% alternative, subject-level statistic included, 200 datasets per setting.
+- **NB21 results (2026-10-15).** With correlated representations (noise correlation 0.5 / 0.8):
+  - The null spread falls to 0.11 / 0.08, below the observed 0.13.
+  - False positives are still 74% / 53% (uncorrected) and 43% / 34% (by subject); the NB-adjusted test gives 0%.
+  - NB power is 37–49%.
+  - The paper now quotes the false-positive range as 34–80%. The observed spread exceeds what correlated, equally informative representations produce, but the effect is still not established.

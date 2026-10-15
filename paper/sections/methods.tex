@@ -262,7 +262,9 @@ sizes, $5\times5$ subject-level cross-validation with 20\% of each training set 
 Under the null all seven are equally informative in the population; under the alternatives their noise
 levels differ. For each of \simNSimSubj--\simNSim{} simulated datasets per setting we applied the split-level
 repeated-measures $F$ (uncorrected and adjusted) and the by-subject repeated-measures $F$ on averaged
-true-class probabilities, to which the by-subject mixed model reduces for a balanced design.
+true-class probabilities, to which the by-subject mixed model reduces for a balanced design. Because real
+representations are transforms of the same EEG, the null and the strongest alternative were repeated with the
+seven representations' noise correlated at 0.5 and 0.8.
 
 \paragraph{Descriptive analyses on macro-F1.} For comparability with the literature we also report the
 unadjusted two-way repeated-measures ANOVA on macro-F1 (partial $\eta^2$, Greenhouse--Geisser-corrected
