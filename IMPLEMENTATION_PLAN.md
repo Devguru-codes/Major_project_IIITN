@@ -626,3 +626,9 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
   - False positives are still 74% / 53% (uncorrected) and 43% / 34% (by subject); the NB-adjusted test gives 0%.
   - NB power is 37–49%.
   - The paper now quotes the false-positive range as 34–80%. The observed spread exceeds what correlated, equally informative representations produce, but the effect is still not established.
+- **Fifth-review should items (2026-10-15).**
+  - S1: Wilcoxon and Friedman/Nemenyi are labelled descriptive. The external paragraph now leads with the calibrated adjusted test, with the mixed model as descriptive. The equivalence tests are noted as conservative under the simulation.
+  - R2.1: Discussion 5.1 opens with the magnitudes (splitting 0.39, representation ≤ 0.13, graph ≤ 0.015) and explains that "not" means "far less than".
+  - R2.2: contribution 2 is reworded and a new "Statistical" contribution is added (calibration simulation).
+  - S3: GPU caveat (0.57 GPU-h) added to the contributions and the data statement; Discussion 5.6 says the effect is established in the external cohort after adjustment.
+  - S4: keywords "cross-validation" and "statistical inference" added.

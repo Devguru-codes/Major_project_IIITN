@@ -68,9 +68,15 @@ Our contributions are:
         training sets and calibrated by simulation, paired statistics over 25 frozen subject-level test splits, an independent
         set of confirmation splits that removes selection bias, and ablations that test whether the
         graph matters at all.
-  \item \textbf{Empirical.} Effect sizes and confidence intervals for which representations a GNN
-        benefits from in three-class AD/FTD/control classification, with non-graph twins and a
-        demographic confound floor as reference points.
+  \item \textbf{Empirical.} Effect sizes, confidence intervals and equivalence tests for representation
+        and graph construction in three-class AD/FTD/control classification, with non-graph twins and
+        a demographic confound floor as reference points --- and the finding that, with 88 subjects,
+        neither factor's effect can be established once training-set overlap is accounted for.
+  \item \textbf{Statistical.} A simulation of the study's own resampling showing that tests which treat
+        cross-validation splits or held-out subjects as independent flag differences between equally
+        informative representations in \simCorrSubjLo--\simNullUncorr\% of datasets, and a
+        Nadeau--Bengio-type adjustment that controls this, applicable to any benchmark comparison of
+        this kind.
   \item \textbf{Protocol.} A quantification, with the model and data held fixed, of how much
         window-level splitting inflates results on this benchmark and on a second cohort --- not a new
         finding \cite{L1,L2,L3}, but a calibration factor for reading published numbers on ds004504 ---
@@ -79,5 +85,6 @@ Our contributions are:
         independent-cohort test of the AD finding, a replication in Parkinson's disease, and a test of
         whether the marker is separable from background slowing.
   \item \textbf{Reproducibility.} Code, seeds, frozen folds and every raw run released; the full
-        study re-runs on free cloud CPUs.
+        study re-runs on free cloud resources, on CPUs except for \gpuHoursTotal{} GPU-hours for the
+        deep-learning baselines.
 \end{enumerate}

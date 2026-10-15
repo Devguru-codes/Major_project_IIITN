@@ -176,6 +176,8 @@ if (_rv / "omnibus_simulation_correlated_summary.csv").exists():
 # observed spread of representation means on ds004504 (split-level, averaged over graph types)
 _cm = pd.read_csv(nb07 / "tables" / "grid_cells.csv").groupby("pipeline")["macro_f1_mean"].mean()
 put("obsRepRange", _cm.max() - _cm.min(), "{:.2f}")
+_ce = pd.read_csv(nb07 / "tables" / "grid_cells.csv").groupby("edge")["macro_f1_mean"].mean()
+put("obsEdgeRange", _ce.max() - _ce.min(), "{:.3f}")
 
 # ---- third review: NB-adjusted omnibus F (NB19) and the common-support PSWE CIs ----
 for ds_, tg_ in (("selection", "Sel"), ("confirmation", "Conf"), ("external", "Ext")):
@@ -218,6 +220,9 @@ for cell, g in cleak.groupby("cell"):
     put(f"cleak{c}CorrectSubj", g.loc["subject-level (correct)", "subject_macro_f1"])
     put(f"cleak{c}LeakySubj", g.loc["window-level (leaky)", "subject_macro_f1"])
     put(f"cleak{c}LeakyWin", g.loc["window-level (leaky)", "window_macro_f1"])
+    if c == "P3spatial":
+        put("leakGain", g.loc["window-level (leaky)", "subject_macro_f1"]
+            - g.loc["subject-level (correct)", "subject_macro_f1"], "{:.2f}")
 cabl = pd.read_csv(ct / "ablations.csv")
 for _, r in cabl.iterrows():
     k = f"cabl{r.cell.replace('x', '')}{r.ablation}"
@@ -449,6 +454,8 @@ if drop_f.exists():
         put(f"dropVs{k}WilP", p_fmt(r_.wilcoxon_p_holm))
     dsec = sum(json.loads(line)["seconds"] for f in sorted((REP / "deep_sensitivity").glob("*.jsonl")) for line in open(f))
     put("dropGpuHours", dsec / 3600, "{:.2f}")
+    _dsec = sum(json.loads(line)["seconds"] for f in sorted((REP / "deep").glob("deep_runs_s*.jsonl")) for line in open(f))
+    put("gpuHoursTotal", (dsec + _dsec) / 3600, "{:.2f}")
 
 SEV_ROWS = None
 sev_d = REP / "severity"

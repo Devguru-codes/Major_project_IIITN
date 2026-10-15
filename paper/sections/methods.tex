@@ -287,7 +287,9 @@ macro-F1 --- about one additional correctly classified subject in a test fold of
 Nadeau--Bengio corrected standard error, with Holm correction within each family, together with the
 90\% confidence interval and the minimum difference detectable with 80\% power. With the corrected
 standard error these tests are conservative: a comparison is called equivalent only if its whole
-corrected 90\% interval lies within the margin.
+corrected 90\% interval lies within the margin; the calibration simulation confirms that tests built on
+this standard error do not over-reject, so equivalence and non-difference conclusions are, if anything,
+conservative.
 
 For PSWEs, group differences were tested with Kruskal--Wallis and Dunn post-hoc tests (Holm-corrected,
 with rank-biserial effect sizes), and with negative-binomial regression of event counts using

@@ -99,12 +99,12 @@ Figure~\ref{fig:edge}) that did not replicate on the confirmation folds ($F=\can
 $p\canovaEdgeP$; marginal means \cedgespatial{}, \cedgefunctional{} and \cedgehybrid{}). The
 representation~$\times$~graph interaction was not significant on either
 (selection $F(\anovaInterDfOne,\anovaInterDfTwo)=\anovaInterF$, $p\anovaInterP$; confirmation
-$F=\canovaInterF$, $p\canovaInterP$; Figure~\ref{fig:interaction}). A Friedman test across all cells
+$F=\canovaInterF$, $p\canovaInterP$; Figure~\ref{fig:interaction}). Descriptively, a Friedman test across all cells
 was significant ($p\friedmanP$), but the Nemenyi critical difference (\cdValue{} ranks) left the top
 cells statistically indistinguishable from one another (Figure~\ref{fig:cd}).
 
 Pairwise comparisons depend on how the dependence between cross-validation splits is handled. With
-Holm-corrected Wilcoxon tests, \nPairsWilcoxonSig{} of the \nPairs{} representation pairs differed on
+Holm-corrected Wilcoxon tests (descriptive; like the Friedman test they ignore that dependence), \nPairsWilcoxonSig{} of the \nPairs{} representation pairs differed on
 the selection folds and \cPairsWilcoxonSig{} on the confirmation folds; with the more conservative
 Nadeau--Bengio corrected $t$-test, \nPairsNbSig{} and \cPairsNbSig{} did. For example, P3 exceeded P4
 by \pThreeFourDiff{} macro-F1 on the selection folds (Cohen's $d=\pThreeFourD$; Wilcoxon--Holm
@@ -339,14 +339,14 @@ The ds004584 recordings passed the same quality gates (\extNWindows{} windows fr
 higher in patients (\extThetaAlphaPD{}) than in controls (\extThetaAlphaCN{}). Age and sex alone
 reached a macro-F1 of \extDemoFOne{} against \extChanceFOne{} for chance in this two-class problem.
 
-\paragraph{Protocol effects replicated.} Representation again dominated: in the by-subject mixed
-model, $F(\mixExtRepDf,\mixExtRepDenDf)=\mixExtRepF$, $p\mixExtRepP$, with \mixExtNPairsSig{} of 21 pairs
+\paragraph{Protocol effects replicated.} Here the representation effect survived the primary,
+overlap-adjusted test ($F_\mathrm{NB}=\nbExtRepF$, $p\nbExtRepP$), unlike on ds004504. Descriptively, in the
+by-subject mixed model, $F(\mixExtRepDf,\mixExtRepDenDf)=\mixExtRepF$ with \mixExtNPairsSig{} of 21 pairs
 separated, whereas graph construction was small (marginal means \mixExtMspatial{} spatial,
 \mixExtMfunctional{} functional, \mixExtMhybrid{} hybrid; $p\mixExtEdgeP$) and favoured a different graph
 type than on ds004504; on macro-F1 with splits as units, representation was significant
 ($F=\extAnovaRepF$, $p\extAnovaRepP$, partial $\eta^2=\extAnovaRepEta$) and graph construction was not
-($p\extAnovaEdgeP$). Unlike on ds004504, the representation effect survived the Nadeau--Bengio adjustment
-for overlapping training sets ($F_\mathrm{NB}=\nbExtRepF$, $p\nbExtRepP$). The GCN was not significantly better than non-graph classifiers trained on the
+($p\extAnovaEdgeP$) in the unadjusted analysis. The GCN was not significantly better than non-graph classifiers trained on the
 same subjects (differences \extGvcDeltaMin{} to \extGvcDeltaMax{}, none significant after Holm correction).
 Window-level splitting of the configuration selected on ds004504 inflated subject-level macro-F1 from
 \extSelFOne{} to \extLeakySubj{} (window-level \extLeakyWin{}), in line with an independent audit of the
