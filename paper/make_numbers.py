@@ -163,6 +163,16 @@ if (_rv / "refit_check_original_cache.csv").exists():
     put("refitRebuiltAgree", 100 * _b.argmax_agreement.mean(), "{:.0f}")
     put("refitRebuiltAbsDiff", (_b.macro_f1_refit - _b.macro_f1_stored).abs().mean(), "{:.3f}")
     put("refitRebuiltFOne", _b.macro_f1_refit.mean()); put("refitStoredFOne", _b.macro_f1_stored.mean())
+# correlated representations (NB21): noise correlation 0.5 and 0.8
+if (_rv / "omnibus_simulation_correlated_summary.csv").exists():
+    _c = pd.read_csv(_rv / "omnibus_simulation_correlated_summary.csv")
+    nul_c, alt_c = _c[_c.spread == 0], _c[_c.spread > 0]
+    pct = lambda v: f"{100 * v:.0f}"
+    put("simCorrUncorrLo", pct(nul_c.reject_uncorrected.min())); put("simCorrUncorrHi", pct(nul_c.reject_uncorrected.max()))
+    put("simCorrSubjLo", pct(nul_c.reject_subject.min())); put("simCorrSubjHi", pct(nul_c.reject_subject.max()))
+    put("simCorrNb", pct(nul_c.reject_nb.max()))
+    put("simCorrRangeLo", nul_c.mean_range.min(), "{:.2f}"); put("simCorrRangeHi", nul_c.mean_range.max(), "{:.2f}")
+    put("simCorrNbPowLo", pct(alt_c.reject_nb.min())); put("simCorrNbPowHi", pct(alt_c.reject_nb.max()))
 # observed spread of representation means on ds004504 (split-level, averaged over graph types)
 _cm = pd.read_csv(nb07 / "tables" / "grid_cells.csv").groupby("pipeline")["macro_f1_mean"].mean()
 put("obsRepRange", _cm.max() - _cm.min(), "{:.2f}")

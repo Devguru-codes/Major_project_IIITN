@@ -117,7 +117,14 @@ that happens to suit this sample keeps its advantage under every re-split of the
 adjusted test did so in \simNullNb\%. The spread of representation means under that null, \simNullRange{}
 macro-F1, is about the spread we observed (\obsRepRange{}). The price of the adjustment is power: for
 true spreads of \simAltRangeLo--\simAltRangeHi{} it detected a difference in only \simAltNbLo--\simAltNbHi\% of
-datasets. The significant subject-level and uncorrected tests above, and the replication of the ordering
+datasets. Real representations are transforms of the same EEG, so their errors are correlated; with the
+simulated representations' noise correlated at 0.5 or 0.8, the null spread shrank to
+\simCorrRangeLo--\simCorrRangeHi{}, below the observed \obsRepRange{}, but the unadjusted tests still declared a
+difference in \simCorrUncorrLo--\simCorrUncorrHi\% (split level) and \simCorrSubjLo--\simCorrSubjHi\% (by subject)
+of null datasets, the adjusted test in \simCorrNb\%, and the adjusted test's power rose to
+\simCorrNbPowLo--\simCorrNbPowHi\%. The observed spread is therefore larger than strongly correlated but equally
+informative representations would produce, yet still not established. The significant subject-level and
+uncorrected tests above, and the replication of the ordering
 across fold sets of the same subjects ($\rho=\confRankRho$), therefore describe this cohort and do not by
 themselves establish a population difference; on ds004504 the representation effect is not established,
 and the calibrated evidence that representation matters comes from the external cohort, where the
