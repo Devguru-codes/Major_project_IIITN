@@ -101,8 +101,19 @@ simulated representations' noise correlated at 0.5 or 0.8, the null spread shran
 \simCorrRangeLo--\simCorrRangeHi{}, below the observed \obsRepRange{}, but the unadjusted tests still declared a
 difference in \simCorrUncorrLo--\simCorrUncorrHi\% (split level) and \simCorrSubjLo--\simCorrSubjHi\% (by subject)
 of null datasets, the adjusted test in \simCorrNb\%, and the adjusted test's power rose to
-\simCorrNbPowLo--\simCorrNbPowHi\%. The observed spread is therefore larger than strongly correlated but equally
-informative representations would produce, yet still not established. The significant subject-level and
+\simCorrNbPowLo--\simCorrNbPowHi\%. These settings were illustrative; to judge our own spread we matched the
+null to the data, choosing the simulation's signal strength, noise and noise correlation so that it reproduced
+the observed mean macro-F1 (\calMeanFOne{} against \calTargetFOne{}), split-to-split SD (\calSplitSd{} against
+\calTargetSd{}) and between-representation correlation of split scores (\calRepCorr{} against \calTargetCorr{}).
+In \calNSim{} matched null datasets the spread of representation means averaged \calNullMean{} (95th percentile
+\calNullQ{}); the observed \obsRepRange{} lies well inside that distribution (empirical $p=\calP$), and at the
+matched setting the unadjusted test still flagged \calFpUncorr\% of null datasets against \calFpNb\% for the
+adjusted one. The out-of-bootstrap comparison, which retrains on \bootN{} resampled cohorts and does
+not depend on the adjustment, gave the same ordering (\bootBest{} highest at \bootBestFOne{}, \bootWorst{}
+lowest at \bootWorstFOne{}) but wide intervals: the largest difference, \bootBest{} minus \bootWorst{},
+was \bootBWDelta{} (95\% percentile interval \bootBWLo{} to \bootBWHi{}; Holm $p\bootBWP$), the median
+bootstrap standard error of a paired difference was \bootSeMed{}, and \bootNSig{} of the \bootNPairs{}
+pairs differed. The significant subject-level and
 uncorrected tests above, and the replication of the ordering
 across fold sets of the same subjects ($\rho=\confRankRho$), therefore describe this cohort and do not by
 themselves establish a population difference; on ds004504 the representation effect is not established,

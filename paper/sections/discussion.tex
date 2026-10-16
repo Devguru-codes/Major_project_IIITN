@@ -11,7 +11,8 @@ largest effect on three-class AD/FTD/control classification (by-subject $F=\mixS
 split-level partial $\eta^2=\anovaRepEta$ and \canovaRepEta{}), with wavelet, spectral and fused features
 leading, but in simulation these unadjusted tests declared a difference between equally informative
 representations in \simCorrSubjLo--\simNullUncorr\% of datasets. A representation effect is therefore established in Parkinson's disease, not
-in this dementia cohort, where 88 subjects cannot distinguish the observed spread from sampling variation.
+in this dementia cohort, where 88 subjects cannot distinguish the observed spread from sampling variation
+(a null simulation matched to the data puts it at $p=\calP$).
 Second, how the graph is built had a detectable but negligible effect: with subjects as units it was
 statistically significant but spans at most \mixSelEdgeRange{} in the probability assigned to the true class,
 it changes direction between cohorts and does not survive the adjustment for overlapping training sets,
@@ -177,7 +178,11 @@ median \bestEpochPOne{} for P1 and \bestEpochPThree{} for P3), so many models ar
 training longer (patience 50, or 100 epochs without early stopping) changed no conclusion and did not
 help the highest-capacity configuration (raw windows, about 84k parameters), and refitting on training
 plus validation subjects for the selected epoch count changed macro-F1 by only \refitMeanGain{} on
-average. Calibration was poor. Results are reproducible exactly from the committed feature caches, but rebuilding
+average. The adjusted test is conservative (no false positives in simulation, power of \simAltNbLo--\simCorrNbPowHi\%
+for moderate differences), so `not established' is weak evidence that representation does not matter; the
+out-of-bootstrap comparison, which does not rely on it, reached the same conclusion, with a bootstrap
+standard error of about \bootSeMed{} for a paired difference, so that only differences of roughly twice
+that size could be shown with this cohort. Calibration was poor. Results are reproducible exactly from the committed feature caches, but rebuilding
 the caches from the raw recordings in a later Kaggle environment changed per-split macro-F1 by
 \refitRebuiltAbsDiff{} on average (mean \refitRebuiltFOne{} against \refitStoredFOne{} for the best cell;
 \refitRebuiltAgree\% of subject decisions unchanged), a reminder that preprocessing libraries are part of

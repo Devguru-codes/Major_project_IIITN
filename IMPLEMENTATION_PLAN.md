@@ -647,3 +647,4 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
     - At the matched setting, the uncorrected F gives 78% false positives and the NB-adjusted F 0%.
     - The earlier statement that the observed spread "exceeds" the correlated null is withdrawn.
   - **Bootstrap.** 200 replicates × 7 representations = 1,400 runs, committed in `reports/bootstrap`. Summarised on Kaggle by NB22e.
+- **Bootstrap result (NB22e).** Same ordering: P3 0.548 highest, P4 0.422 lowest. P3 − P4 = +0.126, 95% percentile interval −0.073 to +0.287, bootstrap-SE p = 0.18, Holm p = 1.0. 0 of 21 pairs significant; median SE 0.095. Added to the paper: Methods paragraph, Results 4.2, S1 limitation, Deviations, Table S1.

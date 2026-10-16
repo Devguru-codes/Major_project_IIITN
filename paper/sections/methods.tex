@@ -266,6 +266,13 @@ true-class probabilities, to which the by-subject mixed model reduces for a bala
 representations are transforms of the same EEG, the null and the strongest alternative were repeated with the
 seven representations' noise correlated at 0.5 and 0.8.
 
+\paragraph{Out-of-bootstrap comparison (added).} As a check that does not rely on the adjustment, we
+resampled the cohort itself: in each of \bootN{} replicates, subjects were drawn with replacement within
+each class, the GCN (spatial graph) was trained on the distinct drawn subjects (20\% held out for early
+stopping) and scored on the subjects never drawn, for all seven representations on the same replicate.
+Each paired difference between representations was tested with its bootstrap standard error (Holm-corrected
+over the \bootNPairs{} pairs), and its 95\% percentile interval is reported.
+
 \paragraph{Descriptive analyses on macro-F1.} For comparability with the literature we also report the
 unadjusted two-way repeated-measures ANOVA on macro-F1 (partial $\eta^2$, Greenhouse--Geisser-corrected
 $p$-values), which shares the mixed model's limitation. Because
@@ -320,7 +327,8 @@ subjects; we added train-only fits and train + val GCN refits, and corrected the
 stopping-rule sensitivity, the PSWE detector robustness and collinearity checks, the equivalence tests,
 the learned-adjacency GCN, occlusion importance, the two mixed-model cross-checks, the severity-stratified
 analysis, an EEGNet run with dropout 0.25, the Nadeau--Bengio-adjusted omnibus tests, the graph-type
-equivalence tests within representations, the calibration simulation and the re-fit checks were added after the corresponding results were known; their definitions, variants and margins were fixed
+equivalence tests within representations, the calibration simulations (including one matched to the
+data), the re-fit checks and the out-of-bootstrap comparison were added after the corresponding results were known; their definitions, variants and margins were fixed
 in the configuration before they were run. A7, A8 and the A11 PSWE rule grid were planned but run late.
 (v)~\emph{Changed or not done.} Planned integrated-gradients explanations were replaced by occlusion,
 which is model-agnostic and reads directly as lost probability for the true class; the planned connectome and embedding plots and calibration
