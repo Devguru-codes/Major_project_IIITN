@@ -632,6 +632,17 @@ def main():
              f"--out {{WORK}}/bootstrap_s{k}.jsonl', log=f'{{WORK}}/bootstrap_s{k}.log')"],
             extras="dev,stats"), kernel_sources=nb02)
 
+    write_kernel("nb22e-bootstrap-summary", "nb22e bootstrap summary", notebook(
+        "NB22e — summary of the out-of-bootstrap representation comparison (CPU, committed runs only)",
+        "Per representation: mean out-of-bootstrap macro-F1 with percentile interval; every pair: paired "
+        "difference, bootstrap-SE z test (Holm over 21 pairs) and percentile interval.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_review6.py', "
+         "log=f'{WORK}/pytest_nb22e.txt')",
+         "import glob\nruns = ' '.join(sorted(glob.glob(f'{SRC}/reports/bootstrap/bootstrap_s*.jsonl')))\n"
+         "assert len(runs.split()) == 4, runs\n"
+         "sh(f'{PY} bootstrap-summary --runs {runs} --out {WORK}/bootstrap', log=f'{WORK}/bootstrap_summary.log')"],
+        extras="dev,stats"))
+
     # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
     write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(
         "NB17 — equivalence tests including the learned-adjacency family (CPU)",
