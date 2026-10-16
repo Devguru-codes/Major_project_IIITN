@@ -641,3 +641,9 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
 - **Could item: out-of-bootstrap comparison with retraining (NB22 shards s0–s3, 200 replicates).**
   - Each replicate: a stratified bootstrap of subjects. The GCN (spatial graph) is trained on the distinct drawn subjects, with 20% held out for early stopping, and scored on the never-drawn subjects. All 7 representations use the same replicate.
   - Pairwise differences: bootstrap-SE z test, Holm-corrected over 21 pairs, plus percentile intervals.
+- **NB22 results (2026-10-17; third launch).** The first two launches failed at the pytest gate: the tiny test cache could not be stratified. Fixed in `bootstrap_split`, then relaunched.
+  - **Calibrated null.** Best setting: separation 0.65, noise 2.0, corr 0.4. Null mean F1 0.496 (target 0.498), split SD 0.114 (target 0.090), rep corr 0.16 (target 0.19).
+    - Observed range 0.135 vs null mean 0.118 and null 95th percentile 0.189: empirical p = 0.31.
+    - At the matched setting, the uncorrected F gives 78% false positives and the NB-adjusted F 0%.
+    - The earlier statement that the observed spread "exceeds" the correlated null is withdrawn.
+  - **Bootstrap.** 200 replicates × 7 representations = 1,400 runs, committed in `reports/bootstrap`. Summarised on Kaggle by NB22e.
