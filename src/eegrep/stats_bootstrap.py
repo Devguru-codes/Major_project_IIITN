@@ -34,8 +34,8 @@ def bootstrap_split(subjects: np.ndarray, labels: np.ndarray, b: int, val_frac: 
     lab = dict(zip(subjects, labels))
     y_in = [lab[s] for s in inbag]
     n_cls, n_val = len(np.unique(labels)), int(np.ceil(val_frac * len(inbag)))
-    can_stratify = (len(np.unique(y_in)) == n_cls and min(np.unique(y_in, return_counts=True)[1]) >= 2
-                    and n_val >= n_cls and len(inbag) - n_val >= n_cls)     # always true on the real cohort
+    counts = np.bincount(y_in, minlength=n_cls)                             # a missing class counts 0
+    can_stratify = counts.min() >= 2 and n_val >= n_cls and len(inbag) - n_val >= n_cls   # always on the real cohort
     tr, va = train_test_split(inbag, test_size=val_frac, stratify=y_in if can_stratify else None, random_state=b)
     return sorted(tr), sorted(va), sorted(oob)
 
@@ -50,13 +50,14 @@ def run_bootstrap(cache, cfg, pipelines: list[str], edge: str, b_values, out_pat
         done = {(r["b"], r["pipeline"]) for r in map(json.loads, out_path.read_text().splitlines()) if r}
     A = cache.adjacency(cfg, seed=0)
     n = 0
-    for b in b_values:
-        tr, va, oob = bootstrap_split(subjects, labels, b)
-        idx = tuple(cache.window_indices(s) for s in (tr, va, oob))
-        for p in pipelines:
+    splits = {b: bootstrap_split(subjects, labels, b) for b in b_values}
+    for p in pipelines:                          # features loaded once per representation, not once per replicate
+        X = cache.X(p)
+        for b, (tr, va, oob) in splits.items():
             if (b, p) in done:
                 continue
-            res = train_one(cache.X(p), A, cache.subject, cache.label, *idx, cfg, seed=20_000 + b,
+            idx = tuple(cache.window_indices(s) for s in (tr, va, oob))
+            res = train_one(X, A, cache.subject, cache.label, *idx, cfg, seed=20_000 + b,
                             n_classes=len(cfg["dataset"]["class_names"]))
             row = {"b": int(b), "pipeline": p, "edge": edge, "n_train": len(tr), "n_val": len(va), "n_oob": len(oob),
                    "macro_f1": res["subject"]["macro_f1"], "balanced_acc": res["subject"]["balanced_acc"],
