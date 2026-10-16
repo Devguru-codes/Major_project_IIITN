@@ -173,6 +173,31 @@ if (_rv / "omnibus_simulation_correlated_summary.csv").exists():
     put("simCorrNb", pct(nul_c.reject_nb.max()))
     put("simCorrRangeLo", nul_c.mean_range.min(), "{:.2f}"); put("simCorrRangeHi", nul_c.mean_range.max(), "{:.2f}")
     put("simCorrNbPowLo", pct(alt_c.reject_nb.min())); put("simCorrNbPowHi", pct(alt_c.reject_nb.max()))
+# data-matched null (NB22a): where the observed spread of representation means falls
+_cn = REP / "calibrated_null" / "calibrated_null_summary.json"
+if _cn.exists():
+    _j = json.loads(_cn.read_text())
+    put("calP", _j["p_range"], "{:.2f}"); put("calNullMean", _j["null_range_mean"], "{:.2f}")
+    put("calNullQ", _j["null_range_q95"], "{:.2f}"); put("calNSim", _j["n_sim"], "{:d}")
+    put("calFpUncorr", 100 * _j["reject_uncorrected"], "{:.0f}"); put("calFpNb", 100 * _j["reject_nb"], "{:.0f}")
+    put("calMeanFOne", _j["null_mean_f1"], "{:.2f}"); put("calTargetFOne", _j["targets"]["mean_f1"], "{:.2f}")
+    put("calSplitSd", _j["null_split_sd"], "{:.2f}"); put("calTargetSd", _j["targets"]["split_sd"], "{:.2f}")
+    put("calRepCorr", _j["null_rep_corr"], "{:.2f}"); put("calTargetCorr", _j["targets"]["rep_corr"], "{:.2f}")
+# bootstrap summary (NB22e)
+_bs = REP / "bootstrap" / "summary"
+if (_bs / "bootstrap_pairs.csv").exists():
+    _bp = pd.read_csv(_bs / "bootstrap_pairs.csv"); _br = pd.read_csv(_bs / "bootstrap_representations.csv")
+    put("bootN", int(_br.n_boot.iloc[0]), "{:d}"); put("bootNPairs", len(_bp), "{:d}")
+    put("bootNSig", int((_bp.p_holm < 0.05).sum()), "{:d}")
+    _best = _br.sort_values("mean").iloc[-1]; _worst = _br.sort_values("mean").iloc[0]
+    put("bootBest", _best.pipeline); put("bootBestFOne", _best["mean"]); put("bootWorst", _worst.pipeline)
+    put("bootWorstFOne", _worst["mean"])
+    _bw = _bp[((_bp.a == _best.pipeline) & (_bp.b == _worst.pipeline)) | ((_bp.b == _best.pipeline) & (_bp.a == _worst.pipeline))].iloc[0]
+    _sgn = 1 if _bw.a == _best.pipeline else -1                       # orient as best minus worst
+    _lo, _hi = sorted((_sgn * _bw.lo, _sgn * _bw.hi))
+    put("bootBWDelta", _sgn * _bw.delta, "{:+.3f}"); put("bootBWLo", _lo, "{:+.3f}")
+    put("bootBWHi", _hi, "{:+.3f}"); put("bootBWP", p_fmt(_bw.p_holm))
+    put("bootSeMed", _bp.se_boot.median(), "{:.3f}")
 # observed spread of representation means on ds004504 (split-level, averaged over graph types)
 _cm = pd.read_csv(nb07 / "tables" / "grid_cells.csv").groupby("pipeline")["macro_f1_mean"].mean()
 put("obsRepRange", _cm.max() - _cm.min(), "{:.2f}")
