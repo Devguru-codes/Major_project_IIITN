@@ -171,7 +171,11 @@ length (median about \SI{2.5}{\minute}), was recorded with patients on their usu
 \cite{ds004584src}, so medication and disease effects on the EEG cannot be separated, and is two-class,
 so it cannot test
 whether the AD/FTD results themselves replicate. The confirmation folds re-sample the same 88 subjects, so they remove the
-selection bias of choosing among configurations but are not an external replication. Hyperparameters
+selection bias of choosing among configurations but are not an external replication, and no
+independent AD/FTD cohort recorded with a comparable protocol was available to us. Our conclusions concern
+one compact model family: the learned-adjacency variant kept the representation ranking
+($\rho=\learnRho$), but the GAT check covered only the two reference cells, and larger or pretrained
+models might separate representations that this GCN does not. Hyperparameters
 were fixed a priori and not tuned. Early stopping on a validation set of about 14 subjects selected
 a median of \bestEpochMedian{} epochs (\bestEpochLeThree{}\% of runs stopped at epoch 3 or earlier;
 median \bestEpochPOne{} for P1 and \bestEpochPThree{} for P3), so many models are lightly trained; however,

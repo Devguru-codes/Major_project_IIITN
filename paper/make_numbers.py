@@ -198,6 +198,7 @@ if (_bs / "bootstrap_pairs.csv").exists():
     put("bootBWDelta", _sgn * _bw.delta, "{:+.3f}"); put("bootBWLo", _lo, "{:+.3f}")
     put("bootBWHi", _hi, "{:+.3f}"); put("bootBWP", p_fmt(_bw.p_holm))
     put("bootSeMed", _bp.se_boot.median(), "{:.3f}")
+    put("bootMde", 2 * _bp.se_boot.median(), "{:.2f}")                 # ~ smallest paired gap this cohort can show
 # observed spread of representation means on ds004504 (split-level, averaged over graph types)
 _cm = pd.read_csv(nb07 / "tables" / "grid_cells.csv").groupby("pipeline")["macro_f1_mean"].mean()
 put("obsRepRange", _cm.max() - _cm.min(), "{:.2f}")

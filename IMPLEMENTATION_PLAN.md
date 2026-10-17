@@ -648,3 +648,10 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
     - The earlier statement that the observed spread "exceeds" the correlated null is withdrawn.
   - **Bootstrap.** 200 replicates × 7 representations = 1,400 runs, committed in `reports/bootstrap`. Summarised on Kaggle by NB22e.
 - **Bootstrap result (NB22e).** Same ordering: P3 0.548 highest, P4 0.422 lowest. P3 − P4 = +0.126, 95% percentile interval −0.073 to +0.287, bootstrap-SE p = 0.18, Holm p = 1.0. 0 of 21 pairs significant; median SE 0.095. Added to the paper: Methods paragraph, Results 4.2, S1 limitation, Deviations, Table S1.
+
+### Seventh review (2026-10-17): text-only fixes
+- Abstract: "Descriptively" added to the representation-vs-graph sentence; detectable-gap limit (`\bootMde` = 2 x median bootstrap SE = 0.19) stated in Significance.
+- Methods 3.11: the pre-specification is a time-stamped commit, not an external registration.
+- Limitations: no independent AD/FTD cohort; conclusions limited to one compact model family (learned graph kept the ranking, rho 0.89; GAT checked on two cells only).
+- Supplement: unique hyperref targets for S-numbered floats (links to Table S1 had jumped to Table 1).
+- Not done: publishing the NB02 feature cache (needs the author's approval to make data public). Main text is already 24 pages before references, so no cut was made.
