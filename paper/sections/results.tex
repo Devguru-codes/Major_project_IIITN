@@ -17,7 +17,7 @@ Across the 21 cells on the selection folds (\nMainRuns{} runs; Table~\ref{tab:ce
 configuration was \bestCell{}, with subject-level macro-F1 \bestFOne{}~$\pm$~\bestFOneSd{}
 (subject-bootstrap 95\% CI \bestFOneCiLo{}--\bestFOneCiHi{}). Because this cell was chosen as the
 maximum of 21, that figure is optimistically biased. Re-evaluated on the independent confirmation
-folds, the same cell scored \confFOne{}~$\pm$~\confFOneSd{} (95\% CI \confFOneCiLo{}--\confFOneCiHi{};
+folds, the same cell scored \confFOne{}~$\pm$~\confFOneSd{} (95\% CI \confFOneNbLo{}--\confFOneNbHi{} with the Nadeau--Bengio correction for overlapping training sets; subject-bootstrap interval, which describes this cohort only, \confFOneCiLo{}--\confFOneCiHi{};
 balanced accuracy \confBalAcc{}, macro ROC-AUC \confAuc{}, Cohen's $\kappa$ \confKappa{}) and again
 ranked first of 21. The ordering of all cells was largely preserved (Spearman $\rho=\confRankRho$
 between the two fold sets; Figure~\ref{fig:confirm}). We therefore take \confFOne{} as the
@@ -32,7 +32,7 @@ splits or subjects as independent, found strong representation effects in all th
 model also a graph effect that spans only \mixSelEdgeRange{} in the probability assigned to the true class;
 their details are descriptive and given in the Supplementary results (Table~\ref{tab:mixed},
 Figure~\ref{fig:mixed}). The last row of Table~\ref{tab:tests} gives each test's false-positive rate in the
-calibration simulation, examined at the end of this section.
+calibration simulation, examined in Section~\ref{sec:res-calib}.
 
 On macro-F1 averaged over representations, every pairwise comparison of graph types was formally equivalent within
 $\pm\eqMargin$ on both fold sets (TOST with the Nadeau--Bengio correction, largest Holm-corrected $p\eqGraphPMax$
@@ -89,7 +89,10 @@ Nadeau--Bengio corrected $t$-test, \nPairsNbSig{} and \cPairsNbSig{} did. For ex
 by \pThreeFourDiff{} macro-F1 on the selection folds (Cohen's $d=\pThreeFourD$; Wilcoxon--Holm
 $p\pThreeFourWilP$; Nadeau--Bengio--Holm $p\pThreeFourNbP$). The same caveat applies to the
 unadjusted omnibus tests, which also treat the splits as independent; with the adjustment (the primary
-analysis) no factor was significant. The calibration simulation shows which of these tests can be trusted. When seven representations were
+analysis) no factor was significant.
+
+\subsection{Which tests can be trusted}\label{sec:res-calib}
+The calibration simulation shows which of these tests can be trusted. When seven representations were
 equally informative in the population, the uncorrected split-level test declared a difference in
 \simNullUncorr\% of simulated datasets and the by-subject test in \simNullSubj\%, because a representation
 that happens to suit this sample keeps its advantage under every re-split of the same subjects; the
@@ -113,7 +116,10 @@ not depend on the adjustment, gave the same ordering (\bootBest{} highest at \bo
 lowest at \bootWorstFOne{}) but wide intervals: the largest difference, \bootBest{} minus \bootWorst{},
 was \bootBWDelta{} (95\% percentile interval \bootBWLo{} to \bootBWHi{}; Holm $p\bootBWP$), the median
 bootstrap standard error of a paired difference was \bootSeMed{}, and \bootNSig{} of the \bootNPairs{}
-pairs differed. The significant subject-level and
+pairs differed. Each replicate trains on about \bootNTrain{} distinct subjects (against 56 in the
+cross-validation) and scores about \bootNOob{}, with the spatial graph only, so its scores are lower and its
+power smaller than the cross-validation's; it is a check on the direction of the conclusion, not a more
+sensitive test. The significant subject-level and
 uncorrected tests above, and the replication of the ordering
 across fold sets of the same subjects ($\rho=\confRankRho$), therefore describe this cohort and do not by
 themselves establish a population difference; on ds004504 the representation effect is not established,

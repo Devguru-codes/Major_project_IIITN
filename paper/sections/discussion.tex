@@ -13,8 +13,7 @@ leading, but in simulation these unadjusted tests declared a difference between 
 representations in \simCorrSubjLo--\simNullUncorr\% of datasets. A representation effect is therefore established in Parkinson's disease, not
 in this dementia cohort, where 88 subjects cannot distinguish the observed spread from sampling variation
 (a null simulation matched to the data puts it at $p=\calP$).
-Second, how the graph is built had a detectable but negligible effect: with subjects as units it was
-statistically significant but spans at most \mixSelEdgeRange{} in the probability assigned to the true class,
+Second, how the graph is built had a negligible effect: with subjects as units it was descriptively significant but spans at most \mixSelEdgeRange{} in the probability assigned to the true class,
 it changes direction between cohorts and does not survive the adjustment for overlapping training sets,
 averaged over representations the three graph constructions were formally equivalent within
 $\pm\eqMargin$ macro-F1, and within single representations the comparisons were inconclusive rather than
@@ -27,7 +26,7 @@ of subjects inflates subject-level macro-F1 from \cleakPThreespatialCorrectSubj{
 reproducing the top of the published range, although not every published subject-wise figure
 (Section~\ref{sec:disc-bench}). Fourth, the
 blood--brain-barrier-associated PSWE marker is more frequent in AD and FTD than in controls, but this
-excess is explained by continuous background slowing; defined relative to each person's background,
+excess is largely accounted for by continuous background slowing; defined relative to each person's background,
 transient slowing events are, if anything, less frequent in dementia.
 
 \subsection{Representation and topology}
@@ -155,7 +154,7 @@ This argues against treating any representation ranking from one disease as a ge
 the evaluation protocol transfers; the best representation is disease- and possibly
 recording-specific.
 
-\subsection{Limitations}
+\subsection{Limitations}\label{sec:limitations}
 The cohort is small, and cross-validation estimates in samples of this size carry wide error bars
 \cite{L6}: test folds contain 17--18 subjects, and under the conservative Nadeau--Bengio
 correction no pairwise difference between representations, and no single ablation, reached
@@ -186,7 +185,7 @@ average. The adjusted test is conservative (no false positives in simulation, po
 for moderate differences), so `not established' is weak evidence that representation does not matter; the
 out-of-bootstrap comparison, which does not rely on it, reached the same conclusion, with a bootstrap
 standard error of about \bootSeMed{} for a paired difference, so that only differences of roughly twice
-that size could be shown with this cohort. Calibration was poor. Results are reproducible exactly from the committed feature caches, but rebuilding
+that size could be shown with this cohort. Calibration was poor. Results are reproduced exactly from the original feature caches (Kaggle notebook output, too large for the repository), but rebuilding
 the caches from the raw recordings in a later Kaggle environment changed per-split macro-F1 by
 \refitRebuiltAbsDiff{} on average (mean \refitRebuiltFOne{} against \refitStoredFOne{} for the best cell;
 \refitRebuiltAgree\% of subject decisions unchanged), a reminder that preprocessing libraries are part of

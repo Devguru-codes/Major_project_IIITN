@@ -48,7 +48,8 @@ early biomarker of cognitive dysfunction \cite{B5,B8}, and Milikovsky et al.\ de
 falls below \SI{6}{\hertz} for at least \SI{5}{\second} --- in patients with AD, linked them to
 cognitive impairment, localised them to cortex with BBB dysfunction in epilepsy, and induced them in
 rodents by albumin extravasation \cite{B1,B2}. PSWEs have since been examined in Parkinson's disease
-\cite{B3} and epilepsy \cite{B4}, but, to our knowledge, never in FTD and never on an open
+\cite{B3}, epilepsy \cite{B4}, obstructive sleep apnoea \cite{pswe_osa} and healthy ageing
+\cite{pswe_healthy}, but, to our knowledge, never in FTD and never on an open
 dementia cohort. Whether this BBB-associated EEG marker carries diagnostic information beyond
 ordinary EEG slowing has not been tested.
 
@@ -75,8 +76,7 @@ Our contributions are:
   \item \textbf{Statistical.} A simulation of the study's own resampling showing that tests which treat
         cross-validation splits or held-out subjects as independent flag differences between equally
         informative representations in \simCorrSubjLo--\simNullUncorr\% of datasets, and a
-        Nadeau--Bengio-type adjustment that controls this, applicable to any benchmark comparison of
-        this kind.
+        Nadeau--Bengio-type adjustment that controls this in that simulation; other benchmark comparisons of this kind would need the same check before relying on it.
   \item \textbf{Protocol.} A quantification, with the model and data held fixed, of how much
         window-level splitting inflates results on this benchmark and on a second cohort --- not a new
         finding \cite{L1,L2,L3}, but a calibration factor for reading published numbers on ds004504 ---

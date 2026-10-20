@@ -132,6 +132,11 @@ put("confAcc", sel.accuracy_mean); put("confWinFOne", sel.window_macro_f1_mean)
 _cw = [json.loads(line) for f in sorted((REP / "confirm").glob("confirm_runs_s*.jsonl")) for line in open(f)]
 _cw = [r for r in _cw if r["tag"] == "confirm" and (r["pipeline"], r["edge"]) == (best.pipeline, best.edge)]
 put("confWinAcc", float(np.mean([r["window"]["accuracy"] for r in _cw])))
+# Nadeau-Bengio corrected t-interval of the selected cell's confirmation score (17.6/56.3 = stats_grid.RATIO_TRAIN)
+from scipy import stats as _st
+_f = np.array([r["subject"]["macro_f1"] for r in _cw]); assert len(_f) == 25
+_hw = _st.t.ppf(0.975, len(_f) - 1) * np.sqrt((1 / len(_f) + 17.6 / 56.3) * _f.var(ddof=1))
+put("confFOneNbLo", _f.mean() - _hw); put("confFOneNbHi", _f.mean() + _hw)
 put("confFtdSens", sel.sens_1_mean)
 
 # ---- fourth review: calibration simulation (NB20a, NB20d) and re-fit checks (NB20b, NB20c) ----
@@ -183,12 +188,29 @@ if _cn.exists():
     put("calMeanFOne", _j["null_mean_f1"], "{:.2f}"); put("calTargetFOne", _j["targets"]["mean_f1"], "{:.2f}")
     put("calSplitSd", _j["null_split_sd"], "{:.2f}"); put("calTargetSd", _j["targets"]["split_sd"], "{:.2f}")
     put("calRepCorr", _j["null_rep_corr"], "{:.2f}"); put("calTargetCorr", _j["targets"]["rep_corr"], "{:.2f}")
+# NB23: the same null with one graph type at a time, and the spread also in split-SD units
+_c23 = {e: REP / "calibrated_null23" / e / "calibrated_null_summary.json" for e in ("avg", "spatial", "functional", "hybrid")}
+if all(f.exists() for f in _c23.values()):
+    _k = {e: json.loads(f.read_text()) for e, f in _c23.items()}
+    assert _k["avg"]["p_range"] == _j["p_range"]                     # same seed and targets as NB22a
+    put("calStdObs", _k["avg"]["observed_std_range"], "{:.2f}"); put("calStdNullMean", _k["avg"]["null_std_range_mean"], "{:.2f}")
+    put("calStdQ", _k["avg"]["null_std_range_q95"], "{:.2f}"); put("calStdP", _k["avg"]["p_std_range"], "{:.2f}")
+    for e in ("spatial", "functional", "hybrid"):
+        c, E = _k[e], e.capitalize()
+        put(f"calP{E}", c["p_range"], "{:.2f}"); put(f"calStdP{E}", c["p_std_range"], "{:.2f}")
+        put(f"calObs{E}", c["observed_range"], "{:.2f}"); put(f"calQ{E}", c["null_range_q95"], "{:.2f}")
+        put(f"calSd{E}", c["null_split_sd"], "{:.3f}"); put(f"calTargetSd{E}", c["targets"]["split_sd"], "{:.3f}")
+        put(f"calFpNb{E}", 100 * c["reject_nb"], "{:.0f}"); put(f"calFpUncorr{E}", 100 * c["reject_uncorrected"], "{:.0f}")
+    _ps = [_k[e][q] for e in ("spatial", "functional", "hybrid") for q in ("p_range", "p_std_range")]
+    put("calEdgePLo", min(_ps), "{:.2f}"); put("calEdgePHi", max(_ps), "{:.2f}")
 # bootstrap summary (NB22e)
 _bs = REP / "bootstrap" / "summary"
 if (_bs / "bootstrap_pairs.csv").exists():
     _bp = pd.read_csv(_bs / "bootstrap_pairs.csv"); _br = pd.read_csv(_bs / "bootstrap_representations.csv")
     put("bootN", int(_br.n_boot.iloc[0]), "{:d}"); put("bootNPairs", len(_bp), "{:d}")
     put("bootNSig", int((_bp.p_holm < 0.05).sum()), "{:d}")
+    _bj = [json.loads(line) for f in sorted((REP / "bootstrap").glob("bootstrap_s*.jsonl")) for line in open(f)]
+    put("bootNTrain", np.mean([r["n_train"] for r in _bj]), "{:.0f}"); put("bootNOob", np.mean([r["n_oob"] for r in _bj]), "{:.0f}")
     _best = _br.sort_values("mean").iloc[-1]; _worst = _br.sort_values("mean").iloc[0]
     put("bootBest", _best.pipeline); put("bootBestFOne", _best["mean"]); put("bootWorst", _worst.pipeline)
     put("bootWorstFOne", _worst["mean"])
