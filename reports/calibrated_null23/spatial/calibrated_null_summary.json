@@ -1,0 +1,27 @@
+{
+ "n_sim": 300,
+ "observed_range": 0.13223463625011622,
+ "null_range_mean": 0.11291504544887682,
+ "null_range_q95": 0.18107536535818286,
+ "p_range": 0.26578073089701,
+ "observed_std_range": 1.344613649114014,
+ "null_std_range_mean": 0.9999282952724305,
+ "null_std_range_q95": 1.6758397437440682,
+ "p_std_range": 0.132890365448505,
+ "null_mean_f1": 0.5581908929322839,
+ "null_split_sd": 0.11346443439609083,
+ "null_rep_corr": 0.21340097993488158,
+ "reject_uncorrected": 0.7733333333333333,
+ "reject_nb": 0.0,
+ "targets": {
+  "mean_f1": 0.5063034420818587,
+  "split_sd": 0.09834396396113308,
+  "rep_corr": 0.17585346844135175,
+  "range_f1": 0.13223463625011622
+ },
+ "params": {
+  "separation": 0.65,
+  "noise": 1.5,
+  "corr": 0.4
+ }
+}
