@@ -201,8 +201,10 @@ if all(f.exists() for f in _c23.values()):
         put(f"calObs{E}", c["observed_range"], "{:.2f}"); put(f"calQ{E}", c["null_range_q95"], "{:.2f}")
         put(f"calSd{E}", c["null_split_sd"], "{:.3f}"); put(f"calTargetSd{E}", c["targets"]["split_sd"], "{:.3f}")
         put(f"calFpNb{E}", 100 * c["reject_nb"], "{:.0f}"); put(f"calFpUncorr{E}", 100 * c["reject_uncorrected"], "{:.0f}")
-    _ps = [_k[e][q] for e in ("spatial", "functional", "hybrid") for q in ("p_range", "p_std_range")]
-    put("calEdgePLo", min(_ps), "{:.2f}"); put("calEdgePHi", max(_ps), "{:.2f}")
+    for q, nm in (("p_range", "Raw"), ("p_std_range", "Std")):
+        _ps = [_k[e][q] for e in ("spatial", "functional", "hybrid")]
+        put(f"calEdge{nm}PLo", min(_ps), "{:.2f}"); put(f"calEdge{nm}PHi", max(_ps), "{:.2f}")
+    put("calEdgeSdLo", min(_k[e]["null_split_sd"] for e in ("spatial", "functional", "hybrid")), "{:.3f}")
 # bootstrap summary (NB22e)
 _bs = REP / "bootstrap" / "summary"
 if (_bs / "bootstrap_pairs.csv").exists():

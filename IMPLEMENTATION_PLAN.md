@@ -655,3 +655,9 @@ All "?" cells are resolved from each paper's Methods and data-availability secti
 - Limitations: no independent AD/FTD cohort; conclusions limited to one compact model family (learned graph kept the ranking, rho 0.89; GAT checked on two cells only).
 - Supplement: unique hyperref targets for S-numbered floats (links to Table S1 had jumped to Table 1).
 - Not done: publishing the NB02 feature cache (needs the author's approval to make data public). Main text is already 24 pages before references, so no cut was made.
+
+### Seventh review, part 2 (2026-10-21)
+- Headline CI now Nadeau-Bengio corrected: 0.596 (0.487-0.706); the subject-bootstrap interval (0.554-0.643) is kept in Results as cohort-only.
+- M1 re-check (NB23, Kaggle CPU, 4 kernels, all tests passed): the matched null could not reach the observed split SD (null >= 0.113 vs 0.090 averaged / 0.098 per graph), so the raw-spread p (0.31) favoured the null. Spread in split-SD units: p = 0.10 averaged over graphs, 0.13-0.27 per graph type (raw 0.27-0.41). Text now reports these; "well inside" removed.
+- The hybrid kernel ran as `eegrep-nb23-calnull-hyb` (the `-hybrid` slug returned 409 after a failed first push); same notebook as kaggle/nb23-calnull-hybrid.
+- Also: bootstrap training-set caveat (about 44 train / 32 scored subjects, spatial only), calibration moved to its own Results subsection, cache sentence corrected (caches are Kaggle output, not committed), "descriptively significant" graph effect, "largely accounted for" PSWE wording, hedged adjustment claim, two Crossref-verified PSWE references (OSA 2022, healthy adults 2024). No PSWE study in FTD was found (two web searches, 2026-10-21).

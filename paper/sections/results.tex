@@ -106,11 +106,7 @@ difference in \simCorrUncorrLo--\simCorrUncorrHi\% (split level) and \simCorrSub
 of null datasets, the adjusted test in \simCorrNb\%, and the adjusted test's power rose to
 \simCorrNbPowLo--\simCorrNbPowHi\%. These settings were illustrative; to judge our own spread we matched the
 null to the data, choosing the simulation's signal strength, noise and noise correlation so that it reproduced
-the observed mean macro-F1 (\calMeanFOne{} against \calTargetFOne{}), split-to-split SD (\calSplitSd{} against
-\calTargetSd{}) and between-representation correlation of split scores (\calRepCorr{} against \calTargetCorr{}).
-In \calNSim{} matched null datasets the spread of representation means averaged \calNullMean{} (95th percentile
-\calNullQ{}); the observed \obsRepRange{} lies well inside that distribution (empirical $p=\calP$), and at the
-matched setting the unadjusted test still flagged \calFpUncorr\% of null datasets against \calFpNb\% for the
+the observed mean macro-F1 (\calMeanFOne{} against \calTargetFOne{}) and between-representation correlation of split scores (\calRepCorr{} against \calTargetCorr{}). It could not reproduce the split-to-split SD: at this mean macro-F1 every simulated setting varied more between splits than the observed scores (\calSplitSd{} against \calTargetSd{}), partly because each observed score averages three graph types, and a noisier null makes a raw comparison of spreads favour the null. We therefore compared the spread also in units of the split SD, which removes this difference in scale, and repeated the match for each graph type on its own. Averaged over graph types, the observed spread was \calStdObs{} split SDs against a null mean of \calStdNullMean{} (95th percentile \calStdQ{}; empirical $p=\calStdP$, against $p=\calP$ for the raw spread); for single graph types, whose null SD was still at least \calEdgeSdLo{} against \calTargetSdSpatial{} observed, $p$ was \calEdgeStdPLo--\calEdgeStdPHi{} in SD units and \calEdgeRawPLo--\calEdgeRawPHi{} raw. The observed spread therefore lies in the upper part of, but not beyond, what equally informative representations produce, and at the matched setting the unadjusted test still flagged \calFpUncorr\% of null datasets against \calFpNb\% for the
 adjusted one. The out-of-bootstrap comparison, which retrains on \bootN{} resampled cohorts and does
 not depend on the adjustment, gave the same ordering (\bootBest{} highest at \bootBestFOne{}, \bootWorst{}
 lowest at \bootWorstFOne{}) but wide intervals: the largest difference, \bootBest{} minus \bootWorst{},

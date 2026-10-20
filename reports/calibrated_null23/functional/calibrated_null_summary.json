@@ -1,0 +1,27 @@
+{
+ "n_sim": 300,
+ "observed_range": 0.13867608208784682,
+ "null_range_mean": 0.13411886128749542,
+ "null_range_q95": 0.21004925628780127,
+ "p_range": 0.4119601328903654,
+ "observed_std_range": 1.4122967905840258,
+ "null_std_range_mean": 1.1885869963107922,
+ "null_std_range_q95": 1.887157597145642,
+ "p_std_range": 0.2691029900332226,
+ "null_mean_f1": 0.48634501805644237,
+ "null_split_sd": 0.11323961322264398,
+ "null_rep_corr": 0.07643957920608237,
+ "reject_uncorrected": 0.8333333333333334,
+ "reject_nb": 0.0,
+ "targets": {
+  "mean_f1": 0.4971058018921797,
+  "split_sd": 0.09819188361286314,
+  "rep_corr": 0.10769208903602571,
+  "range_f1": 0.13867608208784682
+ },
+ "params": {
+  "separation": 0.5,
+  "noise": 1.5,
+  "corr": 0.0
+ }
+}
