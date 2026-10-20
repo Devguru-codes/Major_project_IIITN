@@ -643,6 +643,19 @@ def main():
          "sh(f'{PY} bootstrap-summary --runs {runs} --out {WORK}/bootstrap', log=f'{WORK}/bootstrap_summary.log')"],
         extras="dev,stats"))
 
+    # ---- NB23 (CPU): seventh review. The NB22a null could not match the observed split SD, which is an average
+    # over three graph types; re-run with one graph type at a time (and the average again), reporting the spread
+    # both raw and in split-SD units ----
+    for edge in ("avg", "spatial", "functional", "hybrid"):
+        flag = "" if edge == "avg" else f" --edge {edge}"
+        write_kernel(f"nb23-calnull-{edge}", f"nb23 calnull {edge}", notebook(
+            f"NB23 — data-matched null, {'averaged over graphs' if edge == 'avg' else edge + ' graph only'} (CPU, no data)",
+            "As NB22a, with targets from one graph type (one model per representation and split, as in the "
+            "simulation) and the spread of representation means also compared in units of the split SD.",
+            [t22, f"sh(f'{{PY}} simulate-calibrated --runs {grid_runs} --tag main --n-sim 300 --n-cal 6{flag} "
+                  f"--out {{WORK}}/calibrated_{edge}', log=f'{{WORK}}/calibrated_{edge}.log')"],
+            extras="dev,stats"))
+
     # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
     write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(
         "NB17 — equivalence tests including the learned-adjacency family (CPU)",

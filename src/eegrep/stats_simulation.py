@@ -127,8 +127,11 @@ def split_stats(wide: np.ndarray) -> dict:
             "rep_corr": float(c[np.triu_indices_from(c, 1)].mean()), "range_f1": float(np.ptp(wide.mean(0)))}
 
 
-def observed_targets(runs: pd.DataFrame) -> dict:
-    """runs: load_runs rows of the main grid. Per split, each representation's macro-F1 averaged over graphs."""
+def observed_targets(runs: pd.DataFrame, edge: str | None = None) -> dict:
+    """runs: load_runs rows of the main grid. Per split, each representation's macro-F1 averaged over graphs, or
+    for one graph type only (one model per representation and split, as in the simulation)."""
+    if edge is not None:
+        runs = runs[runs.edge == edge]
     wide = runs.groupby(["unit", "pipeline"])["macro_f1"].mean().unstack().to_numpy()
     return split_stats(wide)
 
@@ -160,9 +163,14 @@ def calibrated_null(targets: dict, separation: float, noise: float, corr: float,
         rows.append({"sim": i, **split_stats(wide), **oneway_rm(wide, ratio)})
     sims = pd.DataFrame(rows)
     obs = targets["range_f1"]
+    # the simulation cannot reach the observed split SD at this mean F1, so also compare the spread in SD units
+    z, obs_z = sims.range_f1 / sims.split_sd, obs / targets["split_sd"]
     summary = {"n_sim": n_sim, "observed_range": obs, "null_range_mean": float(sims.range_f1.mean()),
                "null_range_q95": float(sims.range_f1.quantile(0.95)),
                "p_range": float((1 + (sims.range_f1 >= obs).sum()) / (1 + n_sim)),
+               "observed_std_range": float(obs_z), "null_std_range_mean": float(z.mean()),
+               "null_std_range_q95": float(z.quantile(0.95)),
+               "p_std_range": float((1 + (z >= obs_z).sum()) / (1 + n_sim)),
                "null_mean_f1": float(sims.mean_f1.mean()), "null_split_sd": float(sims.split_sd.mean()),
                "null_rep_corr": float(sims.rep_corr.mean()),
                "reject_uncorrected": float((sims.p_gg < 0.05).mean()), "reject_nb": float((sims.p_nb_gg < 0.05).mean())}

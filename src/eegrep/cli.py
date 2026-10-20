@@ -194,7 +194,7 @@ def cmd_simulate_calibrated(a, cfg):
     from .stats_grid import load_runs
     from .stats_simulation import calibrate, calibrated_null, observed_targets
 
-    targets = observed_targets(load_runs(a.runs, tag=a.tag))
+    targets = observed_targets(load_runs(a.runs, tag=a.tag), edge=a.edge)
     grid = calibrate(targets, n_sim=a.n_cal)
     best = grid.iloc[0]
     sims, summ = calibrated_null(targets, best.separation, best.noise, best["corr"], n_sim=a.n_sim)
@@ -437,6 +437,7 @@ def main(argv=None):
     s = sub.add_parser("simulate-calibrated"); s.add_argument("--runs", nargs="+", required=True)
     s.add_argument("--tag", default="main"); s.add_argument("--n-sim", type=int, default=300)
     s.add_argument("--n-cal", type=int, default=6); s.add_argument("--out", required=True)
+    s.add_argument("--edge", default=None, help="one graph type only (default: average over graphs)")
     s.set_defaults(fn=cmd_simulate_calibrated)
     s = sub.add_parser("bootstrap-reps"); s.add_argument("--cache", required=True); s.add_argument("--out", required=True)
     s.add_argument("--pipelines", default="P1,P2,P3,P4,P5,P6,P7"); s.add_argument("--edge", default="spatial")

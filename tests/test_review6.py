@@ -15,6 +15,8 @@ def test_split_stats_and_observed_targets(rng):
     t = observed_targets(pd.DataFrame(rows))
     assert set(t) == {"mean_f1", "split_sd", "rep_corr", "range_f1"}
     assert 0.45 < t["mean_f1"] < 0.6 and t["range_f1"] == pytest.approx(0.04, abs=0.03)
+    one = observed_targets(pd.DataFrame(rows), edge="spatial")            # one graph: fewer runs averaged
+    assert one["split_sd"] > t["split_sd"]
     s = split_stats(np.column_stack([np.arange(25.0), np.arange(25.0) * 2]))
     assert s["rep_corr"] == pytest.approx(1.0)
 
@@ -25,6 +27,8 @@ def test_calibration_picks_closest_setting_and_null_p_value():
     assert len(grid) == 2 and grid.distance.is_monotonic_increasing
     sims, summ = calibrated_null(targets, 0.5, 1.0, 0.5, n_sim=3, k=3)
     assert len(sims) == 3 and 0 < summ["p_range"] <= 1 and summ["observed_range"] == 0.13
+    assert summ["observed_std_range"] == pytest.approx(1.3) and 0 < summ["p_std_range"] <= 1
+    assert summ["null_std_range_mean"] == pytest.approx((sims.range_f1 / sims.split_sd).mean())
 
 
 def test_bootstrap_split_is_stratified_and_disjoint():
