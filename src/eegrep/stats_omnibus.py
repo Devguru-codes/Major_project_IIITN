@@ -20,7 +20,7 @@ from .stats_grid import RATIO_TRAIN, rm_anova
 
 def nb_adjusted_anova(df: pd.DataFrame, ratio: float = RATIO_TRAIN, dv: str = "macro_f1") -> pd.DataFrame:
     aov = rm_anova(df, dv=dv)
-    j = df["unit"].nunique()
+    j = aov["ddof2"].iloc[0] / aov["ddof1"].iloc[0] + 1          # splits rm_anova kept (it drops incomplete ones)
     inflation = 1.0 + j * ratio
     aov["nb_inflation"] = inflation
     aov["F_nb"] = aov["F"] / inflation

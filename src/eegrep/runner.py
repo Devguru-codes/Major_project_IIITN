@@ -24,8 +24,14 @@ class ResultStore:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.done = set()
         if self.path.exists():
-            with open(self.path, encoding="utf-8") as f:
-                self.done = {json.loads(line)["key"] for line in f if line.strip()}
+            lines = [l for l in self.path.read_text(encoding="utf-8").splitlines() if l.strip()]
+            try:
+                json.loads(lines[-1]) if lines else None
+            except json.JSONDecodeError:        # killed mid-write: only the last line can be partial
+                print(f"[runner] dropping partial last line of {self.path}", flush=True)
+                lines = lines[:-1]
+                self.path.write_text("".join(l + "\n" for l in lines), encoding="utf-8")
+            self.done = {json.loads(l)["key"] for l in lines}
 
     def append(self, row: dict) -> None:
         with open(self.path, "a", encoding="utf-8") as f:

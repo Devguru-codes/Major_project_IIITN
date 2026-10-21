@@ -27,6 +27,8 @@ def qc_report(cache_dir: str | Path, preprocess_logs: list[str | Path], class_na
 
     logs = pd.DataFrame([json.loads(l) for p in preprocess_logs for l in open(p, encoding="utf-8") if l.strip()])
     if not logs.empty:
+        rep["logs_missing"] = sorted(set(uniq) - set(logs["subject"].astype(str)))   # cached but never logged
+        logs = logs.drop_duplicates("subject", keep="last")                          # resumed runs re-log
         n_ex = logs["excluded"].apply(len)
         rep["duration_s"] = {"min": float(logs.duration_s.min()), "max": float(logs.duration_s.max()),
                              "mean": float(logs.duration_s.mean())}
@@ -70,6 +72,8 @@ def gate_failures(rep: dict, gates: dict | None = None) -> list[str]:
     lo, hi = g["duration_s"]
     if "duration_s" in rep and not (lo <= rep["duration_s"]["min"] and rep["duration_s"]["max"] <= hi):
         fails.append(f"durations {rep['duration_s']} outside {lo}–{hi} s")
+    if rep.get("logs_missing"):
+        fails.append(f"{len(rep['logs_missing'])} cached subjects have no preprocessing log: {rep['logs_missing'][:5]}")
     if not all(rep["finite"].values()):
         fails.append(f"non-finite features: {rep['finite']}")
     if g.get("slowing_check"):

@@ -1,7 +1,7 @@
 {
-  "id": "dev123123456/eegrep-nb20-review3",
-  "title": "eegrep nb20 review3",
-  "code_file": "nb20_review3.ipynb",
+  "id": "devgurucodes/eegrep-nb24-a2-spatial",
+  "title": "eegrep nb24 a2 spatial",
+  "code_file": "nb24_a2_spatial.ipynb",
   "language": "python",
   "kernel_type": "notebook",
   "is_private": true,
@@ -10,7 +10,5 @@
   "enable_internet": true,
   "dataset_sources": [],
   "competition_sources": [],
-  "kernel_sources": [
-    "dev123123456/eegrep-nb02-merge-qc"
-  ]
+  "kernel_sources": []
 }

@@ -91,11 +91,18 @@ def build(edge: str, *, spatial: np.ndarray, functional: np.ndarray | None = Non
           seed: int = 0) -> np.ndarray:
     """Return normalised adjacency: (C, C) if shared by all windows, else (N, C, C).
 
-    edge: spatial | functional | hybrid | pswe | identity | random
+    edge: spatial | functional | hybrid | pswe | identity | random | random_<base>
       functional: (N, C, C) per-window α-wPLI;  pswe: (N, C, C) per-window copy of the
-      recording's Jaccard graph;  random: degree-preserving shuffle of the hybrid graph.
+      recording's Jaccard graph;  random_<base>: degree-preserving shuffle of the <base> graph
+      (plain "random" = random_hybrid, the key under which the hybrid-cell runs are stored).
     """
     c = spatial.shape[-1]
+    if edge.startswith("random_"):
+        base = edge.split("_", 1)[1]
+        raw = {"spatial": spatial, "functional": functional, "hybrid": None}[base]
+        sparse = knn_sparsify(hybrid_adjacency(spatial, functional) if base == "hybrid" else raw, k)
+        shuffled = degree_preserving_shuffle(sparse, seed)
+        return normalize((shuffled > 0).astype(np.float32) if binarize else shuffled)
     if edge == "identity":
         return np.eye(c, dtype=np.float32)
     if edge == "spatial":
@@ -107,7 +114,5 @@ def build(edge: str, *, spatial: np.ndarray, functional: np.ndarray | None = Non
     if edge == "pswe":
         return prepare(pswe, k, binarize)
     if edge == "random":
-        sparse = knn_sparsify(hybrid_adjacency(spatial, functional), k)
-        shuffled = degree_preserving_shuffle(sparse, seed)
-        return normalize((shuffled > 0).astype(np.float32) if binarize else shuffled)
+        return build("random_hybrid", spatial=spatial, functional=functional, k=k, binarize=binarize, seed=seed)
     raise ValueError(f"unknown edge type: {edge}")
