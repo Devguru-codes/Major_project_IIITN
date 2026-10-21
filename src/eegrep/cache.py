@@ -128,7 +128,8 @@ class FeatureCache:
         g = cfg["graph"]
         edge = g["edge"]
         spatial = graphs.spatial_adjacency(self.coords)
-        functional = self.wpli(g["functional_band"]) if edge in ("functional", "hybrid", "random") else None
+        needs_wpli = edge in ("functional", "hybrid", "random", "random_functional", "random_hybrid")
+        functional = self.wpli(g["functional_band"]) if needs_wpli else None
         pswe_adj = self.pswe_per_window() if edge == "pswe" else None
         return graphs.build(edge, spatial=spatial, functional=functional, pswe=pswe_adj,
                             k=g["knn_k"], binarize=g["binarize"], seed=seed)

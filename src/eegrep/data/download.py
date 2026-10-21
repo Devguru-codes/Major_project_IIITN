@@ -47,7 +47,10 @@ def select_raw(objects: list[tuple[str, int]], dataset: str) -> list[tuple[str, 
 
 
 def download_dataset(dataset: str, dest: str | Path, bucket: str = "openneuro.org",
-                     subjects: list[str] | None = None, retries: int = 3) -> Path:
+                     subjects: list[str] | None = None, retries: int = 3, expect_version: str | None = None,
+                     expect_manifest: str | Path | None = None) -> Path:
+    """expect_version: the CHANGES version the study used; expect_manifest: a committed manifest whose SHA-256
+    every downloaded file must match. Either mismatch raises, so a newer dataset release cannot slip in."""
     dest = Path(dest)
     objects = select_raw(list_objects(bucket, f"{dataset}/"), dataset)
     if subjects is not None:
@@ -64,7 +67,19 @@ def download_dataset(dataset: str, dest: str | Path, bucket: str = "openneuro.or
             print(f"[download] {i}/{len(objects)} files", flush=True)
     (dest / "download_manifest.json").write_text(json.dumps(
         {"dataset": dataset, "bucket": bucket, "version": _version(dest), "files": manifest}, indent=1))
+    check_download(dest, manifest, expect_version, expect_manifest)
     return dest
+
+
+def check_download(dest: Path, manifest: list[dict], expect_version: str | None,
+                   expect_manifest: str | Path | None) -> None:
+    if expect_version is not None and _version(dest) != expect_version:
+        raise RuntimeError(f"{dest}: dataset version {_version(dest)} != expected {expect_version}")
+    if expect_manifest is not None:
+        ref = {f["path"]: f["sha256"] for f in json.loads(Path(expect_manifest).read_text())["files"]}
+        bad = [f["path"] for f in manifest if f["path"] in ref and ref[f["path"]] != f["sha256"]]
+        if bad:
+            raise RuntimeError(f"{len(bad)} files differ from {expect_manifest}: {bad[:5]}")
 
 
 def _version(dest: Path) -> str:

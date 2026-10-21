@@ -15,7 +15,7 @@ from .splits import window_level_folds
 # name -> how it differs from the reference cell
 ABLATIONS = {
     "A1_no_graph": {"edge": "identity"},
-    "A2_random_graph": {"edge": "random"},
+    "A2_random_graph": {"random_of_reference": True},     # shuffles the reference cell's own graph
     "A3_k3": {"overrides": {"graph.knn_k": 3}},
     "A3_k6": {"overrides": {"graph.knn_k": 6}},
     "A3_full": {"overrides": {"graph.knn_k": None}},
@@ -49,6 +49,8 @@ def run_ablation(name: str, cache: FeatureCache, folds: dict, cfg: dict, store: 
     if spec.get("leaky"):
         kw["window_folds"] = window_level_folds(cache.subject, cache.label, folds["meta"]["seeds"],
                                                 folds["meta"]["n_folds"], folds["meta"]["val_frac"])
+    if spec.get("random_of_reference"):          # "random" (hybrid base) keeps the key of the stored hybrid runs
+        spec = {**spec, "edge": "random" if edge == "hybrid" else f"random_{edge}"}
     return run_cell(cache, folds, cfg, store, pipeline=pipeline, edge=spec.get("edge", edge), **kw)
 
 

@@ -31,10 +31,11 @@ def cmd_download(a, cfg):
     from .data.download import download_dataset
 
     subjects = None
+    pin = {"expect_version": cfg["dataset"].get("served_version"), "expect_manifest": a.expect_manifest}
     if a.shard is not None:
-        download_dataset(cfg["dataset"]["name"], a.dest, cfg["dataset"]["s3_bucket"], subjects=[])
+        download_dataset(cfg["dataset"]["name"], a.dest, cfg["dataset"]["s3_bucket"], subjects=[], **pin)
         subjects = _shard_subjects(Path(a.dest) / "participants.tsv", cfg, a.shard, a.n_shards)
-    download_dataset(cfg["dataset"]["name"], a.dest, cfg["dataset"]["s3_bucket"], subjects=subjects)
+    download_dataset(cfg["dataset"]["name"], a.dest, cfg["dataset"]["s3_bucket"], subjects=subjects, **pin)
 
 
 def cmd_preprocess(a, cfg):
@@ -405,6 +406,7 @@ def main(argv=None):
 
     s = sub.add_parser("download"); s.add_argument("--dest", required=True); s.set_defaults(fn=cmd_download)
     s.add_argument("--shard", type=int); s.add_argument("--n-shards", type=int)
+    s.add_argument("--expect-manifest", help="committed download_manifest.json every file's SHA-256 must match")
     s = sub.add_parser("preprocess"); s.add_argument("--bids", required=True); s.add_argument("--out", required=True)
     s.add_argument("--shard", type=int); s.add_argument("--n-shards", type=int)
     s.add_argument("--n-jobs", type=int, default=4); s.set_defaults(fn=cmd_preprocess)

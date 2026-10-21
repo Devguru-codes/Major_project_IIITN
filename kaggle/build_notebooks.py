@@ -10,9 +10,8 @@ import os
 from pathlib import Path
 
 HERE = Path(__file__).parent
-OWNER = "dev123123456"            # account behind ~/.kaggle/access_token
-# second account (CPU only) for NB20a/b; set EEGREP_KAGGLE_OWNER to its username before building
-ALT_OWNER = os.environ.get("EEGREP_KAGGLE_OWNER", OWNER)
+DATA_OWNER = "dev123123456"       # account that ran NB01-NB22: its private outputs (feature caches) live there
+OWNER = os.environ.get("EEGREP_KAGGLE_OWNER", "devgurucodes")   # account behind the installed token: pushes land here
 N_SHARDS = 3
 GRID_SHARDS = ["P1,P5", "P2,P3,P4", "P6,P7"]   # P5 (1280-dim) is the heaviest; balance by cost
 # (grid-rank index of the cell, ablations, n permutations, first permutation) — ≤ 5 kernels (Kaggle CPU limit)
@@ -83,6 +82,9 @@ def write_kernel(slug: str, title: str, nb: dict, gpu: bool = False, internet: b
             "enable_tpu": False, "enable_internet": internet, "dataset_sources": [],
             "competition_sources": [], "kernel_sources": kernel_sources or []}
     (d / "kernel-metadata.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+    foreign = [k for k in kernel_sources or [] if not k.startswith(f"{owner or OWNER}/")]
+    if foreign:   # private outputs of another account cannot be attached: the push fails at start-up
+        print(f"[warn] {slug}: inputs from another account {foreign}; push from that account or make them public")
 
 
 def main():
@@ -127,7 +129,7 @@ def main():
          "print(json.load(open(f'{WORK}/qc_report.json'))['gate_failures'])"],
         extras="dev"),
         internet=True,
-        kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)])
+        kernel_sources=[f"{DATA_OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)])
 
     find_cache = ("import glob\n"
                   "CACHE = [d for d in glob.glob('/kaggle/input/**/cache', recursive=True) "
@@ -135,7 +137,7 @@ def main():
                   "PART = sorted(glob.glob('/kaggle/input/**/participants.tsv', recursive=True))[0]\n"
                   "FOLDS = f'{SRC}/splits/folds_ds004504.json'\n"
                   "print(CACHE, PART, FOLDS)")
-    nb02 = [f"{OWNER}/eegrep-nb02-merge-qc"]
+    nb02 = [f"{DATA_OWNER}/eegrep-nb02-merge-qc"]
 
     write_kernel("nb03b-pswe-stats", "nb03b pswe stats", notebook(
         "NB03b — PSWE (BBB-associated marker) statistics, RQ6 (CPU)",
@@ -159,7 +161,7 @@ def main():
          "sh(f'{PY} pswe-relative --preproc {\" \".join(PRE)} --cache {CACHE} --participants {PART} "
          "--out {WORK}/rq6_relative', log=f'{WORK}/rq6_relative.log')"],
         extras="stats"),
-        kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)] + nb02)
+        kernel_sources=[f"{DATA_OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)] + nb02)
 
     write_kernel("nb03c-classical-baselines", "nb03c classical baselines", notebook(
         "NB03c — classical non-graph baselines per representation (CPU)",
@@ -182,7 +184,7 @@ def main():
              f"log=f'{{WORK}}/grid.log')"],
             extras="dev"), kernel_sources=nb02)
 
-    grid_sources = [f"{OWNER}/eegrep-nb04-grid-s{k}" for k in range(len(GRID_SHARDS))]
+    grid_sources = [f"{DATA_OWNER}/eegrep-nb04-grid-s{k}" for k in range(len(GRID_SHARDS))]
     select = ("RUNS = sorted(glob.glob('/kaggle/input/**/runs.jsonl', recursive=True))\n"
               f"print(RUNS); assert len(RUNS) == {len(GRID_SHARDS)}, 'missing grid shard outputs'\n"
               "CELLS = sh(f'{PY} select-cells --runs {\" \".join(RUNS)} --top 2').strip().splitlines()[-1].split(',')\n"
@@ -211,7 +213,7 @@ def main():
          "log=f'{WORK}/report.log')\n"
          "print(open(f'{WORK}/report/summary.json').read())"],
         extras="dev,stats"),
-        kernel_sources=nb02 + [f"{OWNER}/eegrep-nb01-preprocess-s0"])
+        kernel_sources=nb02 + [f"{DATA_OWNER}/eegrep-nb01-preprocess-s0"])
 
     # ---- must-fix re-runs after internal review (see IMPLEMENTATION_PLAN.md log) ----
     write_kernel("nb03f-tests-confirm-folds", "nb03f tests confirm folds", notebook(
@@ -332,7 +334,7 @@ def main():
             [f"sh(f'cd {{SRC}} && {{sys.executable}} -m pytest -q -p no:cacheprovider tests/test_external.py "
              "tests/test_model_train.py', log=f'{WORK}/pytest_ext.txt')",
              find_cache + "\n" + ext + f"assert os.path.exists(f'{ext_folds}'), 'commit the NB11a folds first'"] + jobs,
-            extras="dev"), kernel_sources=[f"{OWNER}/eegrep-nb11a-external-prep"])
+            extras="dev"), kernel_sources=[f"{DATA_OWNER}/eegrep-nb11a-external-prep"])
 
     # ---- NB06: deep-learning baselines (the only GPU notebook; budget <= 2.5 GPU-h, expected < 1 h) ----
     deep = ("sh(f'{{PY}} grid --cache {{CACHE}} --folds {{FOLDS}} --pipelines P5 --edges identity --tag deep_{arch} "
@@ -380,7 +382,7 @@ def main():
              f"sh(f'{{C}} qc --cache /tmp/cache --out {{WORK}}/qc_{name}.json --no-fail')",
              train_cells(name, "/tmp/cache", "ablations_confirm.jsonl")],
             extras="preprocess,dev"),
-            kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)])
+            kernel_sources=[f"{DATA_OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)])
 
     write_kernel("nb12-a8-no-ica", "nb12 a8 no ica", notebook(
         "NB12 — ablation A8: preprocessing without ICA + reference cells on the confirmation folds (CPU)",
@@ -438,8 +440,8 @@ def main():
          "sh(f'{PY} --config configs/ds004584.yaml pswe-grid --preproc {PRE84[0]} --cache {CACHE84} "
          "--participants {PART84} --out {WORK}/pswe_grid_ds004584', log=f'{WORK}/pswe_grid_ds004584.log')"],
         extras="dev,stats"),
-        kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)]
-        + [f"{OWNER}/eegrep-nb02-merge-qc", f"{OWNER}/eegrep-nb11a-external-prep"])
+        kernel_sources=[f"{DATA_OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)]
+        + [f"{DATA_OWNER}/eegrep-nb02-merge-qc", f"{DATA_OWNER}/eegrep-nb11a-external-prep"])
 
     # ---- NB16: should-fix analyses after the second internal review ----
     t16 = ("sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_should_fix.py "
@@ -530,20 +532,6 @@ def main():
         + ["sh(f'{PY} equivalence --reports {SRC}/reports --out {WORK}/equivalence', log=f'{WORK}/equivalence.log')"],
         extras="dev,stats"))
 
-    # ---- NB20: third-review checks. Calibration of the NB-adjusted omnibus F by simulation; occlusion re-fits ----
-    write_kernel("nb20-review3", "nb20 review3", notebook(
-        "NB20 — third-review checks: calibration of the Nadeau-Bengio-adjusted omnibus F; occlusion re-fit check (CPU)",
-        "Simulated false-positive rate and power of the uncorrected and adjusted repeated-measures F under the "
-        "study's 5 x 5 subject-level resampling (88 subjects); and whether the best cell re-fitted with the main-grid "
-        "seeds (as the occlusion analysis does) reproduces the stored predictions of all 25 selection splits.",
-        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_review3.py "
-         "tests/test_review2.py', log=f'{WORK}/pytest_nb20.txt')",
-         find_cache,
-         "sh(f'{PY} simulate-omnibus --n-sim 300 --out {WORK}/simulation', log=f'{WORK}/simulation.log')",
-         f"sh(f'{{PY}} refit-check --cache {{CACHE}} --folds {{FOLDS}} --runs {grid_runs} --tag main "
-         f"--pipeline P3 --edge spatial --out {{WORK}}/refit', log=f'{{WORK}}/refit.log')"],
-        extras="dev,stats"), kernel_sources=nb02)
-
     # ---- NB20a/b: the same two checks as NB20, split for the second (CPU-only) account. That account cannot read
     # the first account's private outputs, so NB20b rebuilds the feature cache from OpenNeuro itself ----
     write_kernel("nb20a-simulation", "nb20a simulation", notebook(
@@ -553,7 +541,7 @@ def main():
         ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_review3.py "
          "tests/test_review2.py', log=f'{WORK}/pytest_nb20a.txt')",
          "sh(f'{PY} simulate-omnibus --n-sim 300 --out {WORK}/simulation', log=f'{WORK}/simulation.log')"],
-        extras="dev,stats"), owner=ALT_OWNER)
+        extras="dev,stats"))
     write_kernel("nb20b-refit", "nb20b refit", notebook(
         "NB20b — do the occlusion re-fits reproduce the stored runs? (CPU; rebuilds the cache from OpenNeuro)",
         "Downloads ds004504, runs the fixed preamble and feature cache for all 88 subjects (as NB01 + NB02, "
@@ -566,7 +554,7 @@ def main():
          "log=f'{WORK}/cache.log')",
          f"sh(f'{{PY}} refit-check --cache /tmp/cache --folds {{SRC}}/splits/folds_ds004504.json --runs {grid_runs} "
          f"--tag main --pipeline P3 --edge spatial --out {{WORK}}/refit', log=f'{{WORK}}/refit.log')"],
-        extras="preprocess,dev,stats"), owner=ALT_OWNER)
+        extras="preprocess,dev,stats"))
 
     # ---- NB20c/d (first account, CPU): NB20b re-fitted on a cache rebuilt from OpenNeuro and did not reproduce the
     # stored runs. NB20c re-fits on the ORIGINAL NB02 cache (as the occlusion analysis did) to separate training
@@ -656,6 +644,35 @@ def main():
                   f"--out {{WORK}}/calibrated_{edge}', log=f'{{WORK}}/calibrated_{edge}.log')"],
             extras="dev,stats"))
 
+    # ---- NB24 (CPU): repo audit, finding 1. A2 for the spatial cell shuffled the hybrid graph; re-run it with the
+    # spatial graph shuffled. This account cannot attach the original NB02 cache (private, other account), so the
+    # cache is rebuilt from OpenNeuro and the reference cell is re-run on the same cache: the comparison stays
+    # paired. The rebuilt cache is saved as output for later kernels on this account ----
+    folds_sets = (("selection", "main", "{SRC}/splits/folds_ds004504.json"),
+                  ("confirmation", "confirm", "{SRC}/splits/folds_ds004504_confirm.json"))
+    write_kernel("nb24-a2-spatial", "nb24 a2 spatial", notebook(
+        "NB24 — A2 random graph for P3 x spatial with the spatial graph shuffled (CPU; rebuilds the cache)",
+        "Downloads ds004504 (version pinned), runs the fixed preamble and the feature cache for all 88 subjects, "
+        "then on the selection and confirmation folds trains P3 x spatial (reference) and P3 with a degree-preserving "
+        "shuffle of the spatial graph (A2), on identical splits and seeds.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_audit.py tests/test_graphs.py "
+         "tests/test_ablations.py', log=f'{WORK}/pytest_nb24.txt')",
+         "sh(f'{PY} download --dest /tmp/ds004504', log=f'{WORK}/download.log')\n"
+         "shutil.copy('/tmp/ds004504/participants.tsv', f'{WORK}/participants.tsv')\n"
+         "shutil.copy('/tmp/ds004504/download_manifest.json', f'{WORK}/download_manifest.json')",
+         "sh(f'{PY} preprocess --bids /tmp/ds004504 --out /tmp/preproc --n-jobs 4', log=f'{WORK}/preprocess.log')\n"
+         "shutil.copy('/tmp/preproc/preprocess_log.jsonl', f'{WORK}/preprocess_log.jsonl')",
+         "sh(f'{PY} cache --preproc /tmp/preproc --participants {WORK}/participants.tsv --out {WORK}/cache', "
+         "log=f'{WORK}/cache.log')\n"
+         "sh(f'{PY} qc --cache {WORK}/cache --logs {WORK}/preprocess_log.jsonl --out {WORK}/qc_report.json', "
+         "log=f'{WORK}/qc.log')"]
+        + [f"sh(f'{{PY}} grid --cache {{WORK}}/cache --folds {path} --pipelines P3 --edges spatial --tag {tag} "
+           f"--out {{WORK}}/ref_{name}.jsonl', log=f'{{WORK}}/ref_{name}.log')\n"
+           f"sh(f'{{PY}} ablate --cache {{WORK}}/cache --folds {path} --participants {{WORK}}/participants.tsv "
+           f"--cells P3xspatial --which A2_random_graph --out {{WORK}}/a2_{name}.jsonl', log=f'{{WORK}}/a2_{name}.log')"
+           for name, tag, path in folds_sets],
+        extras="preprocess,dev,stats"))
+
     # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
     write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(
         "NB17 — equivalence tests including the learned-adjacency family (CPU)",
@@ -689,8 +706,8 @@ def main():
          "sh(f'{PY} --config configs/ds004584.yaml pswe-robust --preproc {PRE84[0]} --cache {CACHE84} "
          "--participants {PART84} --out {WORK}/robust_ds004584', log=f'{WORK}/robust_ds004584.log')"],
         extras="dev,stats"),
-        kernel_sources=[f"{OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)]
-        + [f"{OWNER}/eegrep-nb02-merge-qc", f"{OWNER}/eegrep-nb11a-external-prep"])
+        kernel_sources=[f"{DATA_OWNER}/eegrep-nb01-preprocess-s{k}" for k in range(N_SHARDS)]
+        + [f"{DATA_OWNER}/eegrep-nb02-merge-qc", f"{DATA_OWNER}/eegrep-nb11a-external-prep"])
 
     write_kernel("nb03a-folds-demographics", "nb03a folds demographics", notebook(
         "NB03a — frozen folds + demographics confound check (CPU)",

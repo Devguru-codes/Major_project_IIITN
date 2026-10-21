@@ -14,6 +14,8 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 REP = ROOT / "reports"
+import sys; sys.path.insert(0, str(ROOT / "src"))                 # same constants as the analysis code
+from eegrep.stats_grid import RATIO_TRAIN  # noqa: E402
 OUT = ROOT / "paper" / "generated" / "numbers.tex"
 AD, FTD = "C(group, Treatment('CN'))[T.AD]", "C(group, Treatment('CN'))[T.FTD]"
 macros: dict[str, str] = {}
@@ -132,10 +134,10 @@ put("confAcc", sel.accuracy_mean); put("confWinFOne", sel.window_macro_f1_mean)
 _cw = [json.loads(line) for f in sorted((REP / "confirm").glob("confirm_runs_s*.jsonl")) for line in open(f)]
 _cw = [r for r in _cw if r["tag"] == "confirm" and (r["pipeline"], r["edge"]) == (best.pipeline, best.edge)]
 put("confWinAcc", float(np.mean([r["window"]["accuracy"] for r in _cw])))
-# Nadeau-Bengio corrected t-interval of the selected cell's confirmation score (17.6/56.3 = stats_grid.RATIO_TRAIN)
+# Nadeau-Bengio corrected t-interval of the selected cell's confirmation score
 from scipy import stats as _st
 _f = np.array([r["subject"]["macro_f1"] for r in _cw]); assert len(_f) == 25
-_hw = _st.t.ppf(0.975, len(_f) - 1) * np.sqrt((1 / len(_f) + 17.6 / 56.3) * _f.var(ddof=1))
+_hw = _st.t.ppf(0.975, len(_f) - 1) * np.sqrt((1 / len(_f) + RATIO_TRAIN) * _f.var(ddof=1))
 put("confFOneNbLo", _f.mean() - _hw); put("confFOneNbHi", _f.mean() + _hw)
 put("confFtdSens", sel.sens_1_mean)
 

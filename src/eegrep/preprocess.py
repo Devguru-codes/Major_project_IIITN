@@ -79,18 +79,22 @@ def preprocess_dataset(bids_root: str | Path, subjects: list[str], cfg: dict, ou
 
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    todo = [s for s in subjects if not (out / f"{s}.npz").exists()]
+    # a subject is done only when both its data and its log exist; both are written atomically (tmp + rename),
+    # so a session killed mid-way leaves no half-written file that a restart would skip
+    todo = [s for s in subjects if not ((out / f"{s}.npz").exists() and (out / f"{s}.log.json").exists())]
 
     def one(subject):
         set_path = Path(bids_root) / subject / "eeg" / f"{subject}_task-{cfg['dataset']['task']}_eeg.set"
         data, sfreq, log = preprocess_recording(set_path, cfg)
-        np.savez(out / f"{subject}.npz", data=data, sfreq=sfreq)
-        return {"subject": subject, **log}
+        np.savez(out / f"{subject}.tmp.npz", data=data, sfreq=sfreq)
+        (out / f"{subject}.tmp.npz").replace(out / f"{subject}.npz")
+        (out / f"{subject}.log.tmp").write_text(json.dumps({"subject": subject, **log}), encoding="utf-8")
+        (out / f"{subject}.log.tmp").replace(out / f"{subject}.log.json")
 
-    logs = Parallel(n_jobs=n_jobs, verbose=5)(delayed(one)(s) for s in todo)
-    with open(out / "preprocess_log.jsonl", "a", encoding="utf-8") as f:
-        for log in logs:
-            f.write(json.dumps(log) + "\n")
+    Parallel(n_jobs=n_jobs, verbose=5)(delayed(one)(s) for s in todo)
+    with open(out / "preprocess_log.jsonl", "w", encoding="utf-8") as f:      # every subject, resumed or not
+        for s in subjects:
+            f.write((out / f"{s}.log.json").read_text(encoding="utf-8") + "\n")
 
 
 def iter_preprocessed(pre_dir: str | Path, subjects: list[str]):

@@ -7,6 +7,7 @@ base: default.yaml
 dataset:
   name: ds004584
   cite_doi: 10.18112/openneuro.ds004584.v1.0.0
+  served_version: "1.0.0"
   group_to_label: {PD: 0, Control: 1}
   class_names: [PD, CN]
   # same 19 electrodes in the same node order as ds004504 (already standard_1020 names)

@@ -28,7 +28,8 @@ def paired(a: pd.Series, b: pd.Series, ratio: float, margin: float = MARGIN) -> 
     se = float(np.sqrt((1.0 / n + ratio) * d.var(ddof=1))) if n > 1 else float("nan")
     df = n - 1
     if not se > 0:                                        # identical runs
-        return {"n": n, "delta": m, "se_nb": 0.0, "ci90_lo": m, "ci90_hi": m, "p_tost": 0.0, "mde80": 0.0}
+        return {"n": n, "delta": m, "se_nb": 0.0, "ci90_lo": m, "ci90_hi": m,
+                "p_tost": 0.0 if abs(m) < margin else 1.0, "mde80": 0.0}
     q = stats.t.ppf(0.95, df)
     p_lower = stats.t.sf((m + margin) / se, df)           # H0: delta <= -margin
     p_upper = stats.t.cdf((m - margin) / se, df)          # H0: delta >= +margin
