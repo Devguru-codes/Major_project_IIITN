@@ -214,6 +214,21 @@ def cmd_bootstrap_reps(a, cfg):
     run_bootstrap(FeatureCache(a.cache), cfg, a.pipelines.split(","), a.edge, range(a.b_start, a.b_end), a.out)
 
 
+def cmd_ablate_replace(a, cfg):
+    import pandas as pd
+
+    from .stats_ablation import replace_ablations
+    from .stats_grid import load_runs
+
+    t = replace_ablations(pd.read_csv(a.table), load_runs(a.ref), load_runs(a.abl), a.note)
+    Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+    t.to_csv(a.out, index=False)
+    print(t[t.source != ""].round(4).to_string())
+    if a.figure_dir:
+        from .figures import fig_forest
+        fig_forest(t, a.figure_dir)
+
+
 def cmd_bootstrap_summary(a, cfg):
     import pandas as pd
 
@@ -445,6 +460,11 @@ def main(argv=None):
     s.add_argument("--pipelines", default="P1,P2,P3,P4,P5,P6,P7"); s.add_argument("--edge", default="spatial")
     s.add_argument("--b-start", type=int, required=True); s.add_argument("--b-end", type=int, required=True)
     s.set_defaults(fn=cmd_bootstrap_reps)
+    s = sub.add_parser("ablate-replace"); s.add_argument("--table", required=True)
+    s.add_argument("--ref", nargs="+", required=True); s.add_argument("--abl", nargs="+", required=True)
+    s.add_argument("--note", required=True); s.add_argument("--out", required=True)
+    s.add_argument("--figure-dir", help="also redraw the ablation forest plot from the new table")
+    s.set_defaults(fn=cmd_ablate_replace)
     s = sub.add_parser("bootstrap-summary"); s.add_argument("--runs", nargs="+", required=True)
     s.add_argument("--out", required=True); s.set_defaults(fn=cmd_bootstrap_summary)
     s = sub.add_parser("refit-check"); s.add_argument("--cache", required=True); s.add_argument("--folds", required=True)

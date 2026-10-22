@@ -83,3 +83,22 @@ def test_qc_flags_cached_subjects_without_a_log(cfg, small_cache, tmp_path):
     rep = qc_report(small_cache.dir, [log], cfg["dataset"]["class_names"])
     assert rep["logs_missing"] == subjects[:1]
     assert any("no preprocessing log" in f for f in gate_failures(rep))
+
+
+def test_replace_ablations_pairs_with_own_reference_and_redoes_holm():
+    from eegrep.stats_ablation import replace_ablations
+
+    units = [f"0-{i}" for i in range(25)]
+    rng = np.random.default_rng(0)
+    table = pd.DataFrame({"cell": ["P3xspatial"] * 2 + ["P3xhybrid"], "ablation": ["A1", "A2", "A2"],
+                          "delta": [-0.03, -0.01, -0.004], "delta_ci_lo": 0.0, "delta_ci_hi": 0.0,
+                          "wilcoxon_p": [0.02, 0.9, 0.8], "nb_p": [0.01, 0.9, 0.8],
+                          "wilcoxon_p_holm": 0.0, "nb_p_holm": 0.0})
+    ref_f1 = 0.55 + rng.normal(0, 0.05, 25)
+    ref = pd.DataFrame({"pipeline": "P3", "edge": "spatial", "unit": units, "macro_f1": ref_f1, "tag": "main"})
+    abl = ref.assign(tag="A2@P3xspatial", edge="random_spatial", macro_f1=ref_f1 + 0.004)
+    t = replace_ablations(table, ref, abl, note="rebuilt cache").set_index(["cell", "ablation"])
+    assert t.loc[("P3xspatial", "A2"), "delta"] == pytest.approx(0.004)
+    assert t.loc[("P3xspatial", "A2"), "source"] == "rebuilt cache" and t.loc[("P3xhybrid", "A2"), "source"] == ""
+    assert t.loc[("P3xspatial", "A1"), "nb_p_holm"] == pytest.approx(0.02)        # Holm over the 2 spatial rows
+    assert t.loc[("P3xhybrid", "A2"), "delta"] == -0.004                          # other cell untouched

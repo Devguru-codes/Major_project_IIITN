@@ -45,6 +45,24 @@ def ablation_table(main: pd.DataFrame, abl: pd.DataFrame, test_train_ratio: floa
     return out.sort_values(["cell", "delta"])
 
 
+def replace_ablations(table: pd.DataFrame, ref: pd.DataFrame, abl: pd.DataFrame, note: str,
+                      test_train_ratio: float = RATIO_TRAIN) -> pd.DataFrame:
+    """Swap re-run ablation rows into an ablation table. Each re-run is paired with its own reference runs
+    (`ref`, e.g. on a rebuilt cache), then Holm is redone within each cell's family, as in ablation_table."""
+    new = ablation_table(ref, abl, test_train_ratio).set_index(["cell", "ablation"])
+    t = table.set_index(["cell", "ablation"])
+    assert new.index.isin(t.index).all(), f"no such rows to replace: {list(new.index[~new.index.isin(t.index)])}"
+    cols = [c for c in new.columns if c in t.columns and not c.endswith("_holm")]
+    t.loc[new.index, cols] = new[cols]
+    t["source"] = t.get("source", pd.Series("", index=t.index)).fillna("")
+    t.loc[new.index, "source"] = note
+    t = t.reset_index()
+    for cell, idx in t.groupby("cell").groups.items():
+        t.loc[idx, "wilcoxon_p_holm"] = holm(t.loc[idx, "wilcoxon_p"].tolist())
+        t.loc[idx, "nb_p_holm"] = holm(t.loc[idx, "nb_p"].tolist())
+    return t
+
+
 def leakage_table(main: pd.DataFrame, abl: pd.DataFrame) -> pd.DataFrame:
     """A10: identical pipeline/model/data; only the split protocol differs."""
     rows = []
