@@ -673,6 +673,21 @@ def main():
            for name, tag, path in folds_sets],
         extras="preprocess,dev,stats"))
 
+    # ---- NB25 (CPU, committed runs only): swap the NB24 A2 rows into both ablation tables and redraw Fig. 13 ----
+    write_kernel("nb25-a2-tables", "nb25 a2 tables", notebook(
+        "NB25 — ablation tables with the corrected A2 row for P3 x spatial (CPU, no data)",
+        "Each NB24 A2 run is paired with the reference re-run on the same rebuilt cache; Holm is redone within the "
+        "cell's ablation family. The forest plot is redrawn from the confirmation-fold table.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_audit.py', "
+         "log=f'{WORK}/pytest_nb25.txt')"]
+        + [f"sh(f'{{PY}} ablate-replace --table {{SRC}}/reports/nb07/tables/{sub}ablations.csv "
+           f"--ref {{SRC}}/reports/a2_spatial/ref_{name}.jsonl --abl {{SRC}}/reports/a2_spatial/a2_{name}.jsonl "
+           f"--note \"NB24 rebuilt cache, own reference\" --out {{WORK}}/ablations_{name}.csv{fig}', "
+           f"log=f'{{WORK}}/replace_{name}.log')"
+           for name, sub, fig in (("selection", "", ""),
+                                  ("confirmation", "confirm/", " --figure-dir {WORK}/figures"))],
+        extras="dev,stats"))
+
     # ---- NB17: equivalence table rerun once the NB16 learned-adjacency runs are committed ----
     write_kernel("nb17-equivalence-learned", "nb17 equivalence learned", notebook(
         "NB17 — equivalence tests including the learned-adjacency family (CPU)",
