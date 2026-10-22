@@ -1,0 +1,14 @@
+{
+  "id": "devgurucodes/eegrep-nb25-a2-tables",
+  "title": "eegrep nb25 a2 tables",
+  "code_file": "nb25_a2_tables.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}
