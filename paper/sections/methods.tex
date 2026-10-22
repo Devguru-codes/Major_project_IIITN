@@ -143,7 +143,7 @@ an input: control participants all score 30, so it is a proxy for the label.
 \paragraph{Ablations.} Run on the two best cells of the main grid, chosen automatically from the
 seed 0--4 results and evaluated on the 25 confirmation splits, each paired with the same cell's
 confirmation-grid run: no graph (identity adjacency, i.e.\ a per-node MLP);
-degree-preserving random graphs; $k\in\{3,6\}$ and a fully connected graph; binarised edges; depth
+degree-preserving shuffles of the cell's own graph (node labels permuted); $k\in\{3,6\}$ and a fully connected graph; binarised edges; depth
 1 and 3; GAT instead of GCN; no subject-equal weighting; demographic residualisation (age and sex
 regressed out of every feature, coefficients fitted on training windows); adding P7 (PSWE) features
 to the best representation; the PSWE co-occurrence graph (Jaccard overlap of channels' PSWE
@@ -333,7 +333,7 @@ in the configuration before they were run. A7, A8 and the A11 PSWE rule grid wer
 (v)~\emph{Changed or not done.} Planned integrated-gradients explanations were replaced by occlusion,
 which is model-agnostic and reads directly as lost probability for the true class; the planned connectome and embedding plots and calibration
 diagrams were not carried out.
-(vi)~\emph{Implementation details.} Hjorth activity in P4 was replaced by line length (it duplicates the
+(vi)~\emph{Corrected ablation.} A code review found that the random-graph ablation of the spatial cell had shuffled the hybrid graph instead of the spatial one. It was re-run with the spatial graph shuffled; because the original feature cache was not accessible from the account used, the cache was rebuilt from the raw recordings (which lowers scores slightly; Section~\ref{sec:limitations}) and the reference cell was re-run on the same cache, so the difference stays paired. (vii)~\emph{Implementation details.} Hjorth activity in P4 was replaced by line length (it duplicates the
 variance); PSWEs are detected per channel rather than over averaged regions, with an MPF range set by us
 (the source does not report one); EEGNet's max-norm constraints were replaced by the shared weight decay
 and its dropout kept at the shared 0.5 (a run with the cross-subject value of 0.25 is reported as a

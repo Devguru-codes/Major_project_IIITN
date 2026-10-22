@@ -148,7 +148,7 @@ Status & Analyses \\
 Primary & Planned split-level ANOVA and pairwise tests on macro-F1, with the Nadeau--Bengio adjustment for overlapping training sets (adjustment added after review; Deviations) \\
 Descriptive & By-subject mixed model and its cross-checks; unadjusted split-level ANOVA, Wilcoxon tests, Friedman/Nemenyi \\
 Planned & Split-level ANOVA, pairwise Wilcoxon and Nadeau--Bengio tests, Friedman/Nemenyi; demographic, classical and deep-learning baselines; ablations A1--A12; leakage; permutation test; external validation; PSWE group, slowing and MMSE analyses (RQ6) and incremental value (RQ7) \\
-Added & Confirmation folds; train + val regime; equivalence tests; Nadeau--Bengio-adjusted omnibus tests; graph-type equivalence within representations; stopping-rule sensitivity; PSWE detector robustness, rule grid and collinearity checks; learned adjacency; occlusion importance; mixed-model cross-checks (RM-ANOVA, correct/incorrect outcome); severity stratification; EEGNet with dropout 0.25; calibration simulations of the tests (one matched to the data, overall and per graph type); re-fit checks; out-of-bootstrap comparison of representations \\
+Added & Confirmation folds; train + val regime; equivalence tests; Nadeau--Bengio-adjusted omnibus tests; graph-type equivalence within representations; stopping-rule sensitivity; PSWE detector robustness, rule grid and collinearity checks; learned adjacency; occlusion importance; mixed-model cross-checks (RM-ANOVA, correct/incorrect outcome); severity stratification; EEGNet with dropout 0.25; calibration simulations of the tests (one matched to the data, overall and per graph type); re-fit checks; out-of-bootstrap comparison of representations; corrected random-graph ablation of the spatial cell (rebuilt cache) \\
 Exploratory & Background-relative PSWE definitions \\
 \bottomrule
 \end{tabular}
@@ -248,8 +248,7 @@ Regime & Representation & GCN & Classical & GCN F1 & Classical F1 & $\Delta$ & $
 \begin{table}[h]
 \centering\scriptsize
 \caption{Ablations on the selection folds (seeds 0--4), on which the two reference cells were chosen;
-layout as Table~\ref{tab:ablations}. These estimates are subject to selection bias and are given for
-comparison only.}
+layout as Table~\ref{tab:ablations}. These estimates are subject to selection bias and are given for comparison only. The random-graph row of P3~$\times$~spatial comes from a re-run with the spatial graph shuffled, on a feature cache rebuilt from the raw recordings and paired with a reference run on that cache (Section~\ref{sec:deviations}).}
 \label{tab:ablations-main}
 \begin{tabular}{lcccc}
 \toprule

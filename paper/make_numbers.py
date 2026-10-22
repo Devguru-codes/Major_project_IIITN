@@ -101,7 +101,9 @@ for cell, r in summ["permutation"].items():
     put(f"perm{c}P", p_fmt(r["p"]).lstrip("=<")); put(f"perm{c}NullMean", r["null_mean"])
     put(f"perm{c}NullMax", r["null_max"]); put(f"perm{c}Obs", r["observed_seed0_macro_f1"])
     put(f"perm{c}N", r["n_perm"], "{:d}")
-abl = pd.read_csv(nb07 / "tables" / "ablations.csv")
+# NB25: A2 for P3 x spatial re-run with the spatial graph shuffled (repo audit); the rest of each table is NB07's
+A2FIX = REP / "a2_spatial" / "tables"
+abl = pd.read_csv(next(f for f in (A2FIX / "ablations_selection.csv", nb07 / "tables" / "ablations.csv") if f.exists()))
 for _, r in abl.iterrows():
     c = r.cell.replace("x", "")
     k = f"abl{c}{r.ablation}"
@@ -275,7 +277,7 @@ for cell, g in cleak.groupby("cell"):
     if c == "P3spatial":
         put("leakGain", g.loc["window-level (leaky)", "subject_macro_f1"]
             - g.loc["subject-level (correct)", "subject_macro_f1"], "{:.2f}")
-cabl = pd.read_csv(ct / "ablations.csv")
+cabl = pd.read_csv(next(f for f in (A2FIX / "ablations_confirmation.csv", ct / "ablations.csv") if f.exists()))
 for _, r in cabl.iterrows():
     k = f"cabl{r.cell.replace('x', '')}{r.ablation}"
     put(k + "Delta", r.delta, "{:+.3f}")
@@ -283,6 +285,7 @@ for _, r in cabl.iterrows():
     put(k + "P", p_fmt(r.nb_p_holm)); put(k + "WilP", p_fmt(r.wilcoxon_p_holm))
 put("cablNSigNb", int((cabl.nb_p_holm < 0.05).sum()), "{:d}")
 put("cablN", len(cabl), "{:d}")
+put("cablNPos", int((cabl.delta > 0).sum()), "{:d}"); put("cablPosMax", cabl.delta.max(), "{:+.3f}")
 small = cabl[cabl.ablation.isin(["A3_k3", "A3_k6", "A4_binary", "A5_depth1", "A5_depth3", "A9_unweighted"])]
 put("cablSmallMax", small.delta.abs().max(), "{:.3f}")
 put("cablNSigWil", int((cabl.wilcoxon_p_holm < 0.05).sum()), "{:d}")
