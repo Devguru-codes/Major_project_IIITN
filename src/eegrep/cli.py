@@ -214,6 +214,17 @@ def cmd_bootstrap_reps(a, cfg):
     run_bootstrap(FeatureCache(a.cache), cfg, a.pipelines.split(","), a.edge, range(a.b_start, a.b_end), a.out)
 
 
+def cmd_ablation_table(a, cfg):
+    from .stats_ablation import ablation_table, leakage_table
+    from .stats_grid import load_runs
+
+    ref, abl = load_runs(a.ref), load_runs(a.abl)
+    out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    t = ablation_table(ref, abl); t.to_csv(out / "ablations.csv", index=False)
+    leakage_table(ref, abl).to_csv(out / "leakage.csv", index=False)
+    print(t.round(4).to_string())
+
+
 def cmd_ablate_replace(a, cfg):
     import pandas as pd
 
@@ -460,6 +471,9 @@ def main(argv=None):
     s.add_argument("--pipelines", default="P1,P2,P3,P4,P5,P6,P7"); s.add_argument("--edge", default="spatial")
     s.add_argument("--b-start", type=int, required=True); s.add_argument("--b-end", type=int, required=True)
     s.set_defaults(fn=cmd_bootstrap_reps)
+    s = sub.add_parser("ablation-table"); s.add_argument("--ref", nargs="+", required=True)
+    s.add_argument("--abl", nargs="+", required=True); s.add_argument("--out", required=True)
+    s.set_defaults(fn=cmd_ablation_table)
     s = sub.add_parser("ablate-replace"); s.add_argument("--table", required=True)
     s.add_argument("--ref", nargs="+", required=True); s.add_argument("--abl", nargs="+", required=True)
     s.add_argument("--note", required=True); s.add_argument("--out", required=True)
