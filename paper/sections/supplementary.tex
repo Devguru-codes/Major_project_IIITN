@@ -69,8 +69,7 @@ confirmation folds, and the train + val refits) took \cpuHoursConfirm{} CPU-hour
 external cohort added \nExtraRuns{} runs and \cpuHoursExtra{} CPU-hours, and the learned-adjacency GCN
 \learnNRuns{} runs and \cpuHoursLearned{} CPU-hours. Re-fitting the best cell for the occlusion analysis and
 for its reproducibility check took 50 further training runs (about \cpuHoursOcc{} CPU-hours, estimated from the
-main-grid run times of that cell). The mixed models, equivalence and adjusted omnibus tests, severity
-analysis and calibration simulation (NB13--NB20) are statistical computations that took minutes each. Every run is logged with its configuration hash, code version and seed.
+main-grid run times of that cell). The out-of-bootstrap comparison took \bootNRuns{} runs and \cpuHoursBoot{} CPU-hours (NB22); the corrected random-graph ablation took \aTwoNRuns{} runs and \cpuHoursATwo{} CPU-hours, after rebuilding the feature cache from the raw recordings (NB24). The mixed models, equivalence and adjusted omnibus tests, severity analysis, calibration simulations and table updates (NB13--NB23, NB25) train no GCN. Every run is logged with its configuration hash, code version and seed.
 
 \subsection*{Supplementary results}
 \paragraph{By-subject mixed model (descriptive).} In the by-subject mixed model (Table~\ref{tab:mixed}, Figure~\ref{fig:mixed}), representation
@@ -248,7 +247,7 @@ Regime & Representation & GCN & Classical & GCN F1 & Classical F1 & $\Delta$ & $
 \begin{table}[h]
 \centering\scriptsize
 \caption{Ablations on the selection folds (seeds 0--4), on which the two reference cells were chosen;
-layout as Table~\ref{tab:ablations}. These estimates are subject to selection bias and are given for comparison only. The random-graph row of P3~$\times$~spatial comes from a re-run with the spatial graph shuffled, on a feature cache rebuilt from the raw recordings and paired with a reference run on that cache (Section~\ref{sec:deviations}).}
+layout as Table~\ref{tab:ablations}. These estimates are subject to selection bias and are given for comparison only. The random-graph row of P3~$\times$~spatial comes from a re-run with the spatial graph shuffled, on a feature cache rebuilt from the raw recordings and paired with a reference run on that cache (Section~\ref{sec:deviations}); its reference scored \aTwoRefSelection{} there.}
 \label{tab:ablations-main}
 \begin{tabular}{lcccc}
 \toprule

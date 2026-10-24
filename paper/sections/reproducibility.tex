@@ -8,7 +8,7 @@ notebooks that produced them are available at
 (selection folds), 5--9 for the confirmation folds (\texttt{splits/folds\_ds004504\_confirm.json},
 committed before any confirmation run), and $10{,}000+i$ and $11{,}000+i$ for permutation $i$ on the
 selection and confirmation folds. The main tables and figures are regenerated from the committed raw runs
-by \texttt{python -m eegrep report}; the later analyses by the Kaggle notebooks NB10--NB23 (each a sequence of
+by \texttt{python -m eegrep report}; the later analyses by the Kaggle notebooks NB10--NB26 (each a sequence of
 \texttt{eegrep} commands listed in \texttt{kaggle/build\_notebooks.py}); and every number in the text by
 \texttt{paper/make\_numbers.py}, which reads only committed outputs. The resolved package versions are
 recorded in \texttt{reports/kaggle\_pip\_freeze.txt}. The preprocessed feature caches (output of NB02) are not in the repository because of their size; rebuilding them from the raw recordings in a later software environment changes results slightly (Section~\ref{sec:limitations}). The full study

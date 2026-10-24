@@ -3,8 +3,7 @@ We asked whether the performance of graph neural networks for EEG-based dementia
 from how the signal is represented, how the brain graph is built, or the model. On a public
 88-subject benchmark, with a compact, untuned model, the data and the evaluation protocol held fixed and seven
 representations crossed with three graph constructions over 25 paired subject-level splits, the
-representation had by far the larger effect: wavelet and spectral node features led, graph construction
-had a detectable but negligible effect, and the GCN did not outperform non-graph classifiers on the same features. Once the
+representation had the larger effect descriptively: wavelet and spectral node features led, graph construction had a negligible effect (the graph types were equivalent within $\pm\eqMargin$ macro-F1 on average), and the GCN did not outperform non-graph classifiers on the same features. Once the
 overlap between training sets is accounted for --- uncorrected tests, a simulation showed, find
 differences between equally informative representations in most datasets --- the representation effect
 is established in an external Parkinson's disease cohort but not on ds004504, and which representation
@@ -15,6 +14,4 @@ inflated it to \cleakPThreespatialLeakySubj{} on the same pipeline, reproducing 
 figures; published subject-wise results range more widely than leakage alone explains. A
 blood--brain-barrier-associated EEG marker, the paroxysmal slow-wave event, was elevated in AD and FTD under
 its original definition, but the excess tracked background slowing and was not detectable among patients
-whose slowing overlapped with controls'; it was not elevated in Parkinson's disease, and relative to each
-person's background, transient slowing events were less frequent in disease. We release the code, seeds,
-frozen folds and every raw run so that each number in this paper can be regenerated from the data.
+whose slowing overlapped with controls'; it was not elevated in Parkinson's disease, and in an exploratory analysis relative to each person's background, transient slowing events were, if anything, less frequent in dementia. We release the code, seeds, frozen folds and every raw run: each number in this paper is regenerated exactly from the committed runs, and approximately from the raw recordings, because a rebuilt feature cache shifts individual scores slightly (Section~\ref{sec:limitations}).

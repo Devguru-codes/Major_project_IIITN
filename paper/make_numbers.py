@@ -103,6 +103,12 @@ for cell, r in summ["permutation"].items():
     put(f"perm{c}N", r["n_perm"], "{:d}")
 # NB25: A2 for P3 x spatial re-run with the spatial graph shuffled (repo audit); the rest of each table is NB07's
 A2FIX = REP / "a2_spatial" / "tables"
+_a2 = [json.loads(line) for p in ("ref_*.jsonl", "a2_*.jsonl") for f in sorted((REP / "a2_spatial").glob(p)) for line in open(f)]
+if _a2:                                       # NB24: reference + A2 on the rebuilt cache, both fold sets
+    put("aTwoNRuns", len(_a2), "{:d}"); put("cpuHoursATwo", sum(r["seconds"] for r in _a2) / 3600, "{:.1f}")
+    for _fs in ("selection", "confirmation"):
+        _r = [json.loads(line)["subject"]["macro_f1"] for line in open(REP / "a2_spatial" / f"ref_{_fs}.jsonl")]
+        put(f"aTwoRef{_fs.capitalize()}", np.mean(_r))
 abl = pd.read_csv(next(f for f in (A2FIX / "ablations_selection.csv", nb07 / "tables" / "ablations.csv") if f.exists()))
 for _, r in abl.iterrows():
     c = r.cell.replace("x", "")
@@ -216,6 +222,7 @@ if (_bs / "bootstrap_pairs.csv").exists():
     put("bootN", int(_br.n_boot.iloc[0]), "{:d}"); put("bootNPairs", len(_bp), "{:d}")
     put("bootNSig", int((_bp.p_holm < 0.05).sum()), "{:d}")
     _bj = [json.loads(line) for f in sorted((REP / "bootstrap").glob("bootstrap_s*.jsonl")) for line in open(f)]
+    put("bootNRuns", len(_bj), "{:,}"); put("cpuHoursBoot", sum(r["seconds"] for r in _bj) / 3600, "{:.1f}")
     put("bootNTrain", np.mean([r["n_train"] for r in _bj]), "{:.0f}"); put("bootNOob", np.mean([r["n_oob"] for r in _bj]), "{:.0f}")
     _best = _br.sort_values("mean").iloc[-1]; _worst = _br.sort_values("mean").iloc[0]
     put("bootBest", _best.pipeline); put("bootBestFOne", _best["mean"]); put("bootWorst", _worst.pipeline)
