@@ -1,0 +1,16 @@
+{
+  "id": "devgurucodes/eegrep-nb26-ablations-rebuilt",
+  "title": "eegrep nb26 ablations rebuilt",
+  "code_file": "nb26_ablations_rebuilt.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": [
+    "devgurucodes/eegrep-nb24-a2-spatial"
+  ]
+}

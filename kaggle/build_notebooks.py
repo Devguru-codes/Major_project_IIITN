@@ -673,6 +673,23 @@ def main():
            for name, tag, path in folds_sets],
         extras="preprocess,dev,stats"))
 
+    # ---- NB26 (CPU): eighth review. Every ablation of P3 x spatial on the NB24 rebuilt cache (confirmation folds),
+    # paired with NB24's reference on that cache: does the whole spatial column hold without mixing caches? ----
+    write_kernel("nb26-ablations-rebuilt", "nb26 ablations rebuilt", notebook(
+        "NB26 — all ablations of P3 x spatial on the rebuilt cache (CPU)",
+        "Attaches the cache rebuilt from OpenNeuro in NB24 and runs every cache-compatible ablation (all but the "
+        "window-length and ICA ablations, which need their own caches) on the 25 confirmation splits; the table is "
+        "paired with NB24's reference run of P3 x spatial on the same cache.",
+        ["sh(f'cd {SRC} && {sys.executable} -m pytest -q -p no:cacheprovider tests/test_audit.py "
+         "tests/test_ablations.py', log=f'{WORK}/pytest_nb26.txt')",
+         find_cache,
+         "sh(f'{PY} ablate --cache {CACHE} --folds {SRC}/splits/folds_ds004504_confirm.json --participants {PART} "
+         "--cells P3xspatial --which all --out {WORK}/ablations_rebuilt.jsonl --max-hours 10.5', "
+         "log=f'{WORK}/ablate.log')",
+         "sh(f'{PY} ablation-table --ref {SRC}/reports/a2_spatial/ref_confirmation.jsonl "
+         "--abl {WORK}/ablations_rebuilt.jsonl --out {WORK}/tables', log=f'{WORK}/ablation_table.log')"],
+        extras="dev,stats"), kernel_sources=[f"{OWNER}/eegrep-nb24-a2-spatial"])
+
     # ---- NB25 (CPU, committed runs only): swap the NB24 A2 rows into both ablation tables and redraw Fig. 13 ----
     write_kernel("nb25-a2-tables", "nb25 a2 tables", notebook(
         "NB25 — ablation tables with the corrected A2 row for P3 x spatial (CPU, no data)",
