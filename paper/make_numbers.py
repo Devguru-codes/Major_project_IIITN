@@ -109,6 +109,27 @@ if _a2:                                       # NB24: reference + A2 on the rebu
     for _fs in ("selection", "confirmation"):
         _r = [json.loads(line)["subject"]["macro_f1"] for line in open(REP / "a2_spatial" / f"ref_{_fs}.jsonl")]
         put(f"aTwoRef{_fs.capitalize()}", np.mean(_r))
+# NB26: every cache-compatible ablation of P3 x spatial on the NB24 rebuilt cache (confirmation folds)
+_rbd = REP / "ablations_rebuilt"
+if (_rbd / "tables" / "ablations.csv").exists():
+    _rb = pd.read_csv(_rbd / "tables" / "ablations.csv").set_index("ablation")
+    _rbr = [json.loads(line) for line in open(_rbd / "ablations_rebuilt.jsonl")]
+    put("rbN", len(_rb), "{:d}"); put("rbNSig", int((_rb.nb_p_holm < 0.05).sum() + (_rb.wilcoxon_p_holm < 0.05).sum()), "{:d}")
+    put("rbNPos", int((_rb.delta > 0).sum()), "{:d}"); put("rbNRuns", len(_rbr), "{:d}")
+    put("cpuHoursRb", sum(r["seconds"] for r in _rbr) / 3600, "{:.1f}")
+    put("rbDeltaLo", _rb.delta.min(), "{:+.3f}"); put("rbDeltaHi", _rb.delta.max(), "{:+.3f}")
+    for _ab, _nm in (("A6_gat", "Gat"), ("A3_full", "Full"), ("A1_no_graph", "NoGraph")):
+        put(f"rb{_nm}", _rb.loc[_ab, "delta"], "{:+.3f}")
+        put(f"rb{_nm}Lo", _rb.loc[_ab, "delta_ci_lo"], "{:+.3f}"); put(f"rb{_nm}Hi", _rb.loc[_ab, "delta_ci_hi"], "{:+.3f}")
+    _lk = pd.read_csv(_rbd / "tables" / "leakage.csv").set_index("protocol")
+    put("rbLeaky", _lk.loc["window-level (leaky)", "subject_macro_f1"])
+    # same cache, same seeds, a later Kaggle image: how many of NB24's 25 A2 runs come out identical?
+    _old = {json.loads(l)["key"]: json.loads(l)["subject"]["macro_f1"] for l in open(REP / "a2_spatial" / "a2_confirmation.jsonl")}
+    _new = {r["key"]: r["subject"]["macro_f1"] for r in _rbr if r["key"] in _old}
+    assert len(_new) == len(_old) == 25
+    _dd = np.array([_new[k] - _old[k] for k in _old])
+    put("reproNSame", int((np.abs(_dd) < 1e-9).sum()), "{:d}"); put("reproMaxDiff", np.abs(_dd).max(), "{:.2f}")
+    put("reproMeanDiff", np.mean(_dd), "{:+.3f}")
 abl = pd.read_csv(next(f for f in (A2FIX / "ablations_selection.csv", nb07 / "tables" / "ablations.csv") if f.exists()))
 for _, r in abl.iterrows():
     c = r.cell.replace("x", "")

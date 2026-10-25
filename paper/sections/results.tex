@@ -202,8 +202,7 @@ we cannot attribute it to a specific electrode topology rather than to smoothing
 Two changes had uncorrected $t$-intervals that excluded zero for the spatial cell: GAT attention
 (\cablPThreespatialASixgatDelta{} [\cablPThreespatialASixgatLo{}, \cablPThreespatialASixgatHi{}]) and a
 fully connected graph (\cablPThreespatialAThreefullDelta{} [\cablPThreespatialAThreefullLo{},
-\cablPThreespatialAThreefullHi{}]), the latter consistent with over-smoothing; neither interval
-accounts for the overlap between cross-validation training sets. Sparsity ($k=3$ or 6), binarised
+\cablPThreespatialAThreefullHi{}]), the latter consistent with over-smoothing; neither interval accounts for the overlap between cross-validation training sets, and neither excluded zero when every ablation of the spatial cell was repeated on the rebuilt cache (GAT \rbGat{} [\rbGatLo{}, \rbGatHi{}], fully connected \rbFull{} [\rbFullLo{}, \rbFullHi{}]; Supplementary results). Sparsity ($k=3$ or 6), binarised
 edges, depth and loss weighting changed macro-F1 by at most \cablSmallMax{}. Regressing age and sex out of
 every feature cost \cablPThreespatialAOneTworesidualizedDelta{} [\cablPThreespatialAOneTworesidualizedLo{},
 \cablPThreespatialAOneTworesidualizedHi{}] for the spatial cell, leaving performance well above the

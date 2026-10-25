@@ -69,7 +69,7 @@ confirmation folds, and the train + val refits) took \cpuHoursConfirm{} CPU-hour
 external cohort added \nExtraRuns{} runs and \cpuHoursExtra{} CPU-hours, and the learned-adjacency GCN
 \learnNRuns{} runs and \cpuHoursLearned{} CPU-hours. Re-fitting the best cell for the occlusion analysis and
 for its reproducibility check took 50 further training runs (about \cpuHoursOcc{} CPU-hours, estimated from the
-main-grid run times of that cell). The out-of-bootstrap comparison took \bootNRuns{} runs and \cpuHoursBoot{} CPU-hours (NB22); the corrected random-graph ablation took \aTwoNRuns{} runs and \cpuHoursATwo{} CPU-hours, after rebuilding the feature cache from the raw recordings (NB24). The mixed models, equivalence and adjusted omnibus tests, severity analysis, calibration simulations and table updates (NB13--NB23, NB25) train no GCN. Every run is logged with its configuration hash, code version and seed.
+main-grid run times of that cell). The out-of-bootstrap comparison took \bootNRuns{} runs and \cpuHoursBoot{} CPU-hours (NB22); the corrected random-graph ablation took \aTwoNRuns{} runs and \cpuHoursATwo{} CPU-hours, after rebuilding the feature cache from the raw recordings (NB24), and repeating the spatial cell's ablations on that cache \rbNRuns{} runs and \cpuHoursRb{} CPU-hours (NB26). The mixed models, equivalence and adjusted omnibus tests, severity analysis, calibration simulations and table updates (NB13--NB23, NB25) train no GCN. Every run is logged with its configuration hash, code version and seed.
 
 \subsection*{Supplementary results}
 \paragraph{By-subject mixed model (descriptive).} In the by-subject mixed model (Table~\ref{tab:mixed}, Figure~\ref{fig:mixed}), representation
@@ -93,6 +93,8 @@ weakened every effect but left the pattern intact: representation remained signi
 P3 again highest (mean proportion correct \mixSelCorrMPThree{} and \mixConfCorrMPThree{}), whereas the graph
 effect was marginal on the selection folds ($p\mixSelCorrEdgeP$, range \mixSelCorrEdgeRange{}) and absent on
 the confirmation folds ($p\mixConfCorrEdgeP$).
+
+\paragraph{Ablations on the rebuilt cache.} To check that the spatial column of Table~\ref{tab:ablations} does not depend on mixing caches, every ablation of P3~$\times$~spatial that uses the same cache (\rbN{} of 16; the window-length and ICA ablations need their own) was repeated on the 25 confirmation splits of the rebuilt cache and paired with the reference re-run there (\aTwoRefConfirmation{}). None reached significance under either Holm-corrected test; the differences ranged from \rbDeltaLo{} to \rbDeltaHi{}, \rbNPos{} of \rbN{} were positive, and removing the graph changed macro-F1 by \rbNoGraph{} [\rbNoGraphLo{}, \rbNoGraphHi{}]. The two uncorrected intervals that excluded zero on the original cache (GAT and the fully connected graph) did not do so here, and window-level splitting again raised macro-F1 to \rbLeaky{}. The conclusions about ablations therefore hold on a cache built in a different software environment; the signs of differences this small do not.
 
 \paragraph{Stopping-rule sensitivity.} Early stopping selected a median of epoch \bestEpochMedian{}. Re-running the whole grid with patience
 50 (median epoch \esPFiftyEpochMedian{}) or with no early stopping (100 epochs, final weights) left the
@@ -147,7 +149,7 @@ Status & Analyses \\
 Primary & Planned split-level ANOVA and pairwise tests on macro-F1, with the Nadeau--Bengio adjustment for overlapping training sets (adjustment added after review; Deviations) \\
 Descriptive & By-subject mixed model and its cross-checks; unadjusted split-level ANOVA, Wilcoxon tests, Friedman/Nemenyi \\
 Planned & Split-level ANOVA, pairwise Wilcoxon and Nadeau--Bengio tests, Friedman/Nemenyi; demographic, classical and deep-learning baselines; ablations A1--A12; leakage; permutation test; external validation; PSWE group, slowing and MMSE analyses (RQ6) and incremental value (RQ7) \\
-Added & Confirmation folds; train + val regime; equivalence tests; Nadeau--Bengio-adjusted omnibus tests; graph-type equivalence within representations; stopping-rule sensitivity; PSWE detector robustness, rule grid and collinearity checks; learned adjacency; occlusion importance; mixed-model cross-checks (RM-ANOVA, correct/incorrect outcome); severity stratification; EEGNet with dropout 0.25; calibration simulations of the tests (one matched to the data, overall and per graph type); re-fit checks; out-of-bootstrap comparison of representations; corrected random-graph ablation of the spatial cell (rebuilt cache) \\
+Added & Confirmation folds; train + val regime; equivalence tests; Nadeau--Bengio-adjusted omnibus tests; graph-type equivalence within representations; stopping-rule sensitivity; PSWE detector robustness, rule grid and collinearity checks; learned adjacency; occlusion importance; mixed-model cross-checks (RM-ANOVA, correct/incorrect outcome); severity stratification; EEGNet with dropout 0.25; calibration simulations of the tests (one matched to the data, overall and per graph type); re-fit checks; out-of-bootstrap comparison of representations; corrected random-graph ablation and all cache-compatible ablations of the spatial cell (rebuilt cache) \\
 Exploratory & Background-relative PSWE definitions \\
 \bottomrule
 \end{tabular}
