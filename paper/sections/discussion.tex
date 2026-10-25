@@ -20,8 +20,7 @@ $\pm\eqMargin$ macro-F1, and within single representations the comparisons were 
 different. The GCN showed no detectable advantage over a random forest or SVM trained
 on the same features and subjects, and end-to-end deep EEG networks (EEGNet, a 1D-CNN) on raw windows
 did not reach it either; these comparisons, however, could only have detected differences of about
-\eqGvcMde{}--\eqDeepMde{} macro-F1, so moderate advantages in either direction remain possible. These conclusions held under three stopping rules, with \SI{5}{\second} to \SI{20}{\second}
-windows and without ICA. Third, splitting windows instead
+\eqGvcMde{}--\eqDeepMde{} macro-F1, so moderate advantages in either direction remain possible. These conclusions held under three stopping rules, with \SI{5}{\second} to \SI{20}{\second} windows, without ICA, and when the spatial cell's ablations were repeated on a feature cache rebuilt in a later software environment. Third, splitting windows instead
 of subjects inflates subject-level macro-F1 from \cleakPThreespatialCorrectSubj{} to \cleakPThreespatialLeakySubj{} on the identical pipeline,
 reproducing the top of the published range, although not every published subject-wise figure
 (Section~\ref{sec:disc-bench}). Fourth, the
@@ -185,8 +184,7 @@ average. The adjusted test is conservative (no false positives in simulation, po
 for moderate differences), so `not established' is weak evidence that representation does not matter; the
 out-of-bootstrap comparison, which does not rely on it, reached the same conclusion, with a bootstrap
 standard error of about \bootSeMed{} for a paired difference, so that only differences of roughly twice
-that size could be shown with this cohort. Calibration was poor. Results are reproduced exactly from the original feature caches (Kaggle notebook output, too large for the repository), but rebuilding
-the caches from the raw recordings in a later Kaggle environment changed per-split macro-F1 by
+that size could be shown with this cohort. Calibration was poor. Results are reproduced exactly from the original feature caches (Kaggle notebook output, too large for the repository) in the same software image; on an identical cache with identical seeds, a later Kaggle image reproduced \reproNSame{} of 25 runs exactly, while early stopping amplified tiny numerical differences in the rest (mean change \reproMeanDiff{}, largest \reproMaxDiff{} on one split). Rebuilding the caches from the raw recordings in a later Kaggle environment changed per-split macro-F1 by
 \refitRebuiltAbsDiff{} on average (mean \refitRebuiltFOne{} against \refitStoredFOne{} for the best cell;
 \refitRebuiltAgree\% of subject decisions unchanged), a reminder that preprocessing libraries are part of
 the pipeline. Graphs are
